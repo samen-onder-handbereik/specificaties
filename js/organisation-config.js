@@ -1,12 +1,11 @@
 var organisationConfig = {
     nl_organisationName: "Samen onder Handbereik",
     nl_organisationStylesURL: "https://gitdocumentatie.logius.nl/publicatie/respec/style/",
-    nl_organisationPublishURL: "https://leongrinwis.github.io/respectvngorg/",
-	// nl_organisationPublishURL: "https://vng-realisatie.github.io/publicatie",
+    nl_organisationPublishURL: "https://github.com/samen-onder-handbereik/specificaties/",
     // Het hier gedefinieerde logo wordt helemaal bovenaan het Respec document aan de rechterzijde geplaatst.
     // Er is voor gekozen de 'width' property niet te gebruiken waardoor het logo automatisch in de juiste verhoudingen wordt geplaatst.
     logos: [{
-        src: "https://leongrinwis.github.io/respectvngorg/media/handenblauwlogosmall.png",
+        src: "https://github.com/samen-onder-handbereik/specificaties/media/handenblauwlogosmall.png",
         alt: "Samen-onder-Handbereik",
         id: "Samen-onder-Handbereik",
         height: 77,
