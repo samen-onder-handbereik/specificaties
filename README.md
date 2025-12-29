@@ -3,21 +3,11 @@
 | Architectuur team | Samen onder Handbereik |
 <hr/>
 
-# ReSpec template instructies
+# Leeswijzer
 
-ReSpec is een tool om html en pdf documenten te genereren op basis van markdown en html content.
+De specificaties op deze site zijn onderdeel van het Samen onder Handbereik [Afsprakenstelsel](https://samen-onder-handbereik.github.io/afsprakenstelsel/). Indien onbekend wordt aangeraden kennis te nemen van dit [Afsprakenstelsel](https://samen-onder-handbereik.github.io/afsprakenstelsel/) en minimaal de daar beschreven [Samenwerkfuncties](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-26-samenwerkfuncties.html) en [Afspraken](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-30-afspraken.html). Van elke Samenwerkfunctie is op deze site het protocol beschreven, de toegepaste samenwerkpatronen, technische patronen, het informatiemodel en de API's. Zowel de huidige-, de voorgaande versie en de opvolgende versie waaraan gewerkt wordt. De specificaties zijn bedoeld voor de organisaties welke het Afsprakenstelsel en de Samenwerkfuncties implementeren en dan met name de technische afdelingen die dit uitvoeren en de functionaliteit beheren en onderhouden.
 
-# Vereiste voor gebruik
-- Kennis van git/GitHub
-- Kennis van Markdown en/of HTML
-- Een webserver om de documentatie te hosten
 
-Voor de laatste gebruiken wij GitHub. Kennis van de vorm van een Javascript object is handig om de in dit template voorkomende scripts aan te kunnen passen maar zonder die kennis kom je m.b.v. deze documentatie ook al heel ver.
+# Implementatieinstructie
+Deze site geeft een meta beschrijving van het informatiemodel en de API's. Elke deelnemende organisatie realiseert de Samenwerkfuncties, Samenwerkpatronen, het Informatiemodel en API's zoals gespecificeert en publiceert de eigen API's en de informatie daarvan in het eigen API Management DevPortal. De versionering en de beschikbaarbaarheid van de huidige versie en de ondersteuning van de vorige versie volgt daarbij de afpraken zoals gemaakt binnen het [Afsprakenstelsel](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-30-afspraken.html).
 
-# Gebruikersinstructie
-Om het gebruik van dit template makkelijker te maken raden we het aan om een IDE te gebruiken. Die geeft een voorbeeld van hoe de markdown eruit zal zien, kan laten zien of de config files nog in de correcte vorm zijn en kan helpen in het gebruik van git.  
-Een gratis voorbeeld van een IDE is: [Visual studio code](https://code.visualstudio.com/). Een combinatie van GitHub desktop en je eigen favoriete Markdown editor is echter ook mogelijk.
-
-Aanpassingen maken aan het document gaat op 2 manieren:
-- De configuratie van het document aanpassing in de config files
-- Markdown of html files toevoegen/veranderen
