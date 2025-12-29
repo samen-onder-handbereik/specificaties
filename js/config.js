@@ -18,8 +18,8 @@ let respecConfig = {
   //previousPublishDate: "2025-12-23",
   //previousPublishVersion: "0.0.1",
   
-  title: "Specificaties van samenwerkpatronen, API's en events",
-  subtitle: "Van het Samen onder Handbereik Jeugd-, Zorg- en Veiligheid Afsprakenstelsel",
+  title: "Specificatie samenwerkfuncties",
+  subtitle: "Samen onder Handbereik Afsprakenstelsel",
 //  content: {"mermaid": "", "ch01": "informative", "ch02": ""},
 //  authors:
 //    [
@@ -32,12 +32,12 @@ let respecConfig = {
   editors:
     [
       {
-        name: "Team Samen onder Handbereik",
-        company: "DGSenB",
-        companyURL: "https://www.rijksoverheid.nl/ministeries/ministerie-van-justitie-en-veiligheid",
+        name: "Samen onder Handbereik team",
+        company: "SoH",
+        companyURL: "https://samen-onder-handbereik.github.io/afsprakenstelsel/",
       }
     ],
-  github: "https://github.com/leongrinwis/respectvngorg",
+  github: "https://github.com/samen-onder-handbereik/specificaties",
 
   maxTocLevel: 5,
 
