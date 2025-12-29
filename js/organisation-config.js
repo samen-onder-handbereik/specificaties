@@ -5,7 +5,7 @@ var organisationConfig = {
     // Het hier gedefinieerde logo wordt helemaal bovenaan het Respec document aan de rechterzijde geplaatst.
     // Er is voor gekozen de 'width' property niet te gebruiken waardoor het logo automatisch in de juiste verhoudingen wordt geplaatst.
     logos: [{
-        src: "https://github.com/samen-onder-handbereik/specificaties/media/handenblauwlogosmall.png",
+        src: "https://samen-onder-handbereik.github.io/specificaties/media/handenblauwlogosmall.png",
         alt: "Samen-onder-Handbereik",
         id: "Samen-onder-Handbereik",
         height: 77,
