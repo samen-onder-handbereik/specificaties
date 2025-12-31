@@ -1,0 +1,651 @@
+<!DOCTYPE HTML><section id="cat" class="normative"><h2>Gegevensdefinitie Melding en Verrijking</h2><p><b>Deze tekst is normatief.</b><!--LOGICAL-JZV-1.0-1-20251001-20251127-152749 imvertor Nightly-build.0--></p><section><h3>Kenmerken   </h3>
+            <table style="width: 100%;" class="overview OVERVIEW-MODEL"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>JZV</td></tr><tr><th scope="row">Definitie</th><td>
+                     
+                           <p>Dit is het informatiemodel voor de samenwerkfunctie Uitwisselen Uitkomst Overleg. Zie deze <a href="https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-29-samenwerkfuncties.html#:~:text=eerder%20worden%20bezworen.-,Uitwisselen%20Uitkomst%20Overleg,-Omschrijving" shape="rect">link</a> voor meer informatie<br clear="none">
+                           </p>
+                        
+                  </td></tr><tr><th scope="row">Datum opname</th><td>20251001</td></tr><tr><th scope="row">Basis-URI</th><td> </td></tr><tr><th scope="row">Informatiemodel type</th><td>Conceptueel</td></tr><tr><th scope="row">MIM versie</th><td>1.2</td></tr><tr><th scope="row">MIM taal</th><td>NL</td></tr><tr><th scope="row">Relatiemodelleringstype</th><td>Relatiesoort leidend</td></tr></tbody></table>
+         </section><section><h3>Kenmerken   </h3>
+            <table style="width: 100%;" class="overview OVERVIEW-DOMAIN"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>JZV</td></tr><tr><th scope="row">Datum opname</th><td>20251001</td></tr></tbody></table>
+         </section><section><h3>Objecttypen   </h3>
+            <section id="global_class_JZV_Actie"><h4>   Actie</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-OBJECTTYPE"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Actie</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        
+                              <p>Een handeling die door een (medewerker van een) organisatie uitgevoerd dient te worden.</p>
+                              <p>Zie deze <a href="https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cfbb3c22-2d0b-9be9-c25f-56752f598046" shape="rect">link</a> voor meer informatie.</p>
+                           
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td>
+                        20251001
+                     </td></tr><tr><th scope="row">Unieke aanduiding</th><td>id</td></tr><tr><th scope="row">Indicatie abstract object</th><td>Nee</td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Actie_id">id</a>
+                        </td><td>De unieke identificatie van de actie.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Actie_omschrijving">omschrijving</a>
+                        </td><td>De omschrijving van de actie.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Actie_conditie">conditie</a>
+                        </td><td>Een conditie waaraan dient te worden voldaan om de uitvoering van de actie te triggeren.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Actie_gremium">gremium</a>
+                        </td><td>Het gremium waarin tot de actie is besloten.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Actie_idCasusoverleg">id­Casusoverleg</a>
+                        </td><td>Het id van het casusoverleg waarin tot de actie is besloten.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+               <h5>Overzicht relaties  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 50%;"></colgroup><colgroup style="width: 50%;"></colgroup><tbody><tr><th scope="col">Relatienaam met kardinaliteiten</th><th scope="col">Definitie</th></tr><tr><td>
+                           Actie
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Actie_belegdBij">belegd­Bij</a>
+                           
+                           
+                              <a class="link" href="#global_class_JZV_Organisatie">Organisatie</a>
+                           
+                           [ 1 ]
+                        </td><td></td></tr><tr><td>
+                           
+                              <a class="link" href="#global_class_JZV_Zaak">Zaak</a>
+                           
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftActie">heeft­Actie</a>
+                           
+                           Actie
+                           [ 0 .. * ]
+                        </td><td></td></tr></tbody></table>
+                  
+               
+            </section>
+            <section id="global_class_JZV_Besluit"><h4>   Besluit</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-OBJECTTYPE"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Besluit</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        
+                              <p>Een na overweging of beraadslaging vastgestelde beslissing van een overheidsorgaan voor een individueel of concreet geval.</p>
+                              <p>Zie deze <a href="https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-10ed8253-e69f-a423-c2c8-37bf3774a355" shape="rect">link</a> voor meer informatie. </p>
+                           
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Unieke aanduiding</th><td>id</td></tr><tr><th scope="row">Indicatie abstract object</th><td>Nee</td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Besluit_id">id</a>
+                        </td><td>De unieke identificatie van het besluit.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Besluit_omschrijving">omschrijving</a>
+                        </td><td>De omschrijving van het besluit.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Besluit_gremium">gremium</a>
+                        </td><td>Het gremium waarin het besluit is genomen.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Besluit_idCasusoverleg">id­Casusoverleg</a>
+                        </td><td>Het id van het casusoverleg waarin het besluit is genomen.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+               <h5>Overzicht relaties  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 50%;"></colgroup><colgroup style="width: 50%;"></colgroup><tbody><tr><th scope="col">Relatienaam met kardinaliteiten</th><th scope="col">Definitie</th></tr><tr><td>
+                           
+                              <a class="link" href="#global_class_JZV_Zaak">Zaak</a>
+                           
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftBesluit">heeft­Besluit</a>
+                           
+                           Besluit
+                           [ 0 .. * ]
+                        </td><td></td></tr></tbody></table>
+                  
+               
+            </section>
+            <section id="global_class_JZV_Betrokkene"><h4>   Betrokkene</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-OBJECTTYPE"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Betrokkene</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        
+                              <p>Een natuurlijk of niet-natuurlijk persoon die het onderwerp is van een zaak of die een uitvoerende rol speelt in een zaak.</p>
+                              <p>Zie deze <a href="https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cf8a64b4-f3e7-2613-4888-90e09e2b3a17" shape="rect">link</a> voor meer informatie. </p>
+                           
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Unieke aanduiding</th><td>burgerservicenummer</td></tr><tr><th scope="row">Indicatie abstract object</th><td>Nee</td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Betrokkene_burgerservicenummer">burgerservicenummer</a>
+                        </td><td>Het burgerservicenummer van de betrokkene. </td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           naam
+                        :</td><td>De naam van de betrokkene.</td><td>
+                           <a class="link" href="#detail_class_JZV_Naam">Naam</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Naam_voornamen">voornamen</a>
+                        </td><td>De verzameling namen die, gescheiden door spaties, aan de geslachtsnaam voorafgaat. Indien aanwezig, wordt het predicaat (tabel 38) afgesplitst.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Naam_voorvoegsel">voorvoegsel</a>
+                        </td><td>Dat deel van de geslachtsnaam dat voorkomt in Tabel 36, Voorvoegseltabel en, gescheiden door een spatie, voorafgaat aan de rest van de geslachtsnaam.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Naam_geslachtsnaam">geslachtsnaam</a>
+                        </td><td>De (geslachts)naam waarvan de eventueel aanwezige voorvoegsels (tabel 36) en adellijke titel/predicaat (tabel 38) zijn afgesplitst.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           adres
+                        :</td><td>Het adres van de betrokkene.</td><td>
+                           <a class="link" href="#detail_class_JZV_Adres">Adres</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_straatnaam">straatnaam</a>
+                        </td><td>De officiële straatnaam zoals door het gemeentebestuur is vastgesteld dan wel een kopie van de inhoud van element 11.15 Naam openbare ruimte, indien noodzakelijk afgekort volgens de NEN-5825 [2002] norm. </td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_huisnummer">huisnummer</a>
+                        </td><td>De numerieke aanduiding zoals deze door het gemeentebestuur aan het object is toegekend dan wel een door of namens het bevoegde gemeentelijke orgaan ten aanzien van een adresseerbaar object toegekende nummering.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Integer</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_postcode">postcode</a>
+                        </td><td>De door de Post­NL vastgestelde code behorend bij de straatnaam en het huisnummer dan wel de door Post­NL vastgestelde code behorende bij een bepaalde combinatie van een naam openbare ruimte en een huisnummer.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_plaats">plaats</a>
+                        </td><td>Een woonplaatsnaam is de naam van een door het bevoegde gemeentelijke orgaan als zodanig aangewezen gedeelte van het gemeentelijk grondgebied.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+               <h5>Overzicht relaties  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 50%;"></colgroup><colgroup style="width: 50%;"></colgroup><tbody><tr><th scope="col">Relatienaam met kardinaliteiten</th><th scope="col">Definitie</th></tr><tr><td>
+                           
+                              <a class="link" href="#global_class_JZV_Zaak">Zaak</a>
+                           
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftNevenbetrokkene">heeft­Nevenbetrokkene</a>
+                           
+                           Betrokkene
+                           [ 0 .. * ]
+                        </td><td></td></tr><tr><td>
+                           
+                              <a class="link" href="#global_class_JZV_Zaak">Zaak</a>
+                           
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftHoofdbetrokkene">heeft­Hoofdbetrokkene</a>
+                           
+                           Betrokkene
+                           [ 1 ]
+                        </td><td></td></tr></tbody></table>
+                  
+               
+            </section>
+            <section id="global_class_JZV_Casusoverleg"><h4>   Casusoverleg</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-OBJECTTYPE"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Casusoverleg</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        
+                              <p>Een periodiek beraad waarbij meerdere bij de zaak betrokken organisaties in een samenwerking samenwerken.</p>
+                              <p>Zie deze <a href="https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-5f116ca6-b072-6aad-c6f4-d9cdf15c1463" shape="rect">link</a> voor meer informatie. </p>
+                           
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td>
+                        20251001
+                     </td></tr><tr><th scope="row">Unieke aanduiding</th><td>id</td></tr><tr><th scope="row">Indicatie abstract object</th><td>Nee</td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Casusoverleg_id">id</a>
+                        </td><td>De unieke identificatie van het casusoverleg.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Casusoverleg_datum">datum</a>
+                        </td><td>De datum waarop het casusoverleg heeft plaatsgevonden.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Date</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Casusoverleg_startTijd">start­Tijd</a>
+                        </td><td>De starttijd van het casusoverleg. </td><td>
+                           Time
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Casusoverleg_eindTijd">eind­Tijd</a>
+                        </td><td>De eindtijd van het casusoverleg.</td><td>
+                           Time
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Casusoverleg_notulen">notulen</a>
+                        </td><td>De notulen van het casusoverleg. </td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+               <h5>Overzicht relaties  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 50%;"></colgroup><colgroup style="width: 50%;"></colgroup><tbody><tr><th scope="col">Relatienaam met kardinaliteiten</th><th scope="col">Definitie</th></tr><tr><td>
+                           Casusoverleg
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Casusoverleg_betreft">betreft</a>
+                           
+                           
+                              <a class="link" href="#global_class_JZV_Zaak">Zaak</a>
+                           
+                           [ 1 ]
+                        </td><td></td></tr></tbody></table>
+                  
+               
+            </section>
+            <section id="global_class_JZV_Zaak"><h4>   Zaak</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-OBJECTTYPE"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Zaak</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        
+                              <p>Een samenhangende hoeveelheid werk met een welgedefinieerde aanleiding en een welgedefinieerd eindresultaat, waarvan kwaliteit en doorlooptijd bewaakt moeten worden.</p>
+                              <p>Zie deze <a href="https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-12121467-3c9a-83f0-e10a-e9feac117bd2" shape="rect">link</a> voor meer informatie. </p>
+                           
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Unieke aanduiding</th><td>id</td></tr><tr><th scope="row">Indicatie abstract object</th><td>Nee</td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Zaak_id">id</a>
+                        </td><td>De unieke identificatie van de zaak.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Zaak_startDatum">start­Datum</a>
+                        </td><td>De datum waarop de zaak is gestart.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Date</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+               <h5>Overzicht relaties  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 50%;"></colgroup><colgroup style="width: 50%;"></colgroup><tbody><tr><th scope="col">Relatienaam met kardinaliteiten</th><th scope="col">Definitie</th></tr><tr><td>
+                           Zaak
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftNevenbetrokkene">heeft­Nevenbetrokkene</a>
+                           
+                           
+                              <a class="link" href="#global_class_JZV_Betrokkene">Betrokkene</a>
+                           
+                           [ 0 .. * ]
+                        </td><td></td></tr><tr><td>
+                           Zaak
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftActie">heeft­Actie</a>
+                           
+                           
+                              <a class="link" href="#global_class_JZV_Actie">Actie</a>
+                           
+                           [ 0 .. * ]
+                        </td><td></td></tr><tr><td>
+                           Zaak
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftBesluit">heeft­Besluit</a>
+                           
+                           
+                              <a class="link" href="#global_class_JZV_Besluit">Besluit</a>
+                           
+                           [ 0 .. * ]
+                        </td><td></td></tr><tr><td>
+                           Zaak
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Zaak_heeftHoofdbetrokkene">heeft­Hoofdbetrokkene</a>
+                           
+                           
+                              <a class="link" href="#global_class_JZV_Betrokkene">Betrokkene</a>
+                           
+                           [ 1 ]
+                        </td><td></td></tr><tr><td>
+                           
+                              <a class="link" href="#global_class_JZV_Casusoverleg">Casusoverleg</a>
+                           
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Casusoverleg_betreft">betreft</a>
+                           
+                           Zaak
+                           [ 1 ]
+                        </td><td></td></tr></tbody></table>
+                  
+               
+            </section>
+            <section id="global_class_JZV_Organisatie"><h4>   Organisatie</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-OBJECTTYPE"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Organisatie</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        
+                              <p>Een instelling of instantie die werkzaamheden uitvoert op het gebied van het sociaal domein of aanpalende domeinen.</p>
+                              <p>Zie deze <a href="https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-96d0ce3f-bfcf-86c0-8561-b2ca09d5575d" shape="rect">link</a> voor meer informatie.</p>
+                           
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Unieke aanduiding</th><td>OIN</td></tr><tr><th scope="row">Indicatie abstract object</th><td>Nee</td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Organisatie_oIN">OIN</a>
+                        </td><td>Het OIN (Organisatieidentificatienummer) van de organisatie. </td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>
+                           <a class="link" href="#detail_attribute_JZV_Organisatie_naam">naam</a>
+                        </td><td>De naam van de organisatie.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+               <h5>Overzicht relaties  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 50%;"></colgroup><colgroup style="width: 50%;"></colgroup><tbody><tr><th scope="col">Relatienaam met kardinaliteiten</th><th scope="col">Definitie</th></tr><tr><td>
+                           
+                              <a class="link" href="#global_class_JZV_Actie">Actie</a>
+                           
+                           [ 1 ]
+                           
+                              <a class="link" href="#detail_association_JZV_Actie_belegdBij">belegd­Bij</a>
+                           
+                           Organisatie
+                           [ 1 ]
+                        </td><td></td></tr></tbody></table>
+                  
+               
+            </section>
+         </section><section><h3>Gegevensgroeptypen   </h3>
+            <section id="global_class_JZV_Adres"><h4>Gegevensgroep   Adres</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-COMPOSITION"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Adres</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        Een aanduiding van een bepaalde locatie, doorgaans van een woning, gebouw of faciliteit.
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_straatnaam">straatnaam</a>
+                        </td><td>De officiële straatnaam zoals door het gemeentebestuur is vastgesteld dan wel een kopie van de inhoud van element 11.15 Naam openbare ruimte, indien noodzakelijk afgekort volgens de NEN-5825 [2002] norm. </td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_huisnummer">huisnummer</a>
+                        </td><td>De numerieke aanduiding zoals deze door het gemeentebestuur aan het object is toegekend dan wel een door of namens het bevoegde gemeentelijke orgaan ten aanzien van een adresseerbaar object toegekende nummering.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Integer</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_postcode">postcode</a>
+                        </td><td>De door de Post­NL vastgestelde code behorend bij de straatnaam en het huisnummer dan wel de door Post­NL vastgestelde code behorende bij een bepaalde combinatie van een naam openbare ruimte en een huisnummer.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Adres_plaats">plaats</a>
+                        </td><td>Een woonplaatsnaam is de naam van een door het bevoegde gemeentelijke orgaan als zodanig aangewezen gedeelte van het gemeentelijk grondgebied.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+            </section>
+            <section id="global_class_JZV_Naam"><h4>Gegevensgroep   Naam</h4>
+               <table style="width: 100%;" class="overview OVERVIEW-COMPOSITION"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>Naam</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                        De verzameling van tot een persoon behorende gegevens waarmede deze (rechtens) aan het maatschappelijk verkeer deel neemt.
+                     </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr></tbody></table>
+               <h5>Overzicht attributen  </h5>
+                  <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 50%;"></colgroup><colgroup style="width: 10%;"></colgroup><colgroup style="width: 10%;"></colgroup><tbody><tr><th scope="col">Attribuutnaam</th><th scope="col">Definitie</th><th scope="col">Formaat</th><th scope="col">Card</th></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Naam_voornamen">voornamen</a>
+                        </td><td>De verzameling namen die, gescheiden door spaties, aan de geslachtsnaam voorafgaat. Indien aanwezig, wordt het predicaat (tabel 38) afgesplitst.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Naam_voorvoegsel">voorvoegsel</a>
+                        </td><td>Dat deel van de geslachtsnaam dat voorkomt in Tabel 36, Voorvoegseltabel en, gescheiden door een spatie, voorafgaat aan de rest van de geslachtsnaam.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr><tr><td>- 
+                           <a class="link" href="#detail_attribute_JZV_Naam_geslachtsnaam">geslachtsnaam</a>
+                        </td><td>De (geslachts)naam waarvan de eventueel aanwezige voorvoegsels (tabel 36) en adellijke titel/predicaat (tabel 38) zijn afgesplitst.</td><td>
+                           <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                        </td><td>1</td></tr></tbody></table>
+               
+            </section>
+         </section><section><h3>Attribuut- en relatiesoort details  </h3>
+            <section><h4>Objecttype details  </h4>
+               <section id="detail_class_JZV_Actie"><h5>   Actie</h5>
+                  <section id="detail_attribute_JZV_Actie_id"><h6>Attribuutsoort details  <a href="#global_class_JZV_Actie">Actie</a> id</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>id</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De unieke identificatie van de actie.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td>
+                              20251001
+                           </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Ja</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Actie_omschrijving"><h6>Attribuutsoort details  <a href="#global_class_JZV_Actie">Actie</a> omschrijving</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>omschrijving</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De omschrijving van de actie.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td>
+                              20251001
+                           </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Patroon</th><td>
+                              De verzameling van waarden die gegevens van deze attribuutsoort kunnen hebben, oftewel het waardenbereik, uitgedrukt in een specifieke structuur.
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>  </td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td> </td></tr><tr><th scope="row">Mogelijk geen waarde</th><td> </td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Actie_conditie"><h6>Attribuutsoort details  <a href="#global_class_JZV_Actie">Actie</a> conditie</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>conditie</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Een conditie waaraan dient te worden voldaan om de uitvoering van de actie te triggeren.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Actie_gremium"><h6>Attribuutsoort details  <a href="#global_class_JZV_Actie">Actie</a> gremium</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>gremium</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Het gremium waarin tot de actie is besloten.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Actie_idCasusoverleg"><h6>Attribuutsoort details  <a href="#global_class_JZV_Actie">Actie</a> id­Casusoverleg</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>id­Casusoverleg</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Het id van het casusoverleg waarin tot de actie is besloten.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_association_JZV_Actie_belegdBij"><h6>Relatiesoort details  <a href="#global_class_JZV_Actie">Actie</a> belegd­Bij</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>belegd­Bij</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td> </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Gerelateerd objecttype</th><td>
+                              <a class="link" href="#global_class_JZV_Organisatie">Organisatie</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr></tbody></table>
+                     
+                  </section>
+               </section>
+               <section id="detail_class_JZV_Besluit"><h5>   Besluit</h5>
+                  <section id="detail_attribute_JZV_Besluit_id"><h6>Attribuutsoort details  <a href="#global_class_JZV_Besluit">Besluit</a> id</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>id</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De unieke identificatie van het besluit.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Ja</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Besluit_omschrijving"><h6>Attribuutsoort details  <a href="#global_class_JZV_Besluit">Besluit</a> omschrijving</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>omschrijving</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De omschrijving van het besluit.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Besluit_gremium"><h6>Attribuutsoort details  <a href="#global_class_JZV_Besluit">Besluit</a> gremium</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>gremium</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Het gremium waarin het besluit is genomen.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Besluit_idCasusoverleg"><h6>Attribuutsoort details  <a href="#global_class_JZV_Besluit">Besluit</a> id­Casusoverleg</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>id­Casusoverleg</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Het id van het casusoverleg waarin het besluit is genomen.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+               </section>
+               <section id="detail_class_JZV_Betrokkene"><h5>   Betrokkene</h5>
+                  <section id="detail_attribute_JZV_Betrokkene_burgerservicenummer"><h6>Attribuutsoort details  <a href="#global_class_JZV_Betrokkene">Betrokkene</a> burgerservicenummer</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>burgerservicenummer</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Het burgerservicenummer van de betrokkene. 
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Formeel patroon</th><td>^[1-9]\d{8}$</td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Ja</td></tr></tbody></table>
+                  </section>
+               </section>
+               <section id="detail_class_JZV_Casusoverleg"><h5>   Casusoverleg</h5>
+                  <section id="detail_attribute_JZV_Casusoverleg_id"><h6>Attribuutsoort details  <a href="#global_class_JZV_Casusoverleg">Casusoverleg</a> id</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>id</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De unieke identificatie van het casusoverleg.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td>
+                              20251001
+                           </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Ja</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Casusoverleg_datum"><h6>Attribuutsoort details  <a href="#global_class_JZV_Casusoverleg">Casusoverleg</a> datum</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>datum</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De datum waarop het casusoverleg heeft plaatsgevonden.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td>
+                              20251001
+                           </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Date</a>
+                           </td></tr><tr><th scope="row">Patroon</th><td>
+                              De verzameling van waarden die gegevens van deze attribuutsoort kunnen hebben, oftewel het waardenbereik, uitgedrukt in een specifieke structuur.
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>  </td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td> </td></tr><tr><th scope="row">Mogelijk geen waarde</th><td> </td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Casusoverleg_startTijd"><h6>Attribuutsoort details  <a href="#global_class_JZV_Casusoverleg">Casusoverleg</a> start­Tijd</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>start­Tijd</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De starttijd van het casusoverleg. 
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              Time
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Casusoverleg_eindTijd"><h6>Attribuutsoort details  <a href="#global_class_JZV_Casusoverleg">Casusoverleg</a> eind­Tijd</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>eind­Tijd</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De eindtijd van het casusoverleg.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              Time
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Casusoverleg_notulen"><h6>Attribuutsoort details  <a href="#global_class_JZV_Casusoverleg">Casusoverleg</a> notulen</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>notulen</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De notulen van het casusoverleg. 
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_association_JZV_Casusoverleg_betreft"><h6>Relatiesoort details  <a href="#global_class_JZV_Casusoverleg">Casusoverleg</a> betreft</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>betreft</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td> </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Gerelateerd objecttype</th><td>
+                              <a class="link" href="#global_class_JZV_Zaak">Zaak</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>  </td></tr><tr><th scope="row">Mogelijk geen waarde</th><td> </td></tr></tbody></table>
+                     
+                  </section>
+               </section>
+               <section id="detail_class_JZV_Zaak"><h5>   Zaak</h5>
+                  <section id="detail_attribute_JZV_Zaak_id"><h6>Attribuutsoort details  <a href="#global_class_JZV_Zaak">Zaak</a> id</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>id</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De unieke identificatie van de zaak.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Ja</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Zaak_startDatum"><h6>Attribuutsoort details  <a href="#global_class_JZV_Zaak">Zaak</a> start­Datum</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>start­Datum</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De datum waarop de zaak is gestart.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Date</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_association_JZV_Zaak_heeftNevenbetrokkene"><h6>Relatiesoort details  <a href="#global_class_JZV_Zaak">Zaak</a> heeft­Nevenbetrokkene</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>heeft­Nevenbetrokkene</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td> </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Gerelateerd objecttype</th><td>
+                              <a class="link" href="#global_class_JZV_Betrokkene">Betrokkene</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>0 .. *</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr></tbody></table>
+                     
+                  </section>
+                  <section id="detail_association_JZV_Zaak_heeftActie"><h6>Relatiesoort details  <a href="#global_class_JZV_Zaak">Zaak</a> heeft­Actie</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>heeft­Actie</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td> </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Gerelateerd objecttype</th><td>
+                              <a class="link" href="#global_class_JZV_Actie">Actie</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>0 .. *</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr></tbody></table>
+                     
+                  </section>
+                  <section id="detail_association_JZV_Zaak_heeftBesluit"><h6>Relatiesoort details  <a href="#global_class_JZV_Zaak">Zaak</a> heeft­Besluit</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>heeft­Besluit</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td> </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Gerelateerd objecttype</th><td>
+                              <a class="link" href="#global_class_JZV_Besluit">Besluit</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>0 .. *</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr></tbody></table>
+                     
+                  </section>
+                  <section id="detail_association_JZV_Zaak_heeftHoofdbetrokkene"><h6>Relatiesoort details  <a href="#global_class_JZV_Zaak">Zaak</a> heeft­Hoofdbetrokkene</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>heeft­Hoofdbetrokkene</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td> </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Gerelateerd objecttype</th><td>
+                              <a class="link" href="#global_class_JZV_Betrokkene">Betrokkene</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr></tbody></table>
+                     
+                  </section>
+               </section>
+               <section id="detail_class_JZV_Organisatie"><h5>   Organisatie</h5>
+                  <section id="detail_attribute_JZV_Organisatie_oIN"><h6>Attribuutsoort details  <a href="#global_class_JZV_Organisatie">Organisatie</a> OIN</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>OIN</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Het OIN (Organisatieidentificatienummer) van de organisatie. 
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Ja</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Organisatie_naam"><h6>Attribuutsoort details  <a href="#global_class_JZV_Organisatie">Organisatie</a> naam</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>naam</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De naam van de organisatie.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td> </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+               </section>
+            </section>
+            <section><h4>Gegevensgroeptype details  </h4>
+               <section id="detail_class_JZV_Adres"><h5>Gegevensgroeptype   Adres</h5>
+                  <section id="detail_attribute_JZV_Adres_straatnaam"><h6>Attribuutsoort details  <a href="#global_class_JZV_Adres">Adres</a> straatnaam</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>straatnaam</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De officiële straatnaam zoals door het gemeentebestuur is vastgesteld dan wel een kopie van de inhoud van element 11.15 Naam openbare ruimte, indien noodzakelijk afgekort volgens de NEN-5825 [2002] norm. 
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td>
+                              Logisch Ontwerp BRP
+                           </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Lengte</th><td>1..24</td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Adres_huisnummer"><h6>Attribuutsoort details  <a href="#global_class_JZV_Adres">Adres</a> huisnummer</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>huisnummer</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De numerieke aanduiding zoals deze door het gemeentebestuur aan het object is toegekend dan wel een door of namens het bevoegde gemeentelijke orgaan ten aanzien van een adresseerbaar object toegekende nummering.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td>
+                              Logisch Ontwerp BRP
+                           </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Integer</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Adres_postcode"><h6>Attribuutsoort details  <a href="#global_class_JZV_Adres">Adres</a> postcode</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>postcode</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De door de Post­NL vastgestelde code behorend bij de straatnaam en het huisnummer dan wel de door Post­NL vastgestelde code behorende bij een bepaalde combinatie van een naam openbare ruimte en een huisnummer.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td>
+                              Logisch Ontwerp BRP
+                           </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Formeel patroon</th><td>^[1-9][0-9]{3}\s[A-Z]{2}$</td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Adres_plaats"><h6>Attribuutsoort details  <a href="#global_class_JZV_Adres">Adres</a> plaats</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>plaats</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Een woonplaatsnaam is de naam van een door het bevoegde gemeentelijke orgaan als zodanig aangewezen gedeelte van het gemeentelijk grondgebied.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td>
+                              Logisch ontwerp BRP
+                           </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+               </section>
+               <section id="detail_class_JZV_Naam"><h5>Gegevensgroeptype   Naam</h5>
+                  <section id="detail_attribute_JZV_Naam_voornamen"><h6>Attribuutsoort details  <a href="#global_class_JZV_Naam">Naam</a> voornamen</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>voornamen</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De verzameling namen die, gescheiden door spaties, aan de geslachtsnaam voorafgaat. Indien aanwezig, wordt het predicaat (tabel 38) afgesplitst.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td>
+                              Logisch Ontwerp BRP
+                           </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Lengte</th><td>1..200</td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Naam_voorvoegsel"><h6>Attribuutsoort details  <a href="#global_class_JZV_Naam">Naam</a> voorvoegsel</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>voorvoegsel</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              Dat deel van de geslachtsnaam dat voorkomt in Tabel 36, Voorvoegseltabel en, gescheiden door een spatie, voorafgaat aan de rest van de geslachtsnaam.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td>
+                              Logisch Ontwerp BRP
+                           </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Lengte</th><td>1..10</td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+                  <section id="detail_attribute_JZV_Naam_geslachtsnaam"><h6>Attribuutsoort details  <a href="#global_class_JZV_Naam">Naam</a> geslachtsnaam</h6>
+                     <table style="width: 100%;"><colgroup style="width: 30%;"></colgroup><colgroup style="width: 70%;"></colgroup><tbody><tr><th scope="row">Naam</th><td>geslachtsnaam</td></tr><tr><th scope="row">Herkomst</th><td> </td></tr><tr><th scope="row">Definitie</th><td>
+                              De (geslachts)naam waarvan de eventueel aanwezige voorvoegsels (tabel 36) en adellijke titel/predicaat (tabel 38) zijn afgesplitst.
+                           </td></tr><tr><th scope="row">Herkomst definitie</th><td>
+                              Logisch Ontwerp BRP
+                           </td></tr><tr><th scope="row">Datum opname</th><td> </td></tr><tr><th scope="row">Formaat</th><td>
+                              <a class="external-link" href="https://docs.geostandaarden.nl/mim/def-st-mim-20220217/#primitive-datatypes">Character­String</a>
+                           </td></tr><tr><th scope="row">Lengte</th><td>1..200</td></tr><tr><th scope="row">Indicatie kardinaliteit</th><td>1</td></tr><tr><th scope="row">Indicatie authentiek</th><td>Authentiek</td></tr><tr><th scope="row">Indicatie afleidbaar</th><td>Zie package</td></tr><tr><th scope="row">Indicatie classificerend</th><td>Nee</td></tr><tr><th scope="row">Mogelijk geen waarde</th><td>Nee</td></tr><tr><th scope="row">Indicatie identificerend</th><td>Nee</td></tr></tbody></table>
+                  </section>
+               </section>
+            </section>
+            
+            
+            
+            
+         </section></section>
