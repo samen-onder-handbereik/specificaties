@@ -1,37 +1,4 @@
 <section id="uitwisselen-uitkomst-overleg">
   <h2>Uitwisselen Uitkomst Overleg</h2>
   <p> </p>
-<h2>Protocol</h2>
-<h3>Uitwisseling 1: Beschikbaar stellen Uitkomst Overleg</h3>
-<p>Voorzitter -&gt; KETENINDEX</p>
-<p>Hierbij stel ik beschikbaar uit het casusoverleg, m.b.t. hoofdbetrokkene de referentie (verwijzing) naar de uitkomst overleg.</p>
-<p>&nbsp;</p>
-<p>Samenwerkpatroon: <strong>Opdracht Leveren</strong> &ldquo;Uitkomst Overleg Beschikbaar delen&rdquo; + <strong>Gebeurtenis Melden &ldquo;</strong>Uitkomst Overleg Beschikbaar gedeeld&rdquo;<strong>, &nbsp;</strong>door Voorzitter</p>
-<p>Technisch patroon: <strong>Event</strong> &ldquo;Uitkomst Overleg Beschikbaar gedeeld&rdquo; met inzage URI delen, via <strong>Command</strong> naar Kentenindex &nbsp;API, door Voorzitter</p>
-<p>&nbsp;</p>
-<h3>Uitwisseling 2: Opvragen gebeurtenis Uitkomst</h3>
-<p>KETENINDEX &lt;- Deelnemer</p>
-<p>&nbsp;</p>
-<p>Samenwerkpatroon: <strong>Gebeurtenis Ontvangen</strong> &ldquo;Query Uitkomst Overleg Beschikbaar events&rdquo;, door Deelnemer</p>
-<p>Technisch patroon: <strong>Event</strong> &ldquo;Uitkomst Overleg Beschikbaar gedeeld&rdquo; opvragen, via <strong>Query</strong> naar Ketenindex &nbsp;API, door Deelnemer</p>
-<p>&nbsp;</p>
-<h3>Uitwisseling 3: Inzage/Inzien in de Gebeurtenis uitkomst</h3>
-<p>Voorzitter &lt;- Deelnemer</p>
-<p>Hierbij kunt u als deelnemer inzien uit het casusoverleg, m.b.t.</p>
-<p>hoofdbetrokkene en nevenbetrokkenen, het verslag met mijn referentie:</p>
-<p>de notulen, gemaakte (conditionele) afspraken en besluiten. De direct</p>
-<p>betrokken zijn wel/niet ge&iuml;nformeerd over deze uitkomst vanwege</p>
-<p>onderbouwing.</p>
-<p>&nbsp;</p>
-<p><em>request</em></p>
-<p>Samenwerkpatroon: <strong>Inzage Verzoek</strong> &ldquo;Uitkomst Overleg Inzien&rdquo; + <strong>Gebeurtenis Melden</strong> &ldquo;Inzage verzoek gedaan&rdquo;, door Deelnemer</p>
-<p>Technisch patroon: <strong>Query</strong> naar API van systeem voorzitter + <strong>Event</strong> &ldquo;Inzage verzoek gedaan&rdquo; delen, via <strong>Command</strong> naar Kentenindex &nbsp;API, door Deelnemer &nbsp;</p>
-<p>&nbsp;</p>
-<p><em>Response</em></p>
-<p>Samenwerkpatroon: <strong>Inzage Leveren</strong> &ldquo;Uitkomst Overleg Leveren&rdquo; + <strong>Gebeurtenis Melden&nbsp;</strong>&ldquo;Inzage verzoek Uitkomst Overleg geleverd&rdquo;<strong>,</strong> door systeem Voorzitter</p>
-<p>Technisch patroon: <strong>Query</strong>, via 200 response met daarbij de inhoud Uitkomst Overleg + <strong>Event</strong> &ldquo;Inzage verzoek geleverd&rdquo; delen, via <strong>Command</strong> naar Kentenindex &nbsp;API, door systeem Voorzitter</p>
-<p><em>&nbsp;</em></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>  
 </section>
