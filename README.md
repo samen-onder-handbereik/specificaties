@@ -7,5 +7,3 @@ De specificaties op deze site zijn onderdeel van het Samen onder Handbereik Afsp
 ### Implementatieinstructie
 Deze site geeft een meta beschrijving van het informatiemodel en de API's. Elke deelnemende organisatie realiseert de Samenwerkfuncties, Samenwerkpatronen, het Informatiemodel en API's zoals gespecificeert en publiceert de eigen API's en de informatie daarvan in het eigen API Management DevPortal. De versionering en de beschikbaarbaarheid van de huidige versie en de ondersteuning van de vorige versie volgt daarbij de afpraken zoals gemaakt binnen het [Afsprakenstelsel](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-30-afspraken.html).
 
-## testh2
-### testh3
