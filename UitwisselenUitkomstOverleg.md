@@ -1,6 +1,4 @@
-# Uitwisselen Uitkomst Overleg
-
-## Protocol 
+## Protocol
 
 ### Uitwisseling 1: Beschikbaar stellen Uitkomst Overleg
 
