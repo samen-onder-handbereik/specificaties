@@ -15,7 +15,7 @@ _Opmerking: Als de genoemde samenwerkfunctie nog niet in de vorm van een verwijz
 - Opstellen Analyse & Advies
 - Inzien en Deelnemen door de Burger
 - Overleggen over de Casus
-- [Uitwisselen Uitkomst Overleg](https://samen-onder-handbereik.github.io/specificaties/#catuuo)
+- [Uitwisselen Uitkomst Overleg](https://samen-onder-handbereik.github.io/specificaties/#cat)
 - Opstellen en Regisseren Plan
 - Uitvoeren Actie
 - Nazorg en Afsluiten Casus
