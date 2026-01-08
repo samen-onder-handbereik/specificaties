@@ -45,7 +45,3 @@ _Response_
 Samenwerkpatroon: **Inzage Leveren** “Uitkomst Overleg Leveren” + **Gebeurtenis Melden** “Inzage verzoek Uitkomst Overleg geleverd”**,** door systeem Voorzitter
 
 Technisch patroon: **Query**, via 200 response met daarbij de inhoud Uitkomst Overleg + **Event** “Inzage verzoek geleverd” delen, via **Command** naar Kentenindex  API, door systeem Voorzitter
-
-## API's
-Hier komen de verwijzingen naar de yaml files.
-
