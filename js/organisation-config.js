@@ -28,7 +28,7 @@ var organisationConfig = {
    latestVersion: ["nl_organisationPublishURL"],
    thisVersion: ["nl_organisationPublishURL"],
    prevVersion: ["nl_organisationPublishURL"],
-// ???
+// ????
 
 
     useLogo: true,
