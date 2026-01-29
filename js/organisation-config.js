@@ -26,7 +26,7 @@ var organisationConfig = {
    // thisVersion: ["nl_organisationPublishURL", "pubDomain", "/", "shortName", "/", "publishVersion"],
    // prevVersion: ["nl_organisationPublishURL", "pubDomain", "/", "shortName", "/", "previousPublishVersion"],
    latestVersion: ["nl_organisationPublishURL"],
-   //thisVersion: ["nl_organisationPublishURL"],
+   thisVersion: ["nl_organisationPublishURL"],
    prevVersion: ["nl_organisationPublishURL"],
 // ????
 
