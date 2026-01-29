@@ -28,7 +28,11 @@ var organisationConfig = {
    latestVersion: ["nl_organisationPublishURL"],
    thisVersion: ["nl_organisationPublishURL"],
    prevVersion: ["nl_organisationPublishURL"],
+<<<<<<< HEAD
 // ????
+=======
+// ?
+>>>>>>> 790ff27 (Edit3)
 
 
     useLogo: true,
