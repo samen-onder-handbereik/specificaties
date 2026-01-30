@@ -1,4 +1,4 @@
-# Overzicht met verwijzingen
+# Overzicht en verwijzingen
 Om eenvoudig en snel door de specificaties gerelateerd aan de verschillende samenwerkfuncties te kunnen bladeren is hieronder een overzicht met links opgenomen.
 
 ## Stelselvoorzieningen
