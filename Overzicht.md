@@ -2,12 +2,12 @@
 Om eenvoudig en snel door de specificaties gerelateerd aan de verschillende samenwerkfuncties te kunnen bladeren is hieronder een overzicht met links opgenomen.
 
 ## Stelselvoorzieningen
-Zie volgende [hoofdstuk](https://samen-onder-handbereik.github.io/specificaties/#secsv).
+Zie volgende [hoofdstuk](#secsv).
 
 ## Samenwerkfuncties
-_Opmerking: Als de genoemde samenwerkfunctie nog niet in de vorm van een verwijzing is weergegeven, dan wordt aan de uitwerking van de specificaties nog gewerkt en zijn deze nog niet gepubliceert._
+_Opmerking: Als de genoemde samenwerkfunctie nog niet in de vorm van een verwijzing is weergegeven, dan wordt aan de uitwerking van de specificaties nog gewerkt en zijn deze nog niet gepubliceerd._
 
-- Uitwisselen Melding
+- **Uitwisselen Melding**, [Protocol](#mldsub), [Gegevensdefinitie](#mldsub-cat)
 - Vaststellen Identiteit en Relatie(s)
 - Bepalen Bekendheid en Verrijking
 - Werken aan Preventie
@@ -15,11 +15,10 @@ _Opmerking: Als de genoemde samenwerkfunctie nog niet in de vorm van een verwijz
 - Opstellen Analyse & Advies
 - Inzien en Deelnemen door de Burger
 - Overleggen over de Casus
-- **Uitwisselen Uitkomst Overleg**, [Protocol](https://samen-onder-handbereik.github.io/specificaties/#subuuo), [Gegevensdefinitie](https://samen-onder-handbereik.github.io/specificaties/#catuo)
+- **Uitwisselen Uitkomst Overleg**, [Protocol](#uuosub), [Gegevensdefinitie](#uuosub-cat)
 - Opstellen en Regisseren Plan
 - Uitvoeren Actie
 - Nazorg en Afsluiten Casus
-
-- Uitwisselen beschikbare dienste
+- Uitwisselen beschikbare diensten
 - Inrichten en bijsturen samenwerking
 - Monitoring kwaliteit en effectiviteit
