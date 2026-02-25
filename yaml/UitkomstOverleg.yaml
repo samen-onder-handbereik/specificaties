@@ -1,0 +1,885 @@
+openapi: 3.0.1
+info:
+  title: JZV - Uitkomst Overleg
+  description: |-
+    Deze specificatie beschrijft de API *Uitkomst Overleg*.
+
+    N.B. De specificatie is gegenereerd vanuit een informatiemodel dan nog in bewerking is. Het model en de op basis van dit model verkregen OpenAPI-specificatie zijn daarom zeer zeker nog niet 'in beton gegoten'. Suggesties voor aanpassingen en uitbreidingen worden verwelkomd.
+  version: "0.1"
+tags:
+- name: Actie
+  description: |-
+    Een handeling die door een (medewerker van een) organisatie uitgevoerd dient te worden.
+
+    Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cfbb3c22-2d0b-9be9-c25f-56752f598046) voor meer informatie.
+- name: Besluit
+  description: |-
+    Een na overweging of beraadslaging vastgestelde beslissing van een overheidsorgaan voor een individueel of concreet geval.
+
+    Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#:~:text=te%20nemen%20Beslissing-,Besluit,-voorkeursterm) voor meer informatie.
+- name: Casusoverleg
+  description: |-
+    Een periodiek beraad waarbij meerdere bij de zaak betrokken organisaties in een samenwerking samenwerken.
+
+    Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#casusoverleg:~:text=digitaal%20is%20opgeslagen.-,Casusoverleg,-voorkeursterm) voor meer informatie.
+- name: Zaak
+  description: |-
+    Een samenhangende hoeveelheid werk met een welgedefinieerde aanleiding en een welgedefinieerd eindresultaat, waarvan kwaliteit en doorlooptijd bewaakt moeten worden.
+
+    Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#zaak:~:text=artikel%209%3A28-,Zaak,-voorkeursterm) voor meer informatie.
+paths:
+  /v1/actie:
+    get:
+      tags:
+      - Actie
+      summary: Retourneert de lijst van alle Actie objecten
+      description: Retourneert een gepagineerde lijst van alle Actie objecten
+      operationId: haalAlleActieOp
+      parameters:
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/page
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/pageSize
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/sortField
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GepagineerdActieLijst"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/actie/{id}:
+    get:
+      tags:
+      - Actie
+      summary: Retourneert een Actie object op basis van zijn unieke identificatie
+      description: Retourneert een individueel Actie object op basis van zijn unieke
+        identificatie
+      operationId: haalActieOp
+      parameters:
+      - name: id
+        in: path
+        description: Actie ID
+        required: true
+        schema:
+          type: string
+        example: 123
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Actie"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "404":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/404
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/besluit:
+    get:
+      tags:
+      - Besluit
+      summary: Retourneert de lijst van alle Besluit objecten
+      description: Retourneert een gepagineerde lijst van alle Besluit objecten
+      operationId: haalAlleBesluitOp
+      parameters:
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/page
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/pageSize
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/sortField
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GepagineerdBesluitLijst"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/besluit/{id}:
+    get:
+      tags:
+      - Besluit
+      summary: Retourneert een Besluit object op basis van zijn unieke identificatie
+      description: Retourneert een individueel Besluit object op basis van zijn unieke
+        identificatie
+      operationId: haalBesluitOp
+      parameters:
+      - name: id
+        in: path
+        description: Besluit ID
+        required: true
+        schema:
+          type: string
+        example: 123
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Besluit"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "404":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/404
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/casusoverleg:
+    get:
+      tags:
+      - Casusoverleg
+      summary: Retourneert de lijst van alle Casusoverleg objecten
+      description: Retourneert een gepagineerde lijst van alle Casusoverleg objecten
+      operationId: haalAlleCasusoverlegOp
+      parameters:
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/page
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/pageSize
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/sortField
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GepagineerdCasusoverlegLijst"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/casusoverleg/{id}:
+    get:
+      tags:
+      - Casusoverleg
+      summary: Retourneert een Casusoverleg object op basis van zijn unieke identificatie
+      description: Retourneert een individueel Casusoverleg object op basis van zijn
+        unieke identificatie
+      operationId: haalCasusoverlegOp
+      parameters:
+      - name: id
+        in: path
+        description: Casusoverleg ID
+        required: true
+        schema:
+          type: string
+        example: 123
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Casusoverleg"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "404":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/404
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/zaak:
+    get:
+      tags:
+      - Zaak
+      summary: Retourneert de lijst van alle Zaak objecten
+      description: Retourneert een gepagineerde lijst van alle Zaak objecten
+      operationId: haalAlleZaakOp
+      parameters:
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/page
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/pageSize
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/sortField
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GepagineerdZaakLijst"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/zaak/{id}:
+    get:
+      tags:
+      - Zaak
+      summary: Retourneert een Zaak object op basis van zijn unieke identificatie
+      description: Retourneert een individueel Zaak object op basis van zijn unieke
+        identificatie
+      operationId: haalZaakOp
+      parameters:
+      - name: id
+        in: path
+        description: Zaak ID
+        required: true
+        schema:
+          type: string
+        example: 123
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Zaak"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "404":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/404
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+components:
+  schemas:
+    Actie:
+      required:
+      - belegdBij
+      - conditie
+      - heeftBetrekkingOp
+      - id
+      - idCasusoverleg
+      - omschrijving
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        id:
+          type: string
+          description: De unieke identificatie van de actie.
+        omschrijving:
+          type: string
+          description: De omschrijving van de actie.
+        conditie:
+          type: string
+          description: Een conditie waaraan dient te worden voldaan om de uitvoering
+            van de actie te triggeren.
+        idCasusoverleg:
+          type: string
+          description: Het id van het casusoverleg waarin tot de actie is besloten.
+        heeftBetrekkingOp:
+          $ref: "#/components/schemas/Betrokkene"
+        belegdBij:
+          $ref: "#/components/schemas/Organisatie"
+      description: |-
+        Een handeling die door een (medewerker van een) organisatie uitgevoerd dient te worden.
+
+        Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cfbb3c22-2d0b-9be9-c25f-56752f598046) voor meer informatie.
+      nullable: true
+    Adres:
+      required:
+      - huisnummer
+      - id
+      - plaats
+      - postcode
+      - straatnaam
+      - url
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        straatnaam:
+          maxLength: 24
+          minLength: 1
+          type: string
+          description: "De officiële straatnaam zoals door het gemeentebestuur is\
+            \ vastgesteld dan wel een kopie van de inhoud van element 11.15 Naam openbare\
+            \ ruimte, indien noodzakelijk afgekort volgens de NEN-5825 [2002] norm."
+        huisnummer:
+          type: integer
+          description: De numerieke aanduiding zoals deze door het gemeentebestuur
+            aan het object is toegekend dan wel een door of namens het bevoegde gemeentelijke
+            orgaan ten aanzien van een adresseerbaar object toegekende nummering.
+          format: int32
+        postcode:
+          pattern: "^[1-9][0-9]{3}\\s[A-Z]{2}$"
+          type: string
+          description: De door de PostNL vastgestelde code behorend bij de straatnaam
+            en het huisnummer dan wel de door PostNL vastgestelde code behorende bij
+            een bepaalde combinatie van een naam openbare ruimte en een huisnummer.
+        plaats:
+          type: string
+          description: Een woonplaatsnaam is de naam van een door het bevoegde gemeentelijke
+            orgaan als zodanig aangewezen gedeelte van het gemeentelijk grondgebied.
+      description: "Een aanduiding van een bepaalde locatie, doorgaans van een woning,\
+        \ gebouw of faciliteit."
+    Betrokkene:
+      required:
+      - adres
+      - burgerservicenummer
+      - naam
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        burgerservicenummer:
+          pattern: "^[1-9]\\d{8}$"
+          type: string
+          description: Het burgerservicenummer van de betrokkene.
+        naam:
+          $ref: "#/components/schemas/Naam"
+        adres:
+          $ref: "#/components/schemas/Adres"
+      description: |-
+        Een natuurlijk of niet-natuurlijk persoon die het onderwerp is van een zaak of die een uitvoerende rol speelt in een zaak.
+
+        Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cf8a64b4-f3e7-2613-4888-90e09e2b3a17) voor meer informatie.
+    Naam:
+      required:
+      - geslachtsnaam
+      - id
+      - url
+      - voornamen
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        voornamen:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: "De verzameling namen die, gescheiden door spaties, aan de\
+            \ geslachtsnaam voorafgaat. Indien aanwezig, wordt het predicaat (tabel\
+            \ 38) afgesplitst."
+        voorvoegsel:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "Dat deel van de geslachtsnaam dat voorkomt in Tabel 36, Voorvoegseltabel\
+            \ en, gescheiden door een spatie, voorafgaat aan de rest van de geslachtsnaam."
+          nullable: true
+        geslachtsnaam:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: De (geslachts)naam waarvan de eventueel aanwezige voorvoegsels
+            (tabel 36) en adellijke titel/predicaat (tabel 38) zijn afgesplitst.
+      description: De verzameling van tot een persoon behorende gegevens waarmede
+        deze (rechtens) aan het maatschappelijk verkeer deel neemt.
+    Organisatie:
+      required:
+      - naam
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        naam:
+          type: string
+          description: De naam van de organisatie.
+        oin:
+          type: string
+      description: |-
+        Een instelling of instantie die werkzaamheden uitvoert op het gebied van het sociaal domein of aanpalende domeinen.
+
+        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#organisatie:~:text=van%20een%20Plan.-,Organisatie,-voorkeursterm) voor meer informatie.
+    GepagineerdActieLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Actie"
+    GepagineerdBase:
+      required:
+      - pagina
+      - paginaGrootte
+      type: object
+      properties:
+        pagina:
+          minimum: 1
+          type: integer
+          description: Huidig paginanummer
+          format: int32
+        paginaGrootte:
+          maximum: 100
+          type: integer
+          description: Aantal objecten per pagina
+          format: int32
+        totaalAantal:
+          minimum: 0
+          type: integer
+          description: Totaal aantal beschikbare objecten
+          format: int32
+          nullable: true
+        sorteer:
+          type: string
+          description: Komma gescheiden lijst van velden waarop gesorteerd moet worden.
+            Door een minteken (-) voor de veldnaam te zetten wordt het veld in aflopende
+            sorteervolgorde gesorteerd.
+          example: "name,-geboorteDatum"
+        volgende:
+          type: string
+          description: Link naar de volgende pagina
+          format: uri
+          nullable: true
+          example: "http://mijn-api.org/api/v1/klanten/?pagina=4&paginaGrootte=10&sorteer=name,-geboorteDatum"
+        vorige:
+          type: string
+          description: Link naar de vorige pagina
+          format: uri
+          nullable: true
+          example: "http://mijn-api.org/api/v1/klanten/?pagina=2&paginaGrootte=10&sorteer=name,-geboorteDatum"
+      description: Basis schema voor gepagineerde resultaten
+    Besluit:
+      required:
+      - id
+      - idCasusoverleg
+      - omschrijving
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        id:
+          type: string
+          description: De unieke identificatie van het besluit.
+        omschrijving:
+          type: string
+          description: De omschrijving van het besluit.
+        idCasusoverleg:
+          type: string
+          description: Het id van het casusoverleg waarin het besluit is genomen.
+      description: |-
+        Een na overweging of beraadslaging vastgestelde beslissing van een overheidsorgaan voor een individueel of concreet geval.
+
+        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#:~:text=te%20nemen%20Beslissing-,Besluit,-voorkeursterm) voor meer informatie.
+      nullable: true
+    GepagineerdBesluitLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Besluit"
+    Casusoverleg:
+      required:
+      - betreft
+      - datum
+      - eindTijd
+      - id
+      - notulen
+      - startTijd
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        id:
+          type: string
+          description: De unieke identificatie van het casusoverleg.
+        datum:
+          type: string
+          description: De datum waarop het casusoverleg heeft plaatsgevonden.
+          format: date
+        startTijd:
+          $ref: "#/components/schemas/Time"
+        eindTijd:
+          $ref: "#/components/schemas/Time"
+        notulen:
+          type: string
+          description: De notulen van het casusoverleg.
+        betreft:
+          $ref: "#/components/schemas/Zaak"
+      description: |-
+        Een periodiek beraad waarbij meerdere bij de zaak betrokken organisaties in een samenwerking samenwerken.
+
+        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#casusoverleg:~:text=digitaal%20is%20opgeslagen.-,Casusoverleg,-voorkeursterm) voor meer informatie.
+    GepagineerdCasusoverlegLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Casusoverleg"
+    Time:
+      required:
+      - id
+      - url
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+      description: De eindtijd van het casusoverleg.
+    Zaak:
+      required:
+      - id
+      - startDatum
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        id:
+          type: string
+          description: De unieke identificatie van de zaak.
+        startDatum:
+          type: string
+          description: De datum waarop de zaak is gestart.
+          format: date
+        heeftActie:
+          type: array
+          items:
+            $ref: "#/components/schemas/Actie"
+        heeftBesluit:
+          type: array
+          items:
+            $ref: "#/components/schemas/Besluit"
+      description: |-
+        Een samenhangende hoeveelheid werk met een welgedefinieerde aanleiding en een welgedefinieerd eindresultaat, waarvan kwaliteit en doorlooptijd bewaakt moeten worden.
+
+        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#zaak:~:text=artikel%209%3A28-,Zaak,-voorkeursterm) voor meer informatie.
+    GepagineerdZaakLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Zaak"
