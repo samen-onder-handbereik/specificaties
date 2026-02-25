@@ -1,0 +1,533 @@
+openapi: 3.0.1
+info:
+  title: JZV - Melding
+  description: |-
+    Deze specificatie beschrijft de API *Uitkomst Overleg*.
+
+    N.B. De specificatie is gegenereerd vanuit een informatiemodel dan nog in bewerking is. Het model en de op basis van dit model verkregen OpenAPI-specificatie zijn daarom zeer zeker nog niet 'in beton gegoten'. Suggesties voor aanpassingen en uitbreidingen worden verwelkomd.
+  version: "0.1"
+tags:
+- name: Melding
+  description: |-
+    Een officiële verstrekking van informatie waarin zorgen worden geuit over de veiligheid, gezondheid of ontwikkeling met betrekking tot een burger of gezin.
+
+    Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-51e517d3-b7fc-0591-65ce-8234e23de59e) voor meer informatie.
+paths:
+  /v1/melding:
+    get:
+      tags:
+      - Melding
+      summary: Retourneert de lijst van alle Melding objecten
+      description: Retourneert een gepagineerde lijst van alle Melding objecten
+      operationId: haalAlleMeldingOp
+      parameters:
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/page
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/pageSize
+      - $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-parameters.yaml#/components/parameters/sortField
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GepagineerdMeldingLijst"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+  /v1/melding/{id}:
+    get:
+      tags:
+      - Melding
+      summary: Retourneert een Melding object op basis van zijn unieke identificatie
+      description: Retourneert een individueel Melding object op basis van zijn unieke
+        identificatie
+      operationId: haalMeldingOp
+      parameters:
+      - name: id
+        in: path
+        description: Melding ID
+        required: true
+        schema:
+          type: string
+        example: 123
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Remaining
+              style: simple
+            Warning:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/Warning
+              style: simple
+            RateLimit-Reset:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Reset
+              style: simple
+            X-Pagination-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Limit
+              style: simple
+            X-Pagination-Page:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/X-Pagination-Page
+              style: simple
+            RateLimit-Limit:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/RateLimit-Limit
+              style: simple
+            API-Version:
+              $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-headers.yaml#/components/headers/API-Version
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Melding"
+        "400":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/400
+        "401":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/401
+        "403":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/403
+        "404":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/404
+        "405":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/405
+        "415":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/415
+        "429":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/429
+        "500":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/500
+        "503":
+          $ref: https://armatiek.github.io/imvertor-openapi-generator/openapi/common-responses.yaml#/components/responses/503
+components:
+  schemas:
+    Adres:
+      required:
+      - huisnummer
+      - id
+      - plaats
+      - postcode
+      - straatnaam
+      - url
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        straatnaam:
+          maxLength: 24
+          minLength: 1
+          type: string
+          description: "De officiële straatnaam zoals door het gemeentebestuur is\
+            \ vastgesteld dan wel een kopie van de inhoud van element 11.15 Naam openbare\
+            \ ruimte, indien noodzakelijk afgekort volgens de NEN-5825 [2002] norm."
+        huisnummer:
+          type: integer
+          description: De numerieke aanduiding zoals deze door het gemeentebestuur
+            aan het object is toegekend dan wel een door of namens het bevoegde gemeentelijke
+            orgaan ten aanzien van een adresseerbaar object toegekende nummering.
+          format: int32
+        postcode:
+          pattern: "^[1-9][0-9]{3}\\s[A-Z]{2}$"
+          type: string
+          description: De door de PostNL vastgestelde code behorend bij de straatnaam
+            en het huisnummer dan wel de door PostNL vastgestelde code behorende bij
+            een bepaalde combinatie van een naam openbare ruimte en een huisnummer.
+        plaats:
+          type: string
+          description: Een woonplaatsnaam is de naam van een door het bevoegde gemeentelijke
+            orgaan als zodanig aangewezen gedeelte van het gemeentelijk grondgebied.
+      description: "Een aanduiding van een bepaalde locatie, doorgaans van een woning,\
+        \ gebouw of faciliteit."
+    Betrokkene:
+      required:
+      - adres
+      - burgerservicenummer
+      - geslacht
+      - naam
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        burgerservicenummer:
+          pattern: "^[1-9]\\d{8}$"
+          type: string
+          description: Het burgerservicenummer van de betrokkene.
+        geslacht:
+          type: string
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "9"
+        naam:
+          $ref: "#/components/schemas/Naam"
+        adres:
+          $ref: "#/components/schemas/Adres"
+      description: |-
+        Een natuurlijk of niet-natuurlijk persoon die het onderwerp is van een zaak of die een uitvoerende rol speelt in een zaak.
+
+        Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cf8a64b4-f3e7-2613-4888-90e09e2b3a17) voor meer informatie.
+    Contact:
+      required:
+      - emailAdres
+      - id
+      - naam
+      - telefoonnummer
+      - url
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        naam:
+          type: string
+        emailAdres:
+          type: string
+        telefoonnummer:
+          type: string
+      description: Een bundeling van contactgegevens.
+    GepagineerdBase:
+      required:
+      - pagina
+      - paginaGrootte
+      type: object
+      properties:
+        pagina:
+          minimum: 1
+          type: integer
+          description: Huidig paginanummer
+          format: int32
+        paginaGrootte:
+          maximum: 100
+          type: integer
+          description: Aantal objecten per pagina
+          format: int32
+        totaalAantal:
+          minimum: 0
+          type: integer
+          description: Totaal aantal beschikbare objecten
+          format: int32
+          nullable: true
+        sorteer:
+          type: string
+          description: Komma gescheiden lijst van velden waarop gesorteerd moet worden.
+            Door een minteken (-) voor de veldnaam te zetten wordt het veld in aflopende
+            sorteervolgorde gesorteerd.
+          example: "name,-geboorteDatum"
+        volgende:
+          type: string
+          description: Link naar de volgende pagina
+          format: uri
+          nullable: true
+          example: "http://mijn-api.org/api/v1/klanten/?pagina=4&paginaGrootte=10&sorteer=name,-geboorteDatum"
+        vorige:
+          type: string
+          description: Link naar de vorige pagina
+          format: uri
+          nullable: true
+          example: "http://mijn-api.org/api/v1/klanten/?pagina=2&paginaGrootte=10&sorteer=name,-geboorteDatum"
+      description: Basis schema voor gepagineerde resultaten
+    GepagineerdMeldingLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Melding"
+    Incident:
+      required:
+      - datumTijd
+      - id
+      - locatie
+      - omschrijving
+      - periodeVanTot
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        id:
+          type: string
+        datumTijd:
+          type: string
+          description: De datum plus tijd waarop het incident plaatsvond.
+          format: date-time
+        locatie:
+          type: string
+          description: "Een aanduiding van de locatie, in vrije tekst."
+        omschrijving:
+          type: string
+          description: De omschrijving van de aard van het incident.
+        periodeVanTot:
+          $ref: "#/components/schemas/Periode"
+      description: |-
+        Een onverwachte verstorende of gevaar opleverende gedraging of gebeurtenis.
+
+        Zie deze [link]($inet://) voor meer informatie.
+      nullable: true
+    Informatie:
+      required:
+      - id
+      - omschrijving
+      - url
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          type: string
+          format: uri
+        omschrijving:
+          type: string
+      description: Een bundeling van informatie.
+    Melding:
+      required:
+      - contact
+      - datumTijd
+      - id
+      - overigeInformatie
+      - soort
+      - terugkoppelingGewenst
+      - url
+      - verzoek
+      - zorgelijkeSituatie
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        id:
+          type: string
+          description: De unieke identificatie van de melding.
+        soort:
+          type: string
+          description: "Aanduiding van het soort melding, aan de hand van een code\
+            \ uit een codelijst. Zie verder deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-b8c9ed6b-ef14-f31d-c328-0d7dfd100b0d)."
+          enum:
+          - NAZ
+          - VT
+          - ZVH
+        datumTijd:
+          type: string
+          description: "De datumtijd waarop de melding gedaan is. Zie verder deze\
+            \ [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-a7ca40a8-dadf-b893-1d47-a623e050b64d)."
+          format: date-time
+        verzoek:
+          type: string
+          description: Een verzoek aan de ontvanger van de melding.
+        terugkoppelingGewenst:
+          type: boolean
+          description: Aanduiding die aangeeft of de indiener van de melding een terugkoppeling
+            verwacht.
+        zorgelijkeSituatie:
+          $ref: "#/components/schemas/ZorgelijkeSituatie"
+        contact:
+          $ref: "#/components/schemas/Contact"
+        overigeInformatie:
+          $ref: "#/components/schemas/Informatie"
+        naarAanleidingVan:
+          type: array
+          items:
+            $ref: "#/components/schemas/Incident"
+        heeftBetrekkingOp:
+          type: array
+          items:
+            $ref: "#/components/schemas/Betrokkene"
+      description: |-
+        Een officiële verstrekking van informatie waarin zorgen worden geuit over de veiligheid, gezondheid of ontwikkeling met betrekking tot een burger of gezin.
+
+        Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-51e517d3-b7fc-0591-65ce-8234e23de59e) voor meer informatie.
+    Naam:
+      required:
+      - geslachtsnaam
+      - id
+      - url
+      - voornamen
+      - voorvoegsel
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        voornamen:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: "De verzameling namen die, gescheiden door spaties, aan de\
+            \ geslachtsnaam voorafgaat. Indien aanwezig, wordt het predicaat (tabel\
+            \ 38) afgesplitst."
+        voorvoegsel:
+          maxLength: 10
+          minLength: 1
+          type: string
+          description: "Dat deel van de geslachtsnaam dat voorkomt in Tabel 36, Voorvoegseltabel\
+            \ en, gescheiden door een spatie, voorafgaat aan de rest van de geslachtsnaam."
+        geslachtsnaam:
+          maxLength: 200
+          minLength: 1
+          type: string
+          description: De (geslachts)naam waarvan de eventueel aanwezige voorvoegsels
+            (tabel 36) en adellijke titel/predicaat (tabel 38) zijn afgesplitst.
+      description: De verzameling van tot een persoon behorende gegevens waarmede
+        deze (rechtens) aan het maatschappelijk verkeer deel neemt.
+    Periode:
+      required:
+      - datumTijdBegin
+      - datumTijdEinde
+      - id
+      - url
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        datumTijdBegin:
+          type: string
+          description: Het tijdstip op een bepaalde datum waarop de periode begint.
+          format: date-time
+        datumTijdEinde:
+          type: string
+          format: date-time
+      description: Een tijdsduur of een specifieke tijdspanne die begrensd is door
+        begin- en einddatum.
+    VraagAntwoord:
+      required:
+      - antwoord
+      - id
+      - url
+      - vraag
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        vraag:
+          type: string
+        antwoord:
+          type: string
+      description: "Een combinatie van een vraag en een antwoord, ter nadere verduidelijking\
+        \ van een gegeven entiteit."
+    ZorgelijkeSituatie:
+      required:
+      - id
+      - nadereOmschrijving
+      - situatieSchets
+      - url
+      - vraagAntwoord
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+          description: Unieke identificatie van de resource waarnaar verwezen wordt
+          readOnly: true
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        situatieSchets:
+          type: string
+          description: "Een beschrijving van de achtergrond, de context van de situatie."
+        nadereOmschrijving:
+          type: string
+          description: "Een nadere omschrijving van de situatie, in vrije tekst."
+        vraagAntwoord:
+          $ref: "#/components/schemas/VraagAntwoord"
+      description: Een situatie die aanleiding vormt voor het doen van een melding
+        aan een instantie in het sociale domein.

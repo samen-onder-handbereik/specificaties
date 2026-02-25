@@ -47,5 +47,5 @@ Samenwerkpatroon: **Inzage Leveren** “Uitkomst Overleg Leveren” + **Gebeurte
 Technisch patroon: **Query**, via 200 response met daarbij de inhoud Uitkomst Overleg + **Event** “Inzage verzoek geleverd” delen, via **Command** naar Kentenindex  API, door systeem Voorzitter
 
 ## API's
-Hier komen de verwijzingen naar de yaml files.
+De OpenAPI-specificatie van de API _Uitkomst Overleg_ is te downloaden via deze [link](yaml/UitkomstOverleg.yaml).
 
