@@ -49,3 +49,74 @@ Technisch patroon: **Query**, via 200 response met daarbij de inhoud Uitkomst Ov
 ## API's
 De OpenAPI-specificatie van de API _Uitkomst Overleg_ is te downloaden via deze [link](yaml/UitkomstOverleg.yaml).
 
+## CloudEvents
+
+### Doel en scope
+
+Deze samenwerkfunctie ondersteunt het beschikbaar stellen en raadplegen van de uitkomst van een gehouden casusoverleg tussen ketenpartners.
+
+De gebeurtenis ziet op het moment waarop:
+- de uitkomst van het casusoverleg formeel beschikbaar wordt gesteld;
+- een ketenpartner deze uitkomst raadpleegt.
+
+### Subject
+
+Binnen deze samenwerkfunctie verwijst het attribuut `subject` naar het betreffende casusoverleg.
+
+Structuur:
+
+```
+casusoverleg/<casusoverleg-id>
+```
+
+Hierbij is `<casusoverleg-id>` de unieke identificatie van het casusoverleg binnen het producerende systeem.
+
+Voorbeeld:
+
+```json
+"subject": "casusoverleg/123456789"
+```
+
+### Toegestane waarden voor `type`
+
+Binnen deze samenwerkfunctie zijn minimaal de volgende `type`-waarden toegestaan:
+
+#### 1. Uitkomst beschikbaar gesteld
+
+```json
+"type": "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
+```
+
+Betekenis:  
+De uitkomst van het casusoverleg is vastgesteld en beschikbaar gesteld voor ketenpartners.
+
+#### 2. Uitkomst ingezien
+
+```json
+"type": "uitwisselen-uitkomst-overleg.uitkomst-ingezien"
+```
+
+Betekenis:  
+De uitkomst van het casusoverleg is geraadpleegd door een ketenpartner.
+
+### Vulling van `data`
+
+De precieze structuur van het attribuut `data` verschilt per `type`.
+
+#### Bij `uitkomst-beschikbaar-gesteld`
+
+`data` bevat ten minste:
+- de inhoudelijke uitkomst (of een verwijzing daarnaar);
+- eventuele metadata zoals vaststellingsdatum;
+- indien van toepassing: een versienummer.
+
+#### Bij `uitkomst-ingezien`
+
+`data` bevat ten minste:
+- de identificatie (bijvoorbeeld OIN) van de raadplegende ketenpartner;
+- het tijdstip van inzage (indien afwijkend van `time`);
+- eventueel een technisch referentienummer.
+
+### Verdere uitwerking
+
+Indien een uitkomst wordt gewijzigd of ingetrokken, wordt dit via een afzonderlijk event binnen deze samenwerkfunctie gecommuniceerd. Eventuele aanvullende `type`-waarden worden in een latere versie van deze specificatie toegevoegd.
