@@ -76,19 +76,14 @@ Identificeert de bron van het event.
 - Bevat een stabiele, unieke identificatie van de producerende applicatie of organisatie.
 - Wordt vastgelegd als URI (hoeft niet resolvable te zijn).
 - Als basis wordt bij voorkeur het **OIN (Organisatie-identificatienummer)** gebruikt.
-- Binnen *Samen Onder Handbereik* wordt het OIN van de Justitiële Informatiedienst gebruikt:
 
-  ```
-  00000004000000002000
-  ```
+Structuurvoorbeeld:
 
-- Structuurvoorbeeld:
+```
+/oin/<oin>/systeem/<systeemnaam>
+```
 
-  ```
-  /oin/00000004000000002000/systeem/<systeemnaam>
-  ```
-
-- De `source` verandert niet per eventtype, maar per producerende applicatie of organisatorische bron.
+De `source` verandert niet per eventtype, maar per producerende applicatie of organisatorische bron.
 
 **Voorbeeld**
 
@@ -107,9 +102,9 @@ Geeft het type gebeurtenis aan.
 - Wordt vastgesteld per samenwerkfunctie.
 - Naamgeving volgens vast patroon:
 
-  ```
-  <samenwerkfunctie>.<gebeurtenis>
-  ```
+```
+<samenwerkfunctie>.<gebeurtenis>
+```
 
 - Gebruik lower-case en puntnotatie.
 - Geen versienummers in `type` (versiebeheer vindt plaats in `dataschema` of via governance).
@@ -147,9 +142,9 @@ Geeft het formaat van de payload (`data`) aan.
 
 - Standaardwaarde:
 
-  ```
-  application/json
-  ```
+```
+application/json
+```
 
 **Voorbeeld**
 
@@ -198,3 +193,34 @@ Bij de beschrijving van iedere samenwerkfunctie wordt een nadere specificatie op
 - de waarden die voor het attribuut `type` gebruikt mogen worden;
 - welke entiteit als `subject` wordt aangemerkt;
 - de precieze structuur en inhoudelijke vulling van het attribuut `data`.
+
+# Toegang tot nadere details via API
+
+De payload (`data`) van een CloudEvent bevat de gegevens die horen bij de gebeurtenis.  
+De exacte structuur en inhoud van deze payload worden per samenwerkfunctie gespecificeerd.
+
+Naast de functionele gegevens bevat het attribuut `data` in veel gevallen een **verwijzing naar een API-endpoint** waar afnemers aanvullende details over het betreffende object kunnen opvragen.
+
+## Doel
+
+- Het CloudEvent bevat voldoende informatie om een gebeurtenis te signaleren.
+- Nadere of uitgebreide gegevens kunnen door de afnemer worden opgehaald via een API-aanroep bij de producerende partij.
+- Hierdoor blijven events compact en wordt voorkomen dat grote of vaak veranderende datasets in het event zelf worden opgenomen.
+
+## Afspraken
+
+- In gevallen waarin het `type` van het CloudEvent zich daarvoor leent, wordt in `data` een URL opgenomen die verwijst naar het API-endpoint waar de actuele details van het betreffende object beschikbaar zijn.
+- Deze URL verwijst naar een endpoint dat wordt aangeboden door de verzendende partij.
+- De URL bevat voldoende informatie om het betreffende object eenduidig te identificeren.
+- Authenticatie en autorisatie op dit endpoint vallen onder de reguliere afspraken voor API-toegang binnen *Samen Onder Handbereik*.
+
+**Voorbeeld**
+
+```json
+"data": {
+  "detailUrl": "https://api.samenonderhandbereik.nl/uitkomst-overleg/123456789",
+  "...": "..."
+}
+```
+
+De precieze naam van dit veld (bijvoorbeeld `detailUrl`, `resourceUrl` of `self`) wordt vastgelegd binnen de specificatie van de betreffende samenwerkfunctie.

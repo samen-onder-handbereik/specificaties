@@ -108,7 +108,8 @@ De precieze structuur van het attribuut `data` verschilt per `type`.
 `data` bevat ten minste:
 - de inhoudelijke uitkomst (of een verwijzing daarnaar);
 - eventuele metadata zoals vaststellingsdatum;
-- indien van toepassing: een versienummer.
+- indien van toepassing: een versienummer;
+- de URL van het API-endpoint waar de actuele details van de uitkomst van het overleg opgevraagd kunnen worden.
 
 #### Bij `uitkomst-ingezien`
 
