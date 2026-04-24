@@ -513,6 +513,7 @@ components:
       - heeftBetrekkingOp
       - id
       - idCasusoverleg
+      - informering
       - omschrijving
       - url
       type: object
@@ -533,6 +534,11 @@ components:
           type: string
           description: Een conditie waaraan dient te worden voldaan om de uitvoering
             van de actie te triggeren.
+        informering:
+          type: string
+          description: "Aanduiding van de mate en wijze waarop de betrokkene is geï\
+            nformeerd over de voorgenomen of uitgevoerde actie, inclusief – indien\
+            \ van toepassing – de reden waarom informering achterwege is gebleven."
         idCasusoverleg:
           type: string
           description: Het id van het casusoverleg waarin tot de actie is besloten.
