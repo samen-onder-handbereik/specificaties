@@ -159,14 +159,14 @@ Verwijzing naar het schema van de payload.
 
 **Afspraken**
 
-- Kan een URI bevatten naar de geldende JSON Schema-definitie.
-- Indien gebruikt, bevat de verwijzing een expliciet versienummer.
-- Of `dataschema` structureel wordt toegepast binnen *Samen Onder Handbereik* wordt nog nader bepaald.
+- Bevat een verwijzing naar het JSON Schema waaraan de inhoud van het attribuut `data` dient te voldoen.
+- Voor elke samenwerkfunctie wordt een apart JSON Schema-bestand gedefinieerd.
+- Binnen elk JSON Schema-bestand wordt voor elke waarde voor het attribuut `type` een aparte beschrijving opgenomen. 
 
 **Voorbeeld**
 
 ```json
-"dataschema": "https://api.samenonderhandbereik.nl/schema/uitkomst-overleg/1.0.0"
+"dataschema": "https://github.com/samen-onder-handbereik/specificaties/jsonschema/cloudevents/uitkomst-overleg.json#/$defs/uitkomst-beschikbaar-gesteld"
 ```
 
 ## `subject`
