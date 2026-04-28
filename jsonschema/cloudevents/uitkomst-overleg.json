@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/samen-onder-handbereik/specificaties/jsonschema/cloudevents/uitkomst-overleg.json",
+  "title": "CloudEvents data schemas voor uitkomstoverleg",
+
+  "$defs": {
+    "uitkomst-beschikbaar-gesteld": {
+      "$id": "#uitkomst-beschikbaar-gesteld",
+      "type": "object",
+      "required": ["datumPublicatie", "versie", "url"],
+      "properties": {
+      "datumPublicatie": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "versie": {
+          "type": "string"
+        },
+        "url": {
+            "type": "string",
+            "format": "uri"
+        } 
+      },
+      "additionalProperties": false
+    }
+  }
+}
