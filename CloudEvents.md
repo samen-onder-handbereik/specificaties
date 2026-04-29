@@ -166,7 +166,7 @@ Verwijzing naar het schema van de payload.
 **Voorbeeld**
 
 ```json
-"dataschema": "https://github.com/samen-onder-handbereik/specificaties/jsonschema/cloudevents/uitkomst-overleg.json#/$defs/uitkomst-beschikbaar-gesteld"
+"dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/cloudevents/uitkomst-overleg.json#uitkomst-beschikbaar-gesteld"
 ```
 
 ## `subject`
