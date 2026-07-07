@@ -59,15 +59,11 @@ De graph ondersteunt:
 
 Binnen deze samenwerkfunctie worden twee eventtypen gebruikt:
 
-  -------------------------------------------------------------------------------------------------
-  Eventtype                                                     Betekenis
-  ------------------------------------------------------------- -----------------------------------
-  `uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`   De Uitkomst Overleg is beschikbaar
-                                                                gesteld.
+| Eventtype | Betekenis |
+|---|---|
+| `uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld` | De Uitkomst Overleg is beschikbaar gesteld. |
+| `uitwisselen-uitkomst-overleg.uitkomst-ingezien` | De Uitkomst Overleg is geraadpleegd. |
 
-  `uitwisselen-uitkomst-overleg.uitkomst-ingezien`              De Uitkomst Overleg is
-                                                                geraadpleegd.
-  -------------------------------------------------------------------------------------------------
 
 ### 4.1 CloudEvent-profiel
 
@@ -76,28 +72,15 @@ uit het generieke CloudEvent-profiel.
 
 Voor deze samenwerkfunctie gelden de volgende aanvullende afspraken:
 
-  -----------------------------------------------------------------------
-  Attribuut               Verplicht               Betekenis
-  ----------------------- ----------------------- -----------------------
-  `id`                    MUST                    Unieke identificatie
-                                                  van het CloudEvent
+| Attribuut | Verplicht | Betekenis |
+|---|---|---|
+| `id` | MUST | Unieke identificatie van het CloudEvent |
+| `source` | MUST | Organisatie die het event publiceert |
+| `type` | MUST | Eén van de toegestane eventtypen |
+| `subject` | MUST | Identificatie van de Uitkomst Overleg waarop het event betrekking heeft |
+| `time` | MUST | Tijdstip waarop de gebeurtenis plaatsvond |
+| `data` | MUST | PROV-JSONLD-graaf |
 
-  `source`                MUST                    Organisatie die het
-                                                  event publiceert
-
-  `type`                  MUST                    Eén van de toegestane
-                                                  eventtypen
-
-  `subject`               MUST                    Identificatie van de
-                                                  Uitkomst Overleg waarop
-                                                  het event betrekking
-                                                  heeft
-
-  `time`                  MUST                    Tijdstip waarop de
-                                                  gebeurtenis plaatsvond
-
-  `data`                  MUST                    PROV-JSONLD-graaf
-  -----------------------------------------------------------------------
 
 ### 4.2 Subject
 
@@ -133,26 +116,14 @@ casusoverleg.
 
 ## 6. Conceptueel graphmodel
 
-  ----------------------------------------------------------------------------
-  Concept                      PROV-type               Betekenis
-  ---------------------------- ----------------------- -----------------------
-  UitkomstOverleg              Entity                  De via de API
-                                                       beschikbare resource.
+| Concept | PROV-type | Betekenis |
+|---|---|---|
+| UitkomstOverleg | Entity | De via de API beschikbare resource. |
+| Betrokkene | Entity | Zoekanker voor personen. |
+| BeschikbaarStellenUitkomst | Activity | Activiteit waarmee de uitkomst beschikbaar wordt gesteld. |
+| InzienUitkomst | Activity | Activiteit waarmee de uitkomst wordt geraadpleegd. |
+| Organisatie | Agent | Organisatie die een activiteit uitvoert. |
 
-  Betrokkene                   Entity                  Zoekanker voor
-                                                       personen.
-
-  BeschikbaarStellenUitkomst   Activity                Activiteit waarmee de
-                                                       uitkomst beschikbaar
-                                                       wordt gesteld.
-
-  InzienUitkomst               Activity                Activiteit waarmee de
-                                                       uitkomst wordt
-                                                       geraadpleegd.
-
-  Organisatie                  Agent                   Organisatie die een
-                                                       activiteit uitvoert.
-  ----------------------------------------------------------------------------
 
 Relaties:
 

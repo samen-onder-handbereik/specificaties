@@ -1,38 +1,25 @@
 # Release Notes
 
-## Sprint 2
+## Sprint 2 - Markdown-correctie
 
-### Doel
+### Aanleiding
 
-Verdere uitwerking van de implementatiespecificatie.
-
-### Toegevoegd
-
--   CloudEvent-profiel opgenomen in `UitwisselenUitkomstOverleg.md`.
--   Afspraken over CloudEvent-attributen toegevoegd.
--   Betekenis van `subject` en `data` uitgewerkt.
+Herstel van Markdown-opmaak. Geen inhoudelijke wijzigingen.
 
 ### Gewijzigd
 
--   CloudEvent-afspraken zijn onderdeel van de
-    samenwerkfunctie-specificatie gemaakt.
+- Tabellen teruggebracht naar GitHub Flavored Markdown.
+- Geen conversie van Markdown naar andere tabelvormen meer.
 
-### Nog uit te werken
+## Sprint 2
 
--   Volledige PROV-JSONLD voorbeelden.
--   Graph Build Specification.
--   Neo4j-specificatie.
+### Toegevoegd
+
+- CloudEvent-profiel opgenomen in `UitwisselenUitkomstOverleg.md`.
+- Afspraken over CloudEvent-attributen toegevoegd.
 
 ## Sprint 1
 
-### Doel
-
-Eerste herstructurering van de specificatie.
-
 ### Resultaat
 
--   Architectuur waarin CloudEvents, inzage-API en knowledge graph
-    samenkomen.
--   Gebruik van PROV-JSONLD.
--   Eerste conceptueel graphmodel.
--   Modellering van Betrokkene als Entity.
+- Eerste architectuur waarin CloudEvents, inzage-API en knowledge graph samenkomen.
