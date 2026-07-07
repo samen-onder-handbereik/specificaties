@@ -218,3 +218,96 @@ uit:
 
 De exacte JSON-LD-uitwerking wordt in een volgende iteratie verder
 gespecificeerd.
+
+
+## 12. Concrete PROV-JSONLD-uitwerking
+
+In dit hoofdstuk wordt de eerste concrete uitwerking beschreven van de
+PROV-JSONLD-graaf die wordt opgenomen in het CloudEvent
+`uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`.
+
+De graaf bevat de volgende elementen:
+
+| Concept | PROV-type | Toelichting |
+|---|---|---|
+| UitkomstOverleg | Entity | De informatiebron die via de inzage-API beschikbaar wordt gesteld. |
+| Betrokkene | Entity | Domeinanker waarop onder andere gezocht kan worden via burgerservicenummer. |
+| BeschikbaarStellenUitkomst | Activity | De activiteit waarmee de Uitkomst Overleg beschikbaar wordt gesteld. |
+| Organisatie | Agent | De organisatie die de activiteit uitvoert. |
+
+Een vereenvoudigd voorbeeld:
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/prov.jsonld"
+  ],
+  "@graph": [
+    {
+      "@id": "urn:justid:uitkomst-overleg:12345",
+      "@type": "prov:Entity",
+      "type": "UitkomstOverleg",
+      "prov:wasGeneratedBy": "urn:justid:activity:beschikbaarstellen:67890"
+    },
+    {
+      "@id": "urn:justid:betrokkene:45678",
+      "@type": "prov:Entity",
+      "type": "Betrokkene",
+      "burgerservicenummer": "123456789"
+    },
+    {
+      "@id": "urn:justid:activity:beschikbaarstellen:67890",
+      "@type": "prov:Activity",
+      "type": "BeschikbaarStellenUitkomst",
+      "prov:wasAssociatedWith": "urn:justid:organisatie:om"
+    },
+    {
+      "@id": "urn:justid:organisatie:om",
+      "@type": "prov:Agent",
+      "type": "Organisatie"
+    }
+  ]
+}
+```
+
+Dit voorbeeld is bedoeld als richtinggevende specificatie. De exacte URI-strategie
+en JSON-LD-context worden in een volgende iteratie vastgesteld.
+
+## 13. Modellering burgerservicenummer
+
+Het burgerservicenummer wordt opgenomen als attribuut van de Entity
+`Betrokkene`.
+
+Het burgerservicenummer:
+
+- is een domeinattribuut van de Betrokkene;
+- wordt gebruikt om de graph bevraagbaar te maken;
+- wordt niet gebruikt als technische identifier van de PROV Entity;
+- wordt niet als afzonderlijke Entity gemodelleerd.
+
+De technische identifier van de Entity Betrokkene staat los van het
+burgerservicenummer.
+
+## 14. Event uitkomst ingezien
+
+Het event
+`uitwisselen-uitkomst-overleg.uitkomst-ingezien`
+legt vast dat een organisatie de Uitkomst Overleg heeft geraadpleegd.
+
+De provenance-relaties zijn:
+
+```text
+InzienUitkomst
+    USED
+UitkomstOverleg
+
+InzienUitkomst
+    WAS_ASSOCIATED_WITH
+Organisatie
+```
+
+Daarmee kan worden vastgesteld welke organisatie de uitkomst heeft ingezien en
+op welk moment deze gebeurtenis heeft plaatsgevonden.
+
+De vastlegging van dit event ondersteunt zowel auditing als het aantonen dat een
+organisatie kennis heeft kunnen nemen van de uitkomst.

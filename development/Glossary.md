@@ -61,3 +61,10 @@ Een identifier die betekenis heeft binnen het domeinmodel.
 **Status:** Werkbegrip
 
 Een technische identifier waarmee een PROV-element uniek wordt aangeduid.
+
+
+## Burgerservicenummer
+
+**Status:** Werkbegrip
+
+Een persoonsgebonden attribuut van de Entity Betrokkene dat gebruikt kan worden om de graph te bevragen.

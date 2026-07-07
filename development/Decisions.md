@@ -80,3 +80,37 @@ Een UitkomstOverleg of Betrokkene heeft een eigen identiteit, terwijl een Activi
 ### Consequenties
 
 De graph bevat zowel domeinidentifiers als provenance-identifiers.
+
+
+## ADR-007 -- Burgerservicenummer als attribuut van Betrokkene
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Het burgerservicenummer wordt opgenomen als attribuut van de Entity Betrokkene.
+
+### Motivatie
+
+De graph moet bevraagbaar zijn op basis van het burgerservicenummer, bijvoorbeeld tijdens een ZSM-overleg.
+
+### Consequenties
+
+Het burgerservicenummer is geen technische identifier van de PROV Entity en wordt niet als aparte Entity gemodelleerd.
+
+
+## ADR-008 -- Beschikbaarstelling en inzage als afzonderlijke Activities
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Het beschikbaar stellen van een Uitkomst Overleg en het inzien daarvan worden als afzonderlijke provenance-activiteiten gemodelleerd.
+
+### Motivatie
+
+Beschikbaarstelling en inzage hebben verschillende betekenis binnen provenance en auditing.

@@ -7,12 +7,10 @@
 - [x] Markdown-opmaak gecontroleerd.
 - [x] Mapping informatiemodel naar PROV-model.
 - [x] Identifierstrategie eerste versie.
+- [x] Volledig CloudEvent-voorbeeld `uitkomst-beschikbaar-gesteld`.
+- [x] Volledig PROV-JSONLD-voorbeeld.
+- [x] Volledig CloudEvent-voorbeeld `uitkomst-ingezien`.
 
-## Sprint 4 - Hoog
-
-- [ ] Volledig CloudEvent-voorbeeld `uitkomst-beschikbaar-gesteld`.
-- [ ] Volledig PROV-JSONLD-voorbeeld.
-- [ ] Volledig CloudEvent-voorbeeld `uitkomst-ingezien`.
 
 ## Daarna
 

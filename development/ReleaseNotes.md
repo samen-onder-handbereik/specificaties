@@ -1,5 +1,51 @@
 # Release Notes
 
+## Sprint 1
+
+### Doel
+
+Eerste herstructurering van de specificatie.
+
+### Resultaat
+
+- Eerste architectuur waarin CloudEvents, inzage-API en knowledge graph samenkomen.
+- Gebruik van PROV-JSONLD.
+- Eerste conceptueel graphmodel.
+- Modellering van Betrokkene als Entity.
+
+## Sprint 2
+
+### Doel
+
+Verdere uitwerking van de implementatiespecificatie.
+
+### Toegevoegd
+
+- CloudEvent-profiel opgenomen in `UitwisselenUitkomstOverleg.md`.
+- Afspraken over CloudEvent-attributen toegevoegd.
+- Betekenis van `subject` en `data` uitgewerkt.
+
+### Gewijzigd
+
+- CloudEvent-afspraken zijn onderdeel van de samenwerkfunctie-specificatie gemaakt.
+
+### Nog uit te werken
+
+- Volledige PROV-JSONLD voorbeelden.
+- Graph Build Specification.
+- Neo4j-specificatie.
+
+## Sprint 2 - Markdown-correctie
+
+### Aanleiding
+
+Herstel van Markdown-opmaak. Geen inhoudelijke wijzigingen.
+
+### Gewijzigd
+
+- Tabellen teruggebracht naar GitHub Flavored Markdown.
+- Geen conversie van Markdown naar andere tabelvormen meer.
+
 ## Sprint 3
 
 ### Doel
@@ -16,26 +62,22 @@ Vastleggen van de mapping tussen het informatiemodel en het PROV-model.
 
 De basis voor de concrete PROV-JSONLD-uitwerking is vastgelegd.
 
-## Sprint 2 - Markdown-correctie
+## Sprint 4
 
-### Aanleiding
+### Doel
 
-Herstel van Markdown-opmaak. Geen inhoudelijke wijzigingen.
-
-### Gewijzigd
-
-- Tabellen teruggebracht naar GitHub Flavored Markdown.
-- Geen conversie van Markdown naar andere tabelvormen meer.
-
-## Sprint 2
+Concrete uitwerking van CloudEvents en PROV-JSONLD voor de samenwerkfunctie Uitwisselen Uitkomst Overleg.
 
 ### Toegevoegd
 
-- CloudEvent-profiel opgenomen in `UitwisselenUitkomstOverleg.md`.
-- Afspraken over CloudEvent-attributen toegevoegd.
+- Eerste concrete PROV-JSONLD-uitwerking opgenomen.
+- Relatie tussen CloudEvents en de provenance-graaf verder uitgewerkt.
+- Event `uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld` uitgewerkt.
+- Event `uitwisselen-uitkomst-overleg.uitkomst-ingezien` uitgewerkt.
+- Modellering van burgerservicenummer als attribuut van Betrokkene vastgelegd.
 
-## Sprint 1
+### Ontwerpkeuzes
 
-### Resultaat
-
-- Eerste architectuur waarin CloudEvents, inzage-API en knowledge graph samenkomen.
+- Betrokkene blijft een Entity in de graph.
+- Burgerservicenummer wordt gebruikt als domeinattribuut en niet als technische identifier.
+- Beschikbaarstelling en inzage worden als afzonderlijke Activities gemodelleerd.
