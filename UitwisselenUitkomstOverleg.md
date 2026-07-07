@@ -172,3 +172,49 @@ Belangrijke uitgangspunten:
 -   Provenance wordt vastgelegd met PROV-JSONLD.
 -   Betrokkene wordt opgenomen om operationeel zoeken mogelijk te maken.
 -   Activities krijgen geen businessidentiteit.
+
+
+## 9. Mapping informatiemodel naar PROV-model
+
+In dit hoofdstuk wordt de relatie beschreven tussen de concepten uit het
+informatiemodel van Uitwisselen Uitkomst Overleg en de PROV-elementen die in
+de CloudEvent-payload worden opgenomen.
+
+| Informatiemodel | PROV-element | Toelichting |
+|---|---|---|
+| UitkomstOverleg | Entity | De informatiebron die via de inzage-API beschikbaar wordt gesteld. |
+| Betrokkene | Entity | Domeinanker waarmee gezocht kan worden op bijvoorbeeld BSN. |
+| BeschikbaarStellenUitkomst | Activity | De activiteit waarbij de Uitkomst Overleg beschikbaar wordt gesteld. |
+| InzienUitkomst | Activity | De activiteit waarbij een organisatie de Uitkomst Overleg raadpleegt. |
+| Organisatie | Agent | De organisatie die verantwoordelijk is voor een activiteit. |
+
+## 10. Identifierstrategie
+
+Binnen PROV is het noodzakelijk dat Entity-, Activity- en Agent-instanties
+eenduidig identificeerbaar zijn.
+
+Voor Entities en Agents wordt gebruik gemaakt van identifiers die aansluiten
+bij de domeinidentificatie.
+
+Voor Activities geldt dat iedere uitvoering van een activiteit een eigen
+identifier krijgt. Deze identifier heeft geen betekenis in het domeinmodel,
+maar maakt het mogelijk om provenance-relaties eenduidig vast te leggen.
+
+Een Activity-identifier is daarmee een technische identifier en geen
+businessidentifier.
+
+## 11. Eerste PROV-JSONLD-uitwerking
+
+Een CloudEvent bevat in het attribuut `data` een PROV-JSONLD-graaf.
+
+Een eerste uitwerking van het event
+`uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld` bestaat conceptueel
+uit:
+
+- een Entity voor de Uitkomst Overleg;
+- een Activity voor het beschikbaar stellen;
+- een Agent voor de publicerende organisatie;
+- een Entity voor de Betrokkene.
+
+De exacte JSON-LD-uitwerking wordt in een volgende iteratie verder
+gespecificeerd.

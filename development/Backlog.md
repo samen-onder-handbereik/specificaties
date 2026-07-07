@@ -5,9 +5,17 @@
 - [x] Eerste architectuur voor Uitwisselen Uitkomst Overleg.
 - [x] CloudEvent-profiel eerste versie.
 - [x] Markdown-opmaak gecontroleerd.
+- [x] Mapping informatiemodel naar PROV-model.
+- [x] Identifierstrategie eerste versie.
 
-## Hoog
+## Sprint 4 - Hoog
 
-- [ ] Volledige PROV-JSONLD voorbeelden toevoegen.
+- [ ] Volledig CloudEvent-voorbeeld `uitkomst-beschikbaar-gesteld`.
+- [ ] Volledig PROV-JSONLD-voorbeeld.
+- [ ] Volledig CloudEvent-voorbeeld `uitkomst-ingezien`.
+
+## Daarna
+
 - [ ] Graph Build Specification maken.
 - [ ] Neo4j-model uitwerken.
+- [ ] Cypher-query voorbeelden toevoegen.

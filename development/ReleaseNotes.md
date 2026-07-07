@@ -1,5 +1,21 @@
 # Release Notes
 
+## Sprint 3
+
+### Doel
+
+Vastleggen van de mapping tussen het informatiemodel en het PROV-model.
+
+### Toegevoegd
+
+- Mapping tussen domeinconcepten en PROV-elementen.
+- Eerste afspraken over identifiers van Entity, Activity en Agent.
+- Onderscheid gemaakt tussen domeinidentificatie en provenance-identificatie.
+
+### Resultaat
+
+De basis voor de concrete PROV-JSONLD-uitwerking is vastgelegd.
+
 ## Sprint 2 - Markdown-correctie
 
 ### Aanleiding
