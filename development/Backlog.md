@@ -38,3 +38,10 @@
 - [x] Relatie CloudEvent envelope en PROV-JSONLD beschreven.
 - [x] JSON-LD context als onderdeel van het contract beschreven.
 
+
+## Sprint 7 afgerond
+
+- [x] Documentstructuur geconsolideerd.
+- [x] Handmatige paragraafnummering verwijderd.
+- [x] CloudEvent-voorbeeld en PROV-model van elkaar onderscheiden.
+- [x] JSON-LD @type-modellering verfijnd.

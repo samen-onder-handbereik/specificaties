@@ -3,7 +3,7 @@
 > Status: Concept\
 > Versie: 1.0-draft Sprint 2
 
-## 1. Inleiding
+## Inleiding
 
 Deze specificatie beschrijft de samenwerkfunctie **Uitwisselen Uitkomst
 Overleg**.
@@ -22,7 +22,7 @@ De CloudEvents bevatten niet de volledige inhoud van de uitkomst. Zij
 bevatten informatie die nodig is voor notificatie, provenance, auditing
 en het opbouwen van een knowledge graph.
 
-## 2. Scope
+## Scope
 
 Deze specificatie beschrijft:
 
@@ -37,7 +37,7 @@ Deze specificatie beschrijft:
 Deze specificatie beschrijft niet de inhoudelijke modellering van
 besluiten en acties of de interne totstandkoming daarvan.
 
-## 3. Architectuur
+## Architectuur
 
 ``` mermaid
 flowchart LR
@@ -55,7 +55,7 @@ De graph ondersteunt:
 -   auditing;
 -   zoeken naar eerdere betrokkenheid van personen.
 
-## 4. CloudEvents
+## CloudEvents
 
 Binnen deze samenwerkfunctie worden twee eventtypen gebruikt:
 
@@ -65,7 +65,7 @@ Binnen deze samenwerkfunctie worden twee eventtypen gebruikt:
 | `uitwisselen-uitkomst-overleg.uitkomst-ingezien` | De Uitkomst Overleg is geraadpleegd. |
 
 
-### 4.1 CloudEvent-profiel
+### CloudEvent-profiel
 
 De producer vult de standaard CloudEvent-attributen volgens de afspraken
 uit het generieke CloudEvent-profiel.
@@ -82,14 +82,14 @@ Voor deze samenwerkfunctie gelden de volgende aanvullende afspraken:
 | `data` | MUST | PROV-JSONLD-graaf |
 
 
-### 4.2 Subject
+### Subject
 
 Het CloudEvent-attribuut `subject` verwijst naar de Uitkomst Overleg
 waarop het event betrekking heeft.
 
 De waarde wordt gebaseerd op de identificatie van de Uitkomst Overleg.
 
-### 4.3 Data
+### Data
 
 Het attribuut `data` bevat een PROV-JSONLD-document.
 
@@ -105,7 +105,7 @@ Voor deze samenwerkfunctie worden de volgende domeinconcepten gebruikt:
 -   BeschikbaarStellenUitkomst;
 -   InzienUitkomst.
 
-## 5. Gebruik van PROV-JSONLD
+## Gebruik van PROV-JSONLD
 
 Het attribuut `data` van het CloudEvent bevat een PROV-JSONLD-graaf.
 
@@ -114,7 +114,7 @@ De graaf beschrijft de provenance van de beschikbaarstelling of inzage.
 De graaf beschrijft niet de inhoudelijke besluitvorming van het
 casusoverleg.
 
-## 6. Conceptueel graphmodel
+## Conceptueel graphmodel
 
 | Concept | PROV-type | Betekenis |
 |---|---|---|
@@ -149,7 +149,7 @@ InzienUitkomst
 Organisatie
 ```
 
-## 7. Betrokkene
+## Betrokkene
 
 De Betrokkene wordt als afzonderlijke Entity opgenomen.
 
@@ -162,7 +162,7 @@ domeinanker binnen de graph.
 Een toekomstige uitbreiding kan ondersteuning voor het
 vreemdelingennummer toevoegen.
 
-## 8. Ontwerpkeuzes
+## Ontwerpkeuzes
 
 Belangrijke uitgangspunten:
 
@@ -174,7 +174,7 @@ Belangrijke uitgangspunten:
 -   Activities krijgen geen businessidentiteit.
 
 
-## 9. Mapping informatiemodel naar PROV-model
+## Mapping informatiemodel naar PROV-model
 
 In dit hoofdstuk wordt de relatie beschreven tussen de concepten uit het
 informatiemodel van Uitwisselen Uitkomst Overleg en de PROV-elementen die in
@@ -188,7 +188,7 @@ de CloudEvent-payload worden opgenomen.
 | InzienUitkomst | Activity | De activiteit waarbij een organisatie de Uitkomst Overleg raadpleegt. |
 | Organisatie | Agent | De organisatie die verantwoordelijk is voor een activiteit. |
 
-## 10. Identifierstrategie
+## Identifierstrategie
 
 Binnen PROV is het noodzakelijk dat Entity-, Activity- en Agent-instanties
 eenduidig identificeerbaar zijn.
@@ -203,7 +203,7 @@ maar maakt het mogelijk om provenance-relaties eenduidig vast te leggen.
 Een Activity-identifier is daarmee een technische identifier en geen
 businessidentifier.
 
-## 11. Eerste PROV-JSONLD-uitwerking
+## Eerste PROV-JSONLD-uitwerking
 
 Een CloudEvent bevat in het attribuut `data` een PROV-JSONLD-graaf.
 
@@ -220,13 +220,11 @@ De exacte JSON-LD-uitwerking wordt in een volgende iteratie verder
 gespecificeerd.
 
 
-## 12. Concrete PROV-JSONLD-uitwerking
+## Concrete PROV-JSONLD-uitwerking
 
-In dit hoofdstuk wordt de eerste concrete uitwerking beschreven van de
-PROV-JSONLD-graaf die wordt opgenomen in het CloudEvent
-`uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`.
+In dit hoofdstuk wordt het PROV-JSONLD-model beschreven dat in de CloudEvent-payload wordt gebruikt. De volledige JSON-LD-uitwerking is opgenomen in het volledige CloudEvent-voorbeeld verderop in dit document.
 
-De graaf bevat de volgende elementen:
+De provenance-graaf bevat de volgende elementen:
 
 | Concept | PROV-type | Toelichting |
 |---|---|---|
@@ -235,45 +233,21 @@ De graaf bevat de volgende elementen:
 | BeschikbaarStellenUitkomst | Activity | De activiteit waarmee de Uitkomst Overleg beschikbaar wordt gesteld. |
 | Organisatie | Agent | De organisatie die de activiteit uitvoert. |
 
-Een vereenvoudigd voorbeeld:
+De relaties in de provenance-graaf zijn:
 
-```json
-{
-  "@context": [
-    "https://www.w3.org/ns/prov.jsonld"
-  ],
-  "@graph": [
-    {
-      "@id": "urn:justid:uitkomst-overleg:12345",
-      "@type": "prov:Entity",
-      "type": "UitkomstOverleg",
-      "prov:wasGeneratedBy": "urn:justid:activity:beschikbaarstellen:67890"
-    },
-    {
-      "@id": "urn:justid:betrokkene:45678",
-      "@type": "prov:Entity",
-      "type": "Betrokkene",
-      "burgerservicenummer": "123456789"
-    },
-    {
-      "@id": "urn:justid:activity:beschikbaarstellen:67890",
-      "@type": "prov:Activity",
-      "type": "BeschikbaarStellenUitkomst",
-      "prov:wasAssociatedWith": "urn:justid:organisatie:om"
-    },
-    {
-      "@id": "urn:justid:organisatie:om",
-      "@type": "prov:Agent",
-      "type": "Organisatie"
-    }
-  ]
-}
+```text
+UitkomstOverleg
+    prov:wasGeneratedBy
+BeschikbaarStellenUitkomst
+
+BeschikbaarStellenUitkomst
+    prov:wasAssociatedWith
+Organisatie
 ```
 
-Dit voorbeeld is bedoeld als richtinggevende specificatie. De exacte URI-strategie
-en JSON-LD-context worden in een volgende iteratie vastgesteld.
+De concrete serialisatie van deze graaf als JSON-LD maakt onderdeel uit van het volledige CloudEvent-voorbeeld.
 
-## 13. Modellering burgerservicenummer
+## Modellering burgerservicenummer
 
 Het burgerservicenummer wordt opgenomen als attribuut van de Entity
 `Betrokkene`.
@@ -288,7 +262,7 @@ Het burgerservicenummer:
 De technische identifier van de Entity Betrokkene staat los van het
 burgerservicenummer.
 
-## 14. Event uitkomst ingezien
+## Event uitkomst ingezien
 
 Het event
 `uitwisselen-uitkomst-overleg.uitkomst-ingezien`
@@ -313,7 +287,7 @@ De vastlegging van dit event ondersteunt zowel auditing als het aantonen dat een
 organisatie kennis heeft kunnen nemen van de uitkomst.
 
 
-## 15. JSON-LD context en namespaces
+## JSON-LD context en namespaces
 
 De PROV-JSONLD-graaf maakt gebruik van een JSON-LD context om begrippen en eigenschappen ondubbelzinnig te identificeren.
 
@@ -336,7 +310,7 @@ Voorbeeld:
 
 De definitieve publicatie en inhoud van de JSON-LD context worden nog vastgesteld.
 
-## 16. Gebruik van domeinprefixen
+## Gebruik van domeinprefixen
 
 Domeinbegrippen worden gekwalificeerd met de prefix `soh`.
 
@@ -350,7 +324,7 @@ Voorbeeld:
 
 Hiermee wordt voorkomen dat begrippen alleen als lokale namen worden geïnterpreteerd.
 
-## 17. URI- en identifierstrategie
+## URI- en identifierstrategie
 
 De strategie voor URI's en identifiers wordt verder onderzocht.
 
@@ -364,13 +338,13 @@ Een namespace voor begrippen en schema's is niet hetzelfde als de definitieve st
 
 Bij het bepalen van de strategie worden relevante overheidsbrede afspraken en standaarden betrokken.
 
-## 18. Open punt
+## Open punt
 
 Open vraag:
 
 Welke standaarden en afspraken zijn van toepassing op URI's en identifiers voor begrippen, informatieobjecten en instanties binnen de Samen onder handbereik-omgeving?
 
-## 19. Volledig CloudEvent-voorbeeld
+## Volledig CloudEvent-voorbeeld
 
 In eerdere iteraties is de PROV-JSONLD-graaf uitgewerkt als inhoud van het
 CloudEvent-attribuut `data`.
@@ -398,33 +372,42 @@ Het voorbeeld bevat:
     "@context": [
       "https://openprovenance.org/prov-jsonld/context.jsonld",
       {
+        "prov": "http://www.w3.org/ns/prov#",
         "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
       }
     ],
     "@graph": [
       {
         "@id": "<identifier-uitkomst-overleg>",
-        "@type": "prov:Entity",
-        "soh:type": "soh:UitkomstOverleg",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ],
         "prov:wasGeneratedBy": "<identifier-beschikbaarstelling>",
         "soh:betreft": "<identifier-betrokkene>"
       },
       {
         "@id": "<identifier-betrokkene>",
-        "@type": "prov:Entity",
-        "soh:type": "soh:Betrokkene",
+        "@type": [
+          "prov:Entity",
+          "soh:Betrokkene"
+        ],
         "soh:burgerservicenummer": "<burgerservicenummer>"
       },
       {
         "@id": "<identifier-beschikbaarstelling>",
-        "@type": "prov:Activity",
-        "soh:type": "soh:BeschikbaarStellenUitkomst",
+        "@type": [
+          "prov:Activity",
+          "soh:BeschikbaarStellenUitkomst"
+        ],
         "prov:wasAssociatedWith": "<identifier-organisatie>"
       },
       {
         "@id": "<identifier-organisatie>",
-        "@type": "prov:Agent",
-        "soh:type": "soh:Organisatie"
+        "@type": [
+          "prov:Agent",
+          "soh:Organisatie"
+        ]
       }
     ]
   }
@@ -440,14 +423,14 @@ De relatie tussen het CloudEvent en de provenance-graaf is als volgt:
 De gebruikte domeinrelatie `soh:betreft` is een voorbeeld van een nog vast te stellen
 domeinspecifieke relatie. De exacte URI-strategie en de definitieve JSON-LD-context
 worden in een volgende iteratie vastgesteld.
-## 20. Relatie CloudEvent en provenance
+## Relatie CloudEvent en provenance
 
 Het CloudEvent beschrijft de gebeurtenis die wordt uitgewisseld.
 
 De provenance-graaf in `data` beschrijft de herkomst en relaties van de
 betrokken informatieobjecten.
 
-## 21. JSON-LD context als onderdeel van het contract
+## JSON-LD context als onderdeel van het contract
 
 De JSON-LD context maakt onderdeel uit van de semantische betekenis van de
 payload.

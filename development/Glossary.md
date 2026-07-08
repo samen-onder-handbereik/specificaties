@@ -103,3 +103,12 @@ De gegevensinhoud van een CloudEvent die volgens JSON-LD is gestructureerd.
 
 De afspraken waarmee de betekenis van uitgewisselde gegevens eenduidig wordt vastgelegd.
 
+
+## Respec
+
+Een specificatiegenerator die onder andere automatische paragraafnummering verzorgt.
+
+
+## JSON-LD type
+
+Een classificatie van een resource binnen JSON-LD, vastgelegd via `@type`.

@@ -166,3 +166,24 @@ Geaccepteerd
 
 De JSON-LD context is onderdeel van de afspraken over de betekenis van de payload.
 
+
+## ADR-013 -- Markdown-bron gebruikt geen handmatige paragraafnummering
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+De Markdown-bron gebruikt alleen kopniveau's. Nummering wordt door Respec gegenereerd.
+
+
+## ADR-014 -- Domeinclassificatie via meervoudige JSON-LD @type
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Domeinbegrippen worden in JSON-LD als aanvullende `@type`-waarden naast PROV-types opgenomen.

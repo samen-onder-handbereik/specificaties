@@ -107,3 +107,15 @@ Uitwerken van een volledig CloudEvent-contract inclusief PROV-JSONLD payload.
 - Relatie tussen CloudEvent envelope en PROV-JSONLD payload verduidelijkt.
 - JSON-LD context onderdeel gemaakt van het semantisch contract.
 
+
+## Sprint 7
+
+### Doel
+
+Consolidatie en structurering van de specificatie.
+
+### Toegevoegd
+
+- Handmatige paragraafnummering verwijderd uit de specificatiebron.
+- PROV-JSONLD-model en volledig CloudEvent-voorbeeld van elkaar onderscheiden.
+- JSON-LD-modellering met meervoudige `@type` uitgewerkt.
