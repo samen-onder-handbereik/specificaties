@@ -370,3 +370,87 @@ Open vraag:
 
 Welke standaarden en afspraken zijn van toepassing op URI's en identifiers voor begrippen, informatieobjecten en instanties binnen de Samen onder handbereik-omgeving?
 
+## 19. Volledig CloudEvent-voorbeeld
+
+In eerdere iteraties is de PROV-JSONLD-graaf uitgewerkt als inhoud van het
+CloudEvent-attribuut `data`.
+
+In deze iteratie wordt het volledige CloudEvent beschreven, inclusief de
+CloudEvent envelope en de volledige PROV-JSONLD-payload.
+
+Het voorbeeld bevat:
+
+- de standaard CloudEvent-attributen;
+- de JSON-LD context met de gebruikte namespaces;
+- de Entity, Activity en Agent uit het provenance-model;
+- de relaties tussen deze elementen.
+
+```json
+{
+  "specversion": "1.0",
+  "id": "<cloud-event-identifier>",
+  "source": "<producer>",
+  "type": "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
+  "subject": "<identifier-uitkomst-overleg>",
+  "time": "2026-01-01T12:00:00Z",
+  "datacontenttype": "application/ld+json",
+  "data": {
+    "@context": [
+      "https://openprovenance.org/prov-jsonld/context.jsonld",
+      {
+        "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
+      }
+    ],
+    "@graph": [
+      {
+        "@id": "<identifier-uitkomst-overleg>",
+        "@type": "prov:Entity",
+        "soh:type": "soh:UitkomstOverleg",
+        "prov:wasGeneratedBy": "<identifier-beschikbaarstelling>",
+        "soh:betreft": "<identifier-betrokkene>"
+      },
+      {
+        "@id": "<identifier-betrokkene>",
+        "@type": "prov:Entity",
+        "soh:type": "soh:Betrokkene",
+        "soh:burgerservicenummer": "<burgerservicenummer>"
+      },
+      {
+        "@id": "<identifier-beschikbaarstelling>",
+        "@type": "prov:Activity",
+        "soh:type": "soh:BeschikbaarStellenUitkomst",
+        "prov:wasAssociatedWith": "<identifier-organisatie>"
+      },
+      {
+        "@id": "<identifier-organisatie>",
+        "@type": "prov:Agent",
+        "soh:type": "soh:Organisatie"
+      }
+    ]
+  }
+}
+```
+
+De relatie tussen het CloudEvent en de provenance-graaf is als volgt:
+
+- het CloudEvent beschrijft de gebeurtenis die wordt uitgewisseld;
+- het attribuut `data` bevat de provenance-graaf;
+- de identifiers leggen de verbinding tussen CloudEvent en provenance-elementen.
+
+De gebruikte domeinrelatie `soh:betreft` is een voorbeeld van een nog vast te stellen
+domeinspecifieke relatie. De exacte URI-strategie en de definitieve JSON-LD-context
+worden in een volgende iteratie vastgesteld.
+## 20. Relatie CloudEvent en provenance
+
+Het CloudEvent beschrijft de gebeurtenis die wordt uitgewisseld.
+
+De provenance-graaf in `data` beschrijft de herkomst en relaties van de
+betrokken informatieobjecten.
+
+## 21. JSON-LD context als onderdeel van het contract
+
+De JSON-LD context maakt onderdeel uit van de semantische betekenis van de
+payload.
+
+De context bepaalt hoe prefixen zoals `prov` en `soh` worden geïnterpreteerd.
+

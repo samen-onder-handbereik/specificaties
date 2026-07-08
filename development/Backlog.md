@@ -32,3 +32,9 @@
 - [ ] Cypher-query voorbeelden toevoegen.
 - [ ] URI-strategie verder uitwerken.
 
+## Sprint 6 afgerond
+
+- [x] Volledig CloudEvent-voorbeeld uitgewerkt.
+- [x] Relatie CloudEvent envelope en PROV-JSONLD beschreven.
+- [x] JSON-LD context als onderdeel van het contract beschreven.
+

@@ -145,3 +145,24 @@ Er wordt geen definitieve keuze gemaakt voor instantie-identifiers voordat relev
 
 Begrippen, domeinobjecten en provenance-elementen kunnen verschillende identificatiebehoeften hebben.
 
+## ADR-011 -- CloudEvent bevat PROV-JSONLD in data
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+De provenance-graaf wordt opgenomen in het `data`-attribuut van het CloudEvent.
+
+
+## ADR-012 -- JSON-LD context maakt onderdeel uit van het semantisch contract
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+De JSON-LD context is onderdeel van de afspraken over de betekenis van de payload.
+

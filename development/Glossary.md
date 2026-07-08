@@ -89,3 +89,17 @@ Een verkorte aanduiding voor een namespace, bijvoorbeeld `prov` of `soh`.
 
 Een unieke verwijzing naar een resource of begrip.
 
+## CloudEvent envelope
+
+De standaard CloudEvent-attributen die de gebeurtenis beschrijven.
+
+
+## JSON-LD payload
+
+De gegevensinhoud van een CloudEvent die volgens JSON-LD is gestructureerd.
+
+
+## Semantisch contract
+
+De afspraken waarmee de betekenis van uitgewisselde gegevens eenduidig wordt vastgelegd.
+

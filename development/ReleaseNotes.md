@@ -95,3 +95,15 @@ Uitwerken van JSON-LD context, namespaces en identifierstrategie.
 - Gebruik van prefixen voor PROV en Samen onder handbereik.
 - Onderzoeksvraag voor URI- en identifierstrategie vastgelegd.
 
+## Sprint 6
+
+### Doel
+
+Uitwerken van een volledig CloudEvent-contract inclusief PROV-JSONLD payload.
+
+### Toegevoegd
+
+- Volledig CloudEvent-voorbeeld opgenomen.
+- Relatie tussen CloudEvent envelope en PROV-JSONLD payload verduidelijkt.
+- JSON-LD context onderdeel gemaakt van het semantisch contract.
+
