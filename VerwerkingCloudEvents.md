@@ -125,3 +125,107 @@ De volgende onderwerpen worden later verder uitgewerkt:
 - autorisatie en authenticatie;
 - bewaartermijn van transactiegegevens;
 - afspraken rondom opnieuw aanbieden van een CloudEvent.
+
+## API-specificaties
+
+De formele technische contracten van de API's worden beschreven met behulp van
+OpenAPI-specificaties.
+
+De OpenAPI-specificaties bevatten onder andere:
+
+- beschikbare endpoints;
+- HTTP-methodes;
+- request- en responsemodellen;
+- foutafhandeling;
+- technische validatieregels.
+
+De actuele specificaties worden gepubliceerd via:
+
+- OpenAPI-specificatie CloudEvent API: `<URL-placeholder>`
+- OpenAPI-specificatie Status-API: `<URL-placeholder>`
+
+## Identificatie en relatie tussen identifiers
+
+Binnen de verwerking van CloudEvents worden verschillende identifiers gebruikt.
+
+| Identifier | Niveau | Betekenis |
+| --- | --- | --- |
+| CloudEvent `id` | Berichtniveau | Identificeert het aangeboden CloudEvent |
+| Transactie-ID | Verwerkingsniveau | Identificeert de technische verwerking van de aanbieding |
+| JSON-LD `@id` | Semantisch niveau | Identificeert resources binnen de provenance-graaf |
+
+De ontvangstbevestiging van de CloudEvent API bevat uitsluitend de transactie-ID.
+De CloudEvent `id` maakt onderdeel uit van het aangeboden CloudEvent en wordt niet
+opnieuw geretourneerd.
+
+## Standaardisatie van statusresponses
+
+De statusresponse bevat de transactie-ID en de actuele verwerkingsstatus.
+Het attribuut `resultaat` wordt alleen opgenomen wanneer de status `ERROR` is.
+
+Voorbeeld succesvolle verwerking:
+
+```json
+{
+  "transactieId": "<transactie-id>",
+  "status": "OK"
+}
+```
+
+Voorbeeld verwerking nog niet afgerond:
+
+```json
+{
+  "transactieId": "<transactie-id>",
+  "status": "IN_PROGRESS"
+}
+```
+
+Voorbeeld fout:
+
+```json
+{
+  "transactieId": "<transactie-id>",
+  "status": "ERROR",
+  "resultaat": {
+    "fout": "Er heeft een fout plaatsgevonden tijdens de verwerking.",
+    "info": null
+  }
+}
+```
+
+De exacte foutcodes en foutstructuur worden nog vastgesteld.
+
+
+## Herhaald opvragen van de verwerkingsstatus
+
+Wanneer de Status-API de status `IN_PROGRESS` retourneert, is de verwerking van
+het aangeboden CloudEvent nog niet afgerond.
+
+De aanbieder kan in dat geval de Status-API op een later moment opnieuw
+aanroepen met dezelfde transactie-ID.
+
+Het opnieuw opvragen van de status wordt uitgevoerd volgens een retry-strategie.
+De aanbieder bepaalt daarbij zelf het interval tussen opeenvolgende verzoeken,
+binnen de daarvoor geldende afspraken.
+
+Een mogelijke strategie is een oplopend interval (exponential backoff). Daarbij
+wordt de wachttijd tussen opeenvolgende verzoeken geleidelijk verhoogd.
+
+Voorbeeld:
+
+| Poging | Wachttijd |
+| --- | --- |
+| Eerste statusopvraag na ontvangst | 1 seconde |
+| Tweede statusopvraag | 2 seconden |
+| Derde statusopvraag | 4 seconden |
+| Vierde statusopvraag | 8 seconden |
+
+De gekozen retry-strategie kan afhankelijk zijn van de eigenschappen van de
+betreffende toepassing. Het doel is om onnodige belasting van de Status-API te
+voorkomen, terwijl de aanbieder de voortgang van de verwerking kan blijven
+volgen.
+
+De definitieve afspraken over retry-intervallen en eventuele maximale
+herhaalduur worden later vastgesteld.
+
