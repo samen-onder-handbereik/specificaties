@@ -187,3 +187,25 @@ Geaccepteerd
 ### Besluit
 
 Domeinbegrippen worden in JSON-LD als aanvullende `@type`-waarden naast PROV-types opgenomen.
+
+
+## ADR-015 -- Query-API's zijn samenwerkfunctie-specifiek
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Query-API's worden niet generiek gedefinieerd, maar maken onderdeel uit van de
+betreffende samenwerkfunctie.
+
+### Motivatie
+
+De mogelijke queries zijn afhankelijk van de betekenis van de gegevens en de
+informatiebehoefte binnen een samenwerkfunctie.
+
+### Consequenties
+
+Iedere samenwerkfunctie bepaalt welke querymogelijkheden beschikbaar zijn en
+legt deze vast in een eigen API-specificatie.

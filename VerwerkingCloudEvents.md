@@ -115,6 +115,24 @@ De generieke verwerking bepaalt:
 - hoe de verwerking asynchroon plaatsvindt;
 - hoe de status wordt opgevraagd.
 
+## Relatie met andere API's
+
+Binnen het stelsel kunnen verschillende typen API's worden onderscheiden.
+
+De CloudEvent API en de Status-API zijn generieke voorzieningen:
+
+- de CloudEvent API wordt gebruikt voor het aanbieden van CloudEvents;
+- de Status-API wordt gebruikt voor het volgen van de asynchrone verwerking.
+
+Daarnaast kunnen samenwerkfuncties specifieke API's definiëren.
+
+Een voorbeeld hiervan is een Query-API. Een Query-API ondersteunt deelnemers bij
+het zoeken naar informatie binnen een specifieke samenwerkfunctie.
+
+De inhoud en mogelijkheden van een Query-API kunnen niet generiek worden
+vastgesteld, omdat deze afhankelijk zijn van de betekenis van de gegevens en de
+informatiebehoefte binnen de betreffende samenwerkfunctie.
+
 ## Nog vast te stellen
 
 De volgende onderwerpen worden later verder uitgewerkt:

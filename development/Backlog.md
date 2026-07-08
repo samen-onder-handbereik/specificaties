@@ -45,3 +45,19 @@
 - [x] Handmatige paragraafnummering verwijderd.
 - [x] CloudEvent-voorbeeld en PROV-model van elkaar onderscheiden.
 - [x] JSON-LD @type-modellering verfijnd.
+
+
+## Sprint 8 afgerond
+
+- [x] Generiek patroon voor asynchrone verwerking van CloudEvents beschreven.
+- [x] Transactie-ID en Status-API beschreven.
+
+## Sprint 9 afgerond
+
+- [x] Retry-strategie bij `IN_PROGRESS` beschreven.
+- [x] Relatie tussen CloudEvent-id en transactie-ID verduidelijkt.
+
+## Sprint 10 afgerond
+
+- [x] Onderscheid tussen generieke API's en samenwerkfunctie-specifieke API's beschreven.
+- [x] Query-API als samenwerkfunctie-specifieke voorziening vastgelegd.

@@ -11,11 +11,13 @@ Overleg**.
 De samenwerkfunctie ondersteunt het beschikbaar stellen en raadplegen
 van de uitkomst van een casusoverleg tussen ketenpartners.
 
-De oplossing bestaat uit twee complementaire onderdelen:
+De oplossing bestaat uit drie complementaire onderdelen:
 
 1.  De inzage-API waarmee de inhoud van de Uitkomst Overleg beschikbaar
     wordt gesteld.
-2.  CloudEvents waarmee gebeurtenissen rondom de Uitkomst Overleg worden
+2.  De Query-API waarmee deelnemers kunnen zoeken naar beschikbare Uitkomsten
+    Overleg.
+3.  CloudEvents waarmee gebeurtenissen rondom de Uitkomst Overleg worden
     gemeld.
 
 De CloudEvents bevatten niet de volledige inhoud van de uitkomst. Zij
@@ -32,7 +34,8 @@ Deze specificatie beschrijft:
 -   de mapping tussen het informatiemodel en de graph;
 -   de events:
     -   `uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`;
-    -   `uitwisselen-uitkomst-overleg.uitkomst-ingezien`.
+    -   `uitwisselen-uitkomst-overleg.uitkomst-ingezien`;
+-   de Query-API voor het vinden van beschikbare Uitkomsten Overleg.
 
 Deze specificatie beschrijft niet de inhoudelijke modellering van
 besluiten en acties of de interne totstandkoming daarvan.
@@ -43,17 +46,46 @@ besluiten en acties of de interne totstandkoming daarvan.
 flowchart LR
     C[Casusoverleg] --> U[Uitkomst Overleg]
     U --> API[Inzage-API]
+    U --> Q[Query-API]
     U --> CE[CloudEvent]
     CE --> G[Knowledge graph]
 ```
 
 De inzage-API is de bron voor de inhoudelijke gegevens.
 
+De Query-API ondersteunt deelnemers bij het vinden van beschikbare Uitkomsten
+Overleg. De Query-API is specifiek voor deze samenwerkfunctie en bevat
+queries die aansluiten op de betekenis en het gebruik van de gegevens binnen
+Uitwisselen Uitkomst Overleg.
+
 De graph ondersteunt:
 
 -   provenance;
 -   auditing;
--   zoeken naar eerdere betrokkenheid van personen.
+-   zoeken naar eerdere betrokkenheid van personen;
+-   zoeken naar beschikbare Uitkomsten Overleg op basis van beschikbaarheidsdatum.
+
+## Query-API
+
+De Query-API ondersteunt deelnemers bij het uitvoeren van queries op beschikbare
+Uitkomsten Overleg.
+
+De queries zijn samenwerkfunctie-specifiek. Anders dan de API voor het aanbieden
+van CloudEvents en de Status-API, kan de inhoud van deze queries niet generiek
+worden vastgesteld. De beschikbare queries zijn afhankelijk van de betekenis van
+de gegevens binnen de betreffende samenwerkfunctie.
+
+Voorbeelden van mogelijke queries binnen Uitwisselen Uitkomst Overleg zijn:
+
+- welke Uitkomsten Overleg zijn beschikbaar gekomen sinds een bepaald tijdstip;
+- welke Uitkomsten Overleg betrekking hebben op een bepaalde Betrokkene;
+- welke Uitkomsten Overleg door een bepaalde organisatie beschikbaar zijn
+  gesteld.
+
+De Query-API gebruikt de gegevens uit de graph om deze vragen te beantwoorden.
+
+De technische specificatie van de Query-API wordt vastgelegd in een
+samenwerkfunctie-specifieke OpenAPI-specificatie.
 
 ## CloudEvents
 
@@ -118,7 +150,7 @@ casusoverleg.
 
 | Concept | PROV-type | Betekenis |
 |---|---|---|
-| UitkomstOverleg | Entity | De via de API beschikbare resource. |
+| UitkomstOverleg | Entity | De via de API beschikbare resource. De Entity bevat tevens de datumtijd waarop de Uitkomst Overleg beschikbaar is gesteld. |
 | Betrokkene | Entity | Zoekanker voor personen. |
 | BeschikbaarStellenUitkomst | Activity | Activiteit waarmee de uitkomst beschikbaar wordt gesteld. |
 | InzienUitkomst | Activity | Activiteit waarmee de uitkomst wordt geraadpleegd. |
@@ -262,6 +294,41 @@ Het burgerservicenummer:
 De technische identifier van de Entity Betrokkene staat los van het
 burgerservicenummer.
 
+## Beschikbaarheidsdatum Uitkomst Overleg
+
+Een deelnemer moet kunnen vaststellen welke Uitkomsten Overleg beschikbaar zijn
+gekomen sinds een bepaald moment.
+
+Daarvoor wordt aan de Entity `UitkomstOverleg` een domeinattribuut toegevoegd
+dat de datumtijd van beschikbaarstelling bevat.
+
+Voorbeeld:
+
+```json
+{
+  "@id": "<identifier-uitkomst-overleg>",
+  "@type": [
+    "prov:Entity",
+    "soh:UitkomstOverleg"
+  ],
+  "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+}
+```
+
+Het attribuut `soh:beschikbaarGesteldOp` ondersteunt operationele queries op
+beschikbare Uitkomsten Overleg.
+
+Het attribuut heeft een andere betekenis dan het CloudEvent-attribuut `time`.
+
+- `time` in het CloudEvent beschrijft het tijdstip waarop de gebeurtenis
+  plaatsvond.
+- `soh:beschikbaarGesteldOp` beschrijft vanaf welk moment de Uitkomst Overleg
+  beschikbaar is voor raadpleging.
+
+De provenance-informatie blijft de relatie tussen de beschikbaarstelling als
+Activity en de Entity UitkomstOverleg beschrijven.
+
+
 ## Event uitkomst ingezien
 
 Het event
@@ -384,7 +451,8 @@ Het voorbeeld bevat:
           "soh:UitkomstOverleg"
         ],
         "prov:wasGeneratedBy": "<identifier-beschikbaarstelling>",
-        "soh:betreft": "<identifier-betrokkene>"
+        "soh:betreft": "<identifier-betrokkene>",
+        "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
       },
       {
         "@id": "<identifier-betrokkene>",

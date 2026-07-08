@@ -119,3 +119,37 @@ Consolidatie en structurering van de specificatie.
 - Handmatige paragraafnummering verwijderd uit de specificatiebron.
 - PROV-JSONLD-model en volledig CloudEvent-voorbeeld van elkaar onderscheiden.
 - JSON-LD-modellering met meervoudige `@type` uitgewerkt.
+
+
+## Sprint 8
+
+### Doel
+
+Beschrijving van de generieke asynchrone verwerking van aangeboden CloudEvents.
+
+### Toegevoegd
+
+- CloudEvent API en Status-API beschreven.
+- Transactie-ID en statusverwerking vastgelegd.
+
+## Sprint 9
+
+### Doel
+
+Verfijning van de asynchrone verwerking.
+
+### Toegevoegd
+
+- Retry-strategie bij `IN_PROGRESS`.
+- Onderscheid tussen CloudEvent-id en transactie-ID.
+
+## Sprint 10
+
+### Doel
+
+Uitwerken van querybaarheid en API-architectuur.
+
+### Toegevoegd
+
+- Onderscheid tussen generieke API's en samenwerkfunctie-specifieke API's.
+- Query-API als onderdeel van een samenwerkfunctie beschreven.
