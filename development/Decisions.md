@@ -114,3 +114,34 @@ Het beschikbaar stellen van een Uitkomst Overleg en het inzien daarvan worden al
 ### Motivatie
 
 Beschikbaarstelling en inzage hebben verschillende betekenis binnen provenance en auditing.
+
+
+## ADR-009 -- Gebruik van namespaces in JSON-LD
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+JSON-LD contexten worden gebruikt om namespaces en prefixen expliciet te definiëren.
+
+### Consequenties
+
+PROV-begrippen en domeinbegrippen worden herkenbaar onderscheiden.
+
+
+## ADR-010 -- URI- en identifierstrategie wordt afzonderlijk uitgewerkt
+
+### Status
+
+Open
+
+### Besluit
+
+Er wordt geen definitieve keuze gemaakt voor instantie-identifiers voordat relevante standaarden zijn onderzocht.
+
+### Motivatie
+
+Begrippen, domeinobjecten en provenance-elementen kunnen verschillende identificatiebehoeften hebben.
+

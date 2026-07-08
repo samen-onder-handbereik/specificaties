@@ -68,3 +68,24 @@ Een technische identifier waarmee een PROV-element uniek wordt aangeduid.
 **Status:** Werkbegrip
 
 Een persoonsgebonden attribuut van de Entity Betrokkene dat gebruikt kan worden om de graph te bevragen.
+
+
+## JSON-LD context
+
+Een context waarin prefixen en termen worden gekoppeld aan volledige URI's.
+
+
+## Namespace
+
+Een URI-gebied waarin begrippen uniek worden geïdentificeerd.
+
+
+## Prefix
+
+Een verkorte aanduiding voor een namespace, bijvoorbeeld `prov` of `soh`.
+
+
+## URI
+
+Een unieke verwijzing naar een resource of begrip.
+

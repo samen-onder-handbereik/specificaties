@@ -17,3 +17,18 @@
 - [ ] Graph Build Specification maken.
 - [ ] Neo4j-model uitwerken.
 - [ ] Cypher-query voorbeelden toevoegen.
+
+
+## Sprint 5 afgerond
+
+- [x] JSON-LD context eerste versie.
+- [x] Namespacegebruik uitgewerkt.
+- [x] Onderzoeksvraag identifierstrategie vastgesteld.
+
+## Daarna
+
+- [ ] Graph Build Specification maken.
+- [ ] Neo4j-model uitwerken.
+- [ ] Cypher-query voorbeelden toevoegen.
+- [ ] URI-strategie verder uitwerken.
+

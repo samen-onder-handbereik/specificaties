@@ -81,3 +81,17 @@ Concrete uitwerking van CloudEvents en PROV-JSONLD voor de samenwerkfunctie Uitw
 - Betrokkene blijft een Entity in de graph.
 - Burgerservicenummer wordt gebruikt als domeinattribuut en niet als technische identifier.
 - Beschikbaarstelling en inzage worden als afzonderlijke Activities gemodelleerd.
+
+
+## Sprint 5
+
+### Doel
+
+Uitwerken van JSON-LD context, namespaces en identifierstrategie.
+
+### Toegevoegd
+
+- Eerste ontwerp voor JSON-LD context.
+- Gebruik van prefixen voor PROV en Samen onder handbereik.
+- Onderzoeksvraag voor URI- en identifierstrategie vastgelegd.
+

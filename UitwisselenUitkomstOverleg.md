@@ -311,3 +311,62 @@ op welk moment deze gebeurtenis heeft plaatsgevonden.
 
 De vastlegging van dit event ondersteunt zowel auditing als het aantonen dat een
 organisatie kennis heeft kunnen nemen van de uitkomst.
+
+
+## 15. JSON-LD context en namespaces
+
+De PROV-JSONLD-graaf maakt gebruik van een JSON-LD context om begrippen en eigenschappen ondubbelzinnig te identificeren.
+
+Een JSON-LD context koppelt prefixen aan namespaces. Hierdoor kunnen compacte namen worden gebruikt, terwijl de betekenis van begrippen eenduidig blijft.
+
+Voor provenance wordt de PROV-namespace gebruikt. Voor begrippen binnen Samen onder handbereik wordt de prefix `soh` gereserveerd.
+
+Voorbeeld:
+
+```json
+{
+  "@context": [
+    "https://openprovenance.org/prov-jsonld/context.jsonld",
+    {
+      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
+    }
+  ]
+}
+```
+
+De definitieve publicatie en inhoud van de JSON-LD context worden nog vastgesteld.
+
+## 16. Gebruik van domeinprefixen
+
+Domeinbegrippen worden gekwalificeerd met de prefix `soh`.
+
+Voorbeeld:
+
+```json
+{
+  "@type": "soh:UitkomstOverleg"
+}
+```
+
+Hiermee wordt voorkomen dat begrippen alleen als lokale namen worden geïnterpreteerd.
+
+## 17. URI- en identifierstrategie
+
+De strategie voor URI's en identifiers wordt verder onderzocht.
+
+Daarbij wordt onderscheid gemaakt tussen:
+
+- identifiers van begrippen;
+- identifiers van domeinobjecten;
+- technische identifiers voor provenance-elementen.
+
+Een namespace voor begrippen en schema's is niet hetzelfde als de definitieve strategie voor identifiers van instanties.
+
+Bij het bepalen van de strategie worden relevante overheidsbrede afspraken en standaarden betrokken.
+
+## 18. Open punt
+
+Open vraag:
+
+Welke standaarden en afspraken zijn van toepassing op URI's en identifiers voor begrippen, informatieobjecten en instanties binnen de Samen onder handbereik-omgeving?
+
