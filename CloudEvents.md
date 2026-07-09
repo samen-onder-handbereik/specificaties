@@ -1,226 +1,262 @@
-# Gebruik van de standaard CloudEvent
+# Toepassing van de CloudEvents-standaard
 
-Binnen *Samen Onder Handbereik* worden gebeurtenissen uitgewisseld conform de standaard **CloudEvents** van de Cloud Native Computing Foundation (CNCF).
+## Inleiding
+
+Binnen *Samen Onder Handbereik* worden gebeurtenissen uitgewisseld
+conform de standaard **CloudEvents** van de Cloud Native Computing
+Foundation (CNCF).
+
+Een CloudEvent beschrijft een gebeurtenis die binnen een
+samenwerkfunctie heeft plaatsgevonden. Het CloudEvent bevat de
+informatie die nodig is om de gebeurtenis te herkennen en te verwerken.
+De betekenis van de gebeurtenis en de inhoud van de bijbehorende
+gegevens worden bepaald door de betreffende samenwerkfunctie.
 
 Een CloudEvent bestaat uit:
 
-1. **Context-attributen**  
-   Gestandaardiseerde metadata-velden die informatie geven over de gebeurtenis (zoals herkomst, tijdstip en type).
+1.  **Context-attributen**
 
-2. **`data` (payload)**  
-   De inhoudelijke gegevens die horen bij de gebeurtenis.
+    Gestandaardiseerde metadata-attributen die informatie geven over de
+    gebeurtenis, zoals de bron, het type gebeurtenis en het tijdstip
+    waarop de gebeurtenis heeft plaatsgevonden.
 
-In JSON-vorm ziet een CloudEvent er schematisch als volgt uit:
+2.  **`data`**
 
-```json
+    De gegevens die inhoudelijk bij de gebeurtenis horen.
+
+Een CloudEvent heeft in hoofdlijnen de volgende structuur:
+
+``` json
 {
   "specversion": "1.0",
   "id": "550e8400-e29b-41d4-a716-446655440000",
-  "source": "/oin/00000004000000002000/systeem/zaaksysteem",
-  "type": "uitkomst-overleg.vastgesteld",
+  "source": "/oin/<oin>/systeem/<systeemnaam>",
+  "type": "<samenwerkfunctie>.<gebeurtenis>",
   "time": "2026-03-03T10:15:30Z",
-  "datacontenttype": "application/json",
-  "subject": "uitkomst-overleg/123456789",
-  "data": {
-    "...": "..."
-  }
+  "datacontenttype": "application/ld+json",
+  "dataschema": "<schema-identificatie>",
+  "subject": "<identifier>",
+  "data": {}
 }
 ```
 
-De onderstaande afspraken hebben betrekking op de **standaard context-attributen**.  
-Voor de attributen `type`, `subject` en `data` worden aanvullende afspraken gemaakt per samenwerkfunctie.
+Dit voorbeeld laat de generieke structuur van een CloudEvent zien. De
+concrete invulling van de attributen `type`, `subject`, `dataschema` en
+`data` wordt vastgesteld binnen de specificatie van de betreffende
+samenwerkfunctie.
+
+De afspraken in dit hoofdstuk hebben betrekking op het generieke gebruik
+van CloudEvents.
+
+------------------------------------------------------------------------
 
 # Vulling van context-attributen
 
 ## `specversion`
 
-**Doel**  
+### Doel
+
 Geeft aan welke versie van de CloudEvents-specificatie wordt gebruikt.
 
-**Afspraken**
+### Afspraken
 
-- Waarde is altijd: `"1.0"`
-- Wordt als vaste waarde opgenomen in ieder event.
+-   De waarde is altijd `1.0`.
+-   De waarde wordt opgenomen in ieder CloudEvent.
 
-**Voorbeeld**
-
-```json
-"specversion": "1.0"
-```
+------------------------------------------------------------------------
 
 ## `id`
 
-**Doel**  
-Unieke identificatie van het event.
+### Doel
 
-**Afspraken**
+Identificeert het CloudEvent.
 
-- Moet wereldwijd uniek zijn binnen de context van het producerende systeem.
-- Wordt gegenereerd door de verzendende partij.
-- UUID (bij voorkeur UUIDv4) is de standaard.
-- Een `id` mag niet opnieuw gebruikt worden, ook niet bij retries.
+### Afspraken
 
-**Voorbeeld**
+-   Het attribuut `id` wordt gegenereerd door de producerende partij.
+-   De waarde is uniek binnen de context waarin de producer CloudEvents
+    uitgeeft.
+-   Als standaard wordt gebruikgemaakt van een UUID, bij voorkeur
+    UUIDv4.
+-   Een eenmaal gebruikt `id` wordt niet opnieuw gebruikt, ook niet
+    wanneer een CloudEvent opnieuw wordt aangeboden.
 
-```json
-"id": "550e8400-e29b-41d4-a716-446655440000"
-```
+------------------------------------------------------------------------
 
 ## `source`
 
-**Doel**  
-Identificeert de bron van het event.
+### Doel
 
-**Afspraken**
+Identificeert de bron die het CloudEvent heeft geproduceerd.
 
-- Bevat een stabiele, unieke identificatie van de producerende applicatie of organisatie.
-- Wordt vastgelegd als URI (hoeft niet resolvable te zijn).
-- Als basis wordt bij voorkeur het **OIN (Organisatie-identificatienummer)** gebruikt.
+### Afspraken
 
-Structuurvoorbeeld:
+-   De waarde identificeert de producerende organisatie of applicatie.
+-   De waarde wordt vastgelegd als URI.
+-   De URI hoeft niet resolvable te zijn.
+-   Als basis wordt bij voorkeur het Organisatie-identificatienummer
+    (OIN) gebruikt.
 
-```
-/oin/<oin>/systeem/<systeemnaam>
-```
+Voorbeeldstructuur:
 
-De `source` verandert niet per eventtype, maar per producerende applicatie of organisatorische bron.
+    /oin/<oin>/systeem/<systeemnaam>
 
-**Voorbeeld**
+De `source` verandert niet per gebeurtenis, maar is gekoppeld aan de
+producerende bron.
 
-```json
-"source": "/oin/00000004000000002000/systeem/zaaksysteem"
-```
+------------------------------------------------------------------------
 
 ## `type`
 
-**Doel**  
+### Doel
+
 Geeft het type gebeurtenis aan.
 
-**Afspraken (algemeen kader)**
+### Afspraken
 
-- Beschrijft **wat er functioneel is gebeurd**, niet hoe het technisch is verwerkt.
-- Wordt vastgesteld per samenwerkfunctie.
-- Naamgeving volgens vast patroon:
+-   Het attribuut beschrijft wat er functioneel is gebeurd.
+-   Het attribuut beschrijft niet de technische verwerking van de
+    gebeurtenis.
+-   De toegestane waarden worden vastgesteld per samenwerkfunctie.
+-   Naamgeving volgt het patroon:
 
+```{=html}
+<!-- -->
 ```
-<samenwerkfunctie>.<gebeurtenis>
-```
+    <samenwerkfunctie>.<gebeurtenis>
 
-- Gebruik lower-case en puntnotatie.
-- Geen versienummers in `type` (versiebeheer vindt plaats in `dataschema` of via governance).
+-   Er wordt gebruikgemaakt van lower-case en puntnotatie.
+-   Versienummers worden niet opgenomen in `type`.
 
-**Voorbeeld**
-
-```json
-"type": "uitkomst-overleg.vastgesteld"
-```
+------------------------------------------------------------------------
 
 ## `time`
 
-**Doel**  
-Tijdstip waarop de gebeurtenis heeft plaatsgevonden.
+### Doel
 
-**Afspraken**
+Geeft het tijdstip aan waarop de gebeurtenis heeft plaatsgevonden.
 
-- Wordt gevuld door de producer.
-- ISO 8601 formaat.
-- Altijd in UTC (met `Z` notatie).
-- Betreft het moment van optreden van de gebeurtenis, niet het verzendmoment.
+### Afspraken
 
-**Voorbeeld**
+-   De producer vult het attribuut.
+-   Het formaat is ISO 8601.
+-   De waarde wordt vastgelegd in UTC.
+-   Het tijdstip betreft het moment waarop de gebeurtenis plaatsvond en
+    niet het moment van verzending.
 
-```json
-"time": "2026-03-03T10:15:30Z"
-```
+------------------------------------------------------------------------
 
 ## `datacontenttype`
 
-**Doel**  
-Geeft het formaat van de payload (`data`) aan.
+### Doel
 
-**Afspraken**
+Geeft het formaat van de inhoud van `data` aan.
 
-- Standaardwaarde:
+### Afspraken
 
-```
-application/json
-```
+De waarde wordt bepaald door de gebruikte representatie van de payload.
 
-**Voorbeeld**
+Voor JSON-LD wordt bijvoorbeeld gebruikt:
 
-```json
-"datacontenttype": "application/json"
-```
+    application/ld+json
+
+------------------------------------------------------------------------
 
 ## `dataschema`
 
-**Doel**  
-Verwijzing naar het schema van de payload.
+### Doel
 
-**Afspraken**
+Verwijst naar de beschrijving van de structuur en betekenis van de
+payload.
 
-- Bevat een verwijzing naar het JSON Schema waaraan de inhoud van het attribuut `data` dient te voldoen.
-- Voor elke samenwerkfunctie wordt een apart JSON Schema-bestand gedefinieerd.
-- Binnen elk JSON Schema-bestand wordt voor elke waarde voor het attribuut `type` een aparte beschrijving opgenomen. 
+### Afspraken
 
-**Voorbeeld**
+-   Het attribuut verwijst naar de technische beschrijving van de inhoud
+    van `data`.
+-   De concrete invulling wordt bepaald per samenwerkfunctie.
+-   Afhankelijk van de gebruikte representatie kan dit bijvoorbeeld een
+    JSON Schema en/of een semantische context bevatten.
 
-```json
-"dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/cloudevents/uitkomst-overleg.json#uitkomst-beschikbaar-gesteld"
-```
+------------------------------------------------------------------------
 
 ## `subject`
 
-**Doel**  
-Specificeert het object binnen de bron waarop het event betrekking heeft.
+### Doel
 
-**Afspraken**
+Geeft het object aan waarop de gebeurtenis betrekking heeft.
 
-- Wordt gebruikt wanneer meerdere objecttypen binnen dezelfde `source` bestaan.
-- Bevat de identificatie van de entiteit waarop de gebeurtenis betrekking heeft.
-- Per samenwerkfunctie worden nadere afspraken gemaakt over de structuur, betekenis en naamgeving van `subject`.
+### Afspraken
 
-**Voorbeeld**
+-   Het attribuut wordt gebruikt wanneer de gebeurtenis betrekking heeft
+    op een specifiek object binnen de bron.
+-   De betekenis en structuur van `subject` worden vastgesteld per
+    samenwerkfunctie.
+-   De waarde sluit aan bij de identifierstrategie van het betreffende
+    domeinobject.
 
-```json
-"subject": "uitkomst-overleg/123456789"
-```
+------------------------------------------------------------------------
 
-# Nadere uitwerking per samenwerkfunctie
+# Het attribuut `data`
 
-Bij de beschrijving van iedere samenwerkfunctie wordt een nadere specificatie opgenomen waarin in elk geval wordt vastgelegd:
+Het attribuut `data` bevat de gegevens die horen bij de gebeurtenis.
 
-- de waarden die voor het attribuut `type` gebruikt mogen worden;
-- welke entiteit als `subject` wordt aangemerkt;
-- de precieze structuur en inhoudelijke vulling van het attribuut `data`.
+De exacte structuur en betekenis van `data` worden vastgesteld per
+samenwerkfunctie.
 
-# Toegang tot nadere details via API
+Binnen *Samen Onder Handbereik* kan `data` onder andere worden gebruikt
+voor:
 
-De payload (`data`) van een CloudEvent bevat de gegevens die horen bij de gebeurtenis.  
-De exacte structuur en inhoud van deze payload worden per samenwerkfunctie gespecificeerd.
+-   semantische gegevens die nodig zijn voor de interpretatie van de
+    gebeurtenis;
+-   provenance-informatie over de totstandkoming of het gebruik van
+    gegevens.
 
-Naast de functionele gegevens bevat het attribuut `data` in veel gevallen een **verwijzing naar een API-endpoint** waar afnemers aanvullende details over het betreffende object kunnen opvragen.
+Een samenwerkfunctie bepaalt welke gegevens worden opgenomen en welke
+semantische afspraken gelden.
 
-## Doel
+------------------------------------------------------------------------
 
-- Het CloudEvent bevat voldoende informatie om een gebeurtenis te signaleren.
-- Nadere of uitgebreide gegevens kunnen door de afnemer worden opgehaald via een API-aanroep bij de producerende partij.
-- Hierdoor blijven events compact en wordt voorkomen dat grote of vaak veranderende datasets in het event zelf worden opgenomen.
+# Relatie tussen generieke afspraken en samenwerkfuncties
 
-## Afspraken
+De generieke CloudEvents-afspraken bepalen:
 
-- In gevallen waarin het `type` van het CloudEvent zich daarvoor leent, wordt in `data` een URL opgenomen die verwijst naar het API-endpoint waar de actuele details van het betreffende object beschikbaar zijn.
-- Deze URL verwijst naar een endpoint dat wordt aangeboden door de verzendende partij.
-- De URL bevat voldoende informatie om het betreffende object eenduidig te identificeren.
-- Authenticatie en autorisatie op dit endpoint vallen onder de reguliere afspraken voor API-toegang binnen *Samen Onder Handbereik*.
+-   de structuur van het CloudEvent;
+-   de betekenis van standaard context-attributen;
+-   de wijze waarop gebeurtenissen technisch worden beschreven.
 
-**Voorbeeld**
+De samenwerkfunctie bepaalt:
 
-```json
-"data": {
-  "detailUrl": "https://api.samenonderhandbereik.nl/uitkomst-overleg/123456789",
-  "...": "..."
-}
-```
+-   welke gebeurtenistypen beschikbaar zijn;
+-   welke betekenis een gebeurtenis heeft;
+-   welk object als `subject` wordt gebruikt;
+-   welke gegevens in `data` worden opgenomen.
 
-De precieze naam van dit veld (bijvoorbeeld `detailUrl`, `resourceUrl` of `self`) wordt vastgelegd binnen de specificatie van de betreffende samenwerkfunctie.
+------------------------------------------------------------------------
+
+# Relatie met asynchrone verwerking
+
+Het aanbieden en verwerken van CloudEvents verloopt volgens een generiek
+patroon.
+
+Een aanbieder levert een CloudEvent aan via de CloudEvent API. De
+verwerking vindt vervolgens asynchroon plaats.
+
+Na ontvangst ontvangt de aanbieder een technische transactie-ID waarmee
+de status van de verwerking kan worden opgevraagd.
+
+De transactie-ID maakt geen onderdeel uit van het CloudEvent zelf.
+
+------------------------------------------------------------------------
+
+# Samenhang met API's
+
+CloudEvents maken onderdeel uit van een breder patroon waarin
+verschillende API's worden onderscheiden.
+
+De generieke API's zijn:
+
+-   CloudEvent API voor het aanbieden van CloudEvents;
+-   Status-API voor het volgen van de verwerking.
+
+Daarnaast kunnen samenwerkfuncties specifieke API's definiëren, zoals
+een Inzage-API of Query-API.

@@ -100,7 +100,7 @@ Binnen deze samenwerkfunctie worden twee eventtypen gebruikt:
 ### CloudEvent-profiel
 
 De producer vult de standaard CloudEvent-attributen volgens de afspraken
-uit het generieke CloudEvent-profiel.
+uit het hoofdstuk *Toepassing van de CloudEvents-standaard*.
 
 Voor deze samenwerkfunctie gelden de volgende aanvullende afspraken:
 

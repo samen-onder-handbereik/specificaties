@@ -4,6 +4,8 @@
 
 Binnen het stelsel worden gegevensuitwisselingen uitgevoerd door middel van CloudEvents.
 
+De generieke afspraken over de toepassing van de CloudEvents-standaard zijn beschreven in het hoofdstuk *Toepassing van de CloudEvents-standaard*.
+
 Een samenwerkfunctie bepaalt de inhoudelijke betekenis en structuur van een CloudEvent. De technische verwerking van een aangeboden CloudEvent verloopt volgens een generiek patroon dat voor alle samenwerkfuncties geldt.
 
 Een aanbieder levert een volledig samengesteld CloudEvent aan via de CloudEvent API. De verwerking van het aangeboden CloudEvent vindt vervolgens asynchroon plaats.

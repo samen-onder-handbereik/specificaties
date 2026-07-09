@@ -89,9 +89,23 @@ Een verkorte aanduiding voor een namespace, bijvoorbeeld `prov` of `soh`.
 
 Een unieke verwijzing naar een resource of begrip.
 
+## CloudEvent
+
+**Status:** Technisch begrip
+
+Een gebeurtenisbericht volgens de CloudEvents-specificatie van de Cloud Native Computing Foundation (CNCF), bestaande uit context-attributen en een inhoudelijke payload.
+
+
+## CloudEvent API
+
+**Status:** Technisch begrip
+
+Een API waarmee een aanbieder een CloudEvent aanbiedt voor verwerking.
+
+
 ## CloudEvent envelope
 
-De standaard CloudEvent-attributen die de gebeurtenis beschrijven.
+De verzameling standaard context-attributen van een CloudEvent die metadata over de gebeurtenis bevatten.
 
 
 ## JSON-LD payload
