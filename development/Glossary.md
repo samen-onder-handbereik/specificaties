@@ -165,3 +165,12 @@ verdere verwerking daarvan niet in dezelfde stap plaatsvinden.
 Het patroon waarbij een interactie wordt geïnitieerd, geaccepteerd, vervolgens
 asynchroon wordt verwerkt en waarbij de voortgang en/of het resultaat later
 beschikbaar komt.
+
+
+
+## Knowledge graph
+
+**Status:** Technisch begrip
+
+Een graaf waarin informatieobjecten, hun onderlinge relaties en
+provenance-informatie worden vastgelegd zodat deze semantisch bevraagbaar zijn.

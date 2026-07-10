@@ -77,3 +77,12 @@
 - [x] Generiek patroon voor asynchrone interacties beschreven.
 - [x] CloudEvent API en Query-API als toepassingen van het generieke patroon beschreven.
 - [x] Status-API gepositioneerd als ondersteunende functie voor het volgen van asynchrone interacties.
+
+
+
+## Sprint 14 afgerond
+
+- [x] Conceptuele Knowledge graph voor Uitwisselen Uitkomst Overleg toegevoegd.
+- [x] Relatie tussen Query-API en Knowledge graph verduidelijkt.
+- [x] Informatievoorziening van aanbieder Uitkomst Overleg als extern onderdeel opgenomen.
+- [x] CloudEvent buiten de Knowledge graph gepositioneerd.
