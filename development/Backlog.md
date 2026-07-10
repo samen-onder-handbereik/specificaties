@@ -61,3 +61,11 @@
 
 - [x] Onderscheid tussen generieke API's en samenwerkfunctie-specifieke API's beschreven.
 - [x] Query-API als samenwerkfunctie-specifieke voorziening vastgelegd.
+
+
+
+
+## Sprint 12 afgerond
+
+- [x] Voorbeelden van Query-API-aanroepen en responses voor Uitwisselen Uitkomst Overleg toegevoegd.
+- [x] Relatie tussen informatievragen en het graphmodel verduidelijkt.

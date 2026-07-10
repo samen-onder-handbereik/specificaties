@@ -136,4 +136,14 @@ Een API waarmee een deelnemer queries kan uitvoeren op gegevens die binnen een
 samenwerkfunctie beschikbaar zijn gesteld.
 
 Een Query-API is specifiek voor een samenwerkfunctie en wordt niet generiek
-gedefinieerd.
+gedefinieerd. De beschikbare queries sluiten aan op de informatiebehoefte
+binnen de betreffende samenwerkfunctie.
+
+
+
+
+## Status-API
+
+**Status:** Technisch begrip
+
+Een API waarmee de status van een eerder aangeboden verwerking kan worden opgevraagd.

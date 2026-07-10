@@ -185,3 +185,19 @@ generieke/samenwerkfunctie-specifieke architectuur.
 -   Begrippen rond CloudEvents aangevuld in `Glossary.md`.
 -   Generieke afspraken over CloudEvent-attributen, zoals `type`,
     `subject` en `data`, verder aangescherpt.
+
+
+
+
+## Sprint 12
+
+### Doel
+
+Concretiseren van de Query-API voor Uitwisselen Uitkomst Overleg.
+
+### Toegevoegd
+
+-   Voorbeelden van Query-API-aanroepen en responses opgenomen.
+-   Relatie gelegd tussen informatievragen en de onderliggende graph.
+-   Eerste uitwerking gemaakt van de informatie die via de Query-API beschikbaar
+    wordt gesteld.

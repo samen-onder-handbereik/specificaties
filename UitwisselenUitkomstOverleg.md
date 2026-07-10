@@ -84,6 +84,10 @@ Voorbeelden van mogelijke queries binnen Uitwisselen Uitkomst Overleg zijn:
 
 De Query-API gebruikt de gegevens uit de graph om deze vragen te beantwoorden.
 
+De volgende paragrafen beschrijven de onderliggende modellering en de gegevens
+die beschikbaar zijn voor het beantwoorden van deze vragen. Daarna worden
+voorbeelden gegeven van query's en de bijbehorende resultaten.
+
 De technische specificatie van de Query-API wordt vastgelegd in een
 samenwerkfunctie-specifieke OpenAPI-specificatie.
 
@@ -390,6 +394,83 @@ Voorbeeld:
 ```
 
 Hiermee wordt voorkomen dat begrippen alleen als lokale namen worden geïnterpreteerd.
+
+## Voorbeelden Query-API
+
+Deze voorbeelden laten zien hoe de Query-API kan worden gebruikt om de in de
+voorgaande paragrafen beschreven informatievragen te beantwoorden.
+
+### Beschikbare Uitkomsten Overleg sinds een bepaald tijdstip
+
+Met deze query kan een deelnemer opvragen welke Uitkomsten Overleg vanaf een
+bepaald moment beschikbaar zijn gekomen.
+
+Voorbeeld request:
+
+```http
+GET /uitkomsten-overleg?beschikbaarSinds=2026-01-01T00:00:00Z
+```
+
+Voorbeeld response:
+
+```json
+{
+  "results": [
+    {
+      "id": "<identifier-uitkomst-overleg>",
+      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+    }
+  ]
+}
+```
+
+### Uitkomsten Overleg voor een Betrokkene
+
+Met deze query kan een deelnemer beschikbare Uitkomsten Overleg vinden die
+betrekking hebben op een bepaalde Betrokkene.
+
+Voorbeeld request:
+
+```http
+GET /uitkomsten-overleg?betrokkene=<identifier-betrokkene>
+```
+
+Voorbeeld response:
+
+```json
+{
+  "results": [
+    {
+      "id": "<identifier-uitkomst-overleg>",
+      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+    }
+  ]
+}
+```
+
+### Uitkomsten Overleg van een organisatie
+
+Met deze query kan een deelnemer zoeken naar Uitkomsten Overleg die door een
+bepaalde organisatie beschikbaar zijn gesteld.
+
+Voorbeeld request:
+
+```http
+GET /uitkomsten-overleg?organisatie=<identifier-organisatie>
+```
+
+Voorbeeld response:
+
+```json
+{
+  "results": [
+    {
+      "id": "<identifier-uitkomst-overleg>",
+      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+    }
+  ]
+}
+```
 
 ## URI- en identifierstrategie
 
