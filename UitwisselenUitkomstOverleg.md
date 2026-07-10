@@ -48,7 +48,15 @@ flowchart LR
     U --> API[Inzage-API]
     U --> Q[Query-API]
     U --> CE[CloudEvent]
-    CE --> G[Knowledge graph]
+
+    Q --> G[Knowledge graph]
+    CE --> G
+
+    I["Informatievoorziening aanbieder<br/>Uitkomst Overleg"]
+    API --> I
+
+    class I external
+    classDef external stroke-dasharray: 5 5
 ```
 
 De inzage-API is de bron voor de inhoudelijke gegevens.
@@ -358,6 +366,61 @@ De vastlegging van dit event ondersteunt zowel auditing als het aantonen dat een
 organisatie kennis heeft kunnen nemen van de uitkomst.
 
 
+## Voorbeeld Knowledge graph voor Uitwisselen Uitkomst Overleg
+
+De Knowledge graph bevat de betekenisvolle informatieobjecten en provenance-elementen die nodig zijn om de beschikbaarheid en herkomst van een Uitkomst Overleg vast te leggen.
+
+Onderstaande weergave is een conceptuele representatie van de relaties binnen de graph. Het CloudEvent zelf maakt geen onderdeel uit van de Knowledge graph. Het CloudEvent beschrijft de uitwisseling van een gebeurtenis; de Knowledge graph bevat de betekenis van de uitgewisselde informatie en de bijbehorende provenance.
+
+```text
+                         ┌──────────────┐
+                         │ Organisatie  │
+                         │ Agent       │
+                         └──────┬───────┘
+                                │
+                                │ wasAssociatedWith
+                                │
+                 ┌──────────────▼──────────────┐
+                 │ BeschikbaarStellenUitkomst  │
+                 │ Activity                    │
+                 └──────────────┬──────────────┘
+                                │
+                                │ wasGeneratedBy
+                                │
+                 ┌──────────────▼──────────────┐
+                 │ UitkomstOverleg             │
+                 │ Entity                      │
+                 └──────────────┬──────────────┘
+                                │
+                                │ betreft
+                                │
+                         ┌──────▼───────┐
+                         │ Betrokkene   │
+                         │ Entity       │
+                         └──────────────┘
+```
+
+De weergegeven elementen hebben de volgende betekenis:
+
+| Element | Betekenis |
+|---|---|
+| UitkomstOverleg | De informatie die beschikbaar wordt gesteld en via de inzage-API kan worden geraadpleegd. |
+| Betrokkene | Het domeinobject waarop de Uitkomst Overleg betrekking heeft en waarop kan worden gezocht. |
+| BeschikbaarStellenUitkomst | De activiteit waarmee de Uitkomst Overleg beschikbaar wordt gesteld. |
+| Organisatie | De organisatie die verantwoordelijk is voor de activiteit en als PROV Agent wordt gemodelleerd. |
+
+De graph combineert domeininformatie met provenance-informatie:
+
+- `UitkomstOverleg` wordt gemodelleerd als een PROV Entity;
+- `BeschikbaarStellenUitkomst` wordt gemodelleerd als een PROV Activity;
+- `Organisatie` wordt gemodelleerd als een PROV Agent.
+
+De Query-API gebruikt deze relaties om informatievragen te beantwoorden, zoals:
+
+- welke Uitkomsten Overleg betrekking hebben op een bepaalde Betrokkene;
+- welke organisatie een Uitkomst Overleg beschikbaar heeft gesteld;
+- welke Uitkomsten Overleg vanaf een bepaald moment beschikbaar zijn gekomen.
+
 ## JSON-LD context en namespaces
 
 De PROV-JSONLD-graaf maakt gebruik van een JSON-LD context om begrippen en eigenschappen ondubbelzinnig te identificeren.
@@ -563,11 +626,12 @@ Het voorbeeld bevat:
 }
 ```
 
-De relatie tussen het CloudEvent en de provenance-graaf is als volgt:
+De relatie tussen het CloudEvent en de Knowledge graph is als volgt:
 
 - het CloudEvent beschrijft de gebeurtenis die wordt uitgewisseld;
-- het attribuut `data` bevat de provenance-graaf;
-- de identifiers leggen de verbinding tussen CloudEvent en provenance-elementen.
+- de gegevens uit het CloudEvent worden gebruikt bij het opbouwen van de Knowledge graph;
+- de Knowledge graph bevat de betekenisvolle informatieobjecten en provenance-relaties;
+- het CloudEvent zelf maakt geen onderdeel uit van de Knowledge graph.
 
 De gebruikte domeinrelatie `soh:betreft` is een voorbeeld van een nog vast te stellen
 domeinspecifieke relatie. De exacte URI-strategie en de definitieve JSON-LD-context

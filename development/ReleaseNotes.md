@@ -217,3 +217,21 @@ Samen Onder Handbereik.
 -   Asynchrone verwerking beschreven als generiek interactiepatroon.
 -   CloudEvent API en Query-API gepositioneerd als toepassingen van dit patroon.
 -   Status-API gepositioneerd als ondersteunende functie.
+
+
+
+## Sprint 14
+
+### Doel
+
+Concretiseren van het Knowledge graph-model voor Uitwisselen Uitkomst Overleg.
+
+### Gewijzigd
+
+-   Architectuurweergave uitgebreid met de relatie tussen Query-API en
+    Knowledge graph.
+-   Informatievoorziening van aanbieder Uitkomst Overleg zichtbaar gemaakt als
+    extern onderdeel.
+-   Conceptuele Knowledge graph toegevoegd voor de beschikbaarstelling van
+    Uitkomst Overleg.
+-   Scheiding tussen CloudEvent en Knowledge graph verduidelijkt.

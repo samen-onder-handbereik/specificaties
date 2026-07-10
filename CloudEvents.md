@@ -48,8 +48,6 @@ samenwerkfunctie.
 De afspraken in dit hoofdstuk hebben betrekking op het generieke gebruik
 van CloudEvents.
 
-------------------------------------------------------------------------
-
 # Vulling van context-attributen
 
 ## `specversion`
@@ -62,8 +60,6 @@ Geeft aan welke versie van de CloudEvents-specificatie wordt gebruikt.
 
 -   De waarde is altijd `1.0`.
 -   De waarde wordt opgenomen in ieder CloudEvent.
-
-------------------------------------------------------------------------
 
 ## `id`
 
@@ -80,8 +76,6 @@ Identificeert het CloudEvent.
     UUIDv4.
 -   Een eenmaal gebruikt `id` wordt niet opnieuw gebruikt, ook niet
     wanneer een CloudEvent opnieuw wordt aangeboden.
-
-------------------------------------------------------------------------
 
 ## `source`
 
@@ -103,8 +97,6 @@ Voorbeeldstructuur:
 
 De `source` verandert niet per gebeurtenis, maar is gekoppeld aan de
 producerende bron.
-
-------------------------------------------------------------------------
 
 ## `type`
 
@@ -128,8 +120,6 @@ Geeft het type gebeurtenis aan.
 -   Er wordt gebruikgemaakt van lower-case en puntnotatie.
 -   Versienummers worden niet opgenomen in `type`.
 
-------------------------------------------------------------------------
-
 ## `time`
 
 ### Doel
@@ -144,8 +134,6 @@ Geeft het tijdstip aan waarop de gebeurtenis heeft plaatsgevonden.
 -   Het tijdstip betreft het moment waarop de gebeurtenis plaatsvond en
     niet het moment van verzending.
 
-------------------------------------------------------------------------
-
 ## `datacontenttype`
 
 ### Doel
@@ -159,8 +147,6 @@ De waarde wordt bepaald door de gebruikte representatie van de payload.
 Voor JSON-LD wordt bijvoorbeeld gebruikt:
 
     application/ld+json
-
-------------------------------------------------------------------------
 
 ## `dataschema`
 
@@ -177,8 +163,6 @@ payload.
 -   Afhankelijk van de gebruikte representatie kan dit bijvoorbeeld een
     JSON Schema en/of een semantische context bevatten.
 
-------------------------------------------------------------------------
-
 ## `subject`
 
 ### Doel
@@ -193,8 +177,6 @@ Geeft het object aan waarop de gebeurtenis betrekking heeft.
     samenwerkfunctie.
 -   De waarde sluit aan bij de identifierstrategie van het betreffende
     domeinobject.
-
-------------------------------------------------------------------------
 
 # Het attribuut `data`
 
@@ -214,8 +196,6 @@ voor:
 Een samenwerkfunctie bepaalt welke gegevens worden opgenomen en welke
 semantische afspraken gelden.
 
-------------------------------------------------------------------------
-
 # Relatie tussen generieke afspraken en samenwerkfuncties
 
 De generieke CloudEvents-afspraken bepalen:
@@ -231,8 +211,6 @@ De samenwerkfunctie bepaalt:
 -   welk object als `subject` wordt gebruikt;
 -   welke gegevens in `data` worden opgenomen.
 
-------------------------------------------------------------------------
-
 # Relatie met asynchrone verwerking
 
 Het aanbieden en verwerken van CloudEvents verloopt volgens een generiek
@@ -245,8 +223,6 @@ Na ontvangst ontvangt de aanbieder een technische transactie-ID waarmee
 de status van de verwerking kan worden opgevraagd.
 
 De transactie-ID maakt geen onderdeel uit van het CloudEvent zelf.
-
-------------------------------------------------------------------------
 
 # Samenhang met API's
 
