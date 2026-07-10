@@ -201,3 +201,19 @@ Concretiseren van de Query-API voor Uitwisselen Uitkomst Overleg.
 -   Relatie gelegd tussen informatievragen en de onderliggende graph.
 -   Eerste uitwerking gemaakt van de informatie die via de Query-API beschikbaar
     wordt gesteld.
+
+
+
+## Sprint 13
+
+### Doel
+
+Vastleggen van het generieke patroon voor asynchrone interacties binnen
+Samen Onder Handbereik.
+
+### Gewijzigd
+
+-   `VerwerkingCloudEvents.md` verbreed naar `AsynchroneInteracties.md`.
+-   Asynchrone verwerking beschreven als generiek interactiepatroon.
+-   CloudEvent API en Query-API gepositioneerd als toepassingen van dit patroon.
+-   Status-API gepositioneerd als ondersteunende functie.

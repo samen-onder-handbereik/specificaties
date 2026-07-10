@@ -209,3 +209,28 @@ informatiebehoefte binnen een samenwerkfunctie.
 
 Iedere samenwerkfunctie bepaalt welke querymogelijkheden beschikbaar zijn en
 legt deze vast in een eigen API-specificatie.
+
+
+
+## ADR-016 -- Asynchrone interactie als standaardpatroon
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Binnen Samen Onder Handbereik worden interacties asynchroon afgehandeld.
+Specifieke API's geven invulling aan dit generieke interactiepatroon.
+
+### Motivatie
+
+Asynchrone verwerking maakt het mogelijk om interacties los te koppelen van
+de verwerkingstijd en ondersteunt een uniforme wijze van status- en
+resultaatverwerking.
+
+### Consequenties
+
+De CloudEvent API en Query-API worden beschreven als toepassingen van het
+generieke patroon. De Status-API wordt beschouwd als een ondersteunende functie
+voor het volgen van asynchroon uitgevoerde interacties.

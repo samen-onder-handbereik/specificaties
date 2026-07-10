@@ -147,3 +147,21 @@ binnen de betreffende samenwerkfunctie.
 **Status:** Technisch begrip
 
 Een API waarmee de status van een eerder aangeboden verwerking kan worden opgevraagd.
+
+
+
+## Asynchrone interactie
+
+**Status:** Technisch begrip
+
+Een interactie waarbij het initiëren van een verzoek of gebeurtenis en de
+verdere verwerking daarvan niet in dezelfde stap plaatsvinden.
+
+
+## Generiek interactiepatroon
+
+**Status:** Technisch begrip
+
+Het patroon waarbij een interactie wordt geïnitieerd, geaccepteerd, vervolgens
+asynchroon wordt verwerkt en waarbij de voortgang en/of het resultaat later
+beschikbaar komt.

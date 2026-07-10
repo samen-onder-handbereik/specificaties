@@ -1,16 +1,51 @@
-# Asynchrone verwerking van aangeboden CloudEvents
+# Generiek patroon voor asynchrone interacties
 
 ## Inleiding
 
-Binnen het stelsel worden gegevensuitwisselingen uitgevoerd door middel van CloudEvents.
+Binnen Samen Onder Handbereik worden interacties asynchroon afgehandeld.
 
-De generieke afspraken over de toepassing van de CloudEvents-standaard zijn beschreven in het hoofdstuk *Toepassing van de CloudEvents-standaard*.
+Dit betekent dat het aanbieden van een gebeurtenis of het indienen van een
+verzoek niet direct leidt tot een inhoudelijk resultaat. De verdere verwerking
+vindt plaats buiten de context van de oorspronkelijke interactie.
 
-Een samenwerkfunctie bepaalt de inhoudelijke betekenis en structuur van een CloudEvent. De technische verwerking van een aangeboden CloudEvent verloopt volgens een generiek patroon dat voor alle samenwerkfuncties geldt.
+De voortgang van de verwerking kan worden gevolgd. Afhankelijk van het type
+interactie kan daarnaast een inhoudelijk resultaat beschikbaar worden gesteld.
 
-Een aanbieder levert een volledig samengesteld CloudEvent aan via de CloudEvent API. De verwerking van het aangeboden CloudEvent vindt vervolgens asynchroon plaats.
+Dit generieke patroon geldt voor verschillende typen interacties binnen het
+stelsel. Specifieke API's geven invulling aan dit patroon voor verschillende
+soorten interacties.
 
-De aanbieder ontvangt na het aanbieden van het CloudEvent geen direct verwerkingsresultaat. In plaats daarvan ontvangt de aanbieder een technische transactie-ID waarmee later de status van de verwerking kan worden opgevraagd.
+Een samenwerkfunctie bepaalt de inhoudelijke betekenis en structuur van de
+gegevens die binnen een interactie worden gebruikt. De wijze waarop de
+asynchrone verwerking plaatsvindt, volgt het generieke patroon zoals beschreven
+in dit hoofdstuk.
+
+## Generiek interactiepatroon
+
+Een asynchrone interactie bestaat uit de volgende stappen:
+
+1. Een deelnemer initieert een interactie.
+2. De interactie wordt geaccepteerd en krijgt een technische identificatie.
+3. De verwerking vindt asynchroon plaats.
+4. De voortgang en/of het resultaat van de verwerking kan worden geraadpleegd.
+
+```
+Initiator
+    |
+    | verzoek of gebeurtenis aanbieden
+    v
+API
+    |
+    | acceptatie
+    v
+Asynchrone verwerking
+    |
+    +--> status beschikbaar
+    |
+    +--> resultaat beschikbaar
+```
+
+De volgende paragrafen beschrijven concrete toepassingen van dit patroon.
 
 ## Aanbieden van een CloudEvent
 
@@ -117,23 +152,36 @@ De generieke verwerking bepaalt:
 - hoe de verwerking asynchroon plaatsvindt;
 - hoe de status wordt opgevraagd.
 
-## Relatie met andere API's
+## Toepassingen en ondersteunende functies
 
-Binnen het stelsel kunnen verschillende typen API's worden onderscheiden.
+Het generieke patroon voor asynchrone interacties kent verschillende
+toepassingen en ondersteunende functies.
 
-De CloudEvent API en de Status-API zijn generieke voorzieningen:
+### Aanbieden van CloudEvents
 
-- de CloudEvent API wordt gebruikt voor het aanbieden van CloudEvents;
-- de Status-API wordt gebruikt voor het volgen van de asynchrone verwerking.
+Het aanbieden van CloudEvents is een toepassing van het generieke patroon.
+Een producer biedt een gebeurtenis aan via de CloudEvent API. De verdere
+verwerking van deze gebeurtenis vindt asynchroon plaats volgens het in dit
+hoofdstuk beschreven patroon.
 
-Daarnaast kunnen samenwerkfuncties specifieke API's definiëren.
+### Uitvoeren van queries
 
-Een voorbeeld hiervan is een Query-API. Een Query-API ondersteunt deelnemers bij
-het zoeken naar informatie binnen een specifieke samenwerkfunctie.
+Een samenwerkfunctie kan een Query-API definiëren voor het ondersteunen van
+informatievragen.
 
 De inhoud en mogelijkheden van een Query-API kunnen niet generiek worden
 vastgesteld, omdat deze afhankelijk zijn van de betekenis van de gegevens en de
 informatiebehoefte binnen de betreffende samenwerkfunctie.
+
+### Status-API als ondersteunende functie
+
+De Status-API is geen afzonderlijke toepassing van het interactiepatroon, maar
+een ondersteunende functie waarmee de voortgang van een asynchrone interactie
+kan worden gevolgd.
+
+De Status-API heeft geen eigen inhoudelijke betekenis binnen een
+samenwerkfunctie, maar ondersteunt het generieke mechanisme voor het volgen van
+asynchroon uitgevoerde interacties.
 
 ## Nog vast te stellen
 

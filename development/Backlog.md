@@ -69,3 +69,11 @@
 
 - [x] Voorbeelden van Query-API-aanroepen en responses voor Uitwisselen Uitkomst Overleg toegevoegd.
 - [x] Relatie tussen informatievragen en het graphmodel verduidelijkt.
+
+
+
+## Sprint 13 afgerond
+
+- [x] Generiek patroon voor asynchrone interacties beschreven.
+- [x] CloudEvent API en Query-API als toepassingen van het generieke patroon beschreven.
+- [x] Status-API gepositioneerd als ondersteunende functie voor het volgen van asynchrone interacties.
