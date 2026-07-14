@@ -234,3 +234,26 @@ resultaatverwerking.
 De CloudEvent API en Query-API worden beschreven als toepassingen van het
 generieke patroon. De Status-API wordt beschouwd als een ondersteunende functie
 voor het volgen van asynchroon uitgevoerde interacties.
+
+
+## ADR-017 -- Identifier van inzage-resource is gelijk aan Entity identifier
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+De identifier waarmee een Uitkomst Overleg via de inzage-API wordt geraadpleegd
+is gelijk aan de identifier van de betreffende Entity in de Knowledge graph.
+
+### Motivatie
+
+Hiermee wordt voorkomen dat voor hetzelfde informatieobject meerdere
+identifiers ontstaan. De identiteit van het informatieobject blijft onafhankelijk
+van de technische inrichting van de inzage-API.
+
+### Consequenties
+
+De technische ontsluiting wordt bepaald door endpoint en pad van de inzage-API.
+Deze kunnen wijzigen zonder dat de identiteit van het informatieobject verandert.

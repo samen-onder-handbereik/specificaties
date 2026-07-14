@@ -235,3 +235,21 @@ Concretiseren van het Knowledge graph-model voor Uitwisselen Uitkomst Overleg.
 -   Conceptuele Knowledge graph toegevoegd voor de beschikbaarstelling van
     Uitkomst Overleg.
 -   Scheiding tussen CloudEvent en Knowledge graph verduidelijkt.
+
+
+## Sprint 15
+
+### Doel
+
+Verdere verfijning van het generieke asynchrone interactiepatroon en de
+technische ontsluiting van Uitkomst Overleg.
+
+### Gewijzigd
+
+- Verwerkingsstatussen binnen `AsynchroneInteracties.md` verder uitgewerkt.
+- JSON-voorbeelden toegevoegd voor statussen `OK`, `IN_PROGRESS` en `ERROR`.
+- Attribuut `resultaat` beschreven als generiek onderdeel van de statusresponse.
+- Inzage-referentie van Uitkomst Overleg aangepast waarbij de identifier gelijk is
+  aan de identifier van de Entity.
+- Scheiding tussen informatieobjectidentiteit en technische ontsluiting verder
+  verduidelijkt.

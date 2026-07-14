@@ -174,3 +174,17 @@ beschikbaar komt.
 
 Een graaf waarin informatieobjecten, hun onderlinge relaties en
 provenance-informatie worden vastgelegd zodat deze semantisch bevraagbaar zijn.
+
+
+## Inzage-endpoint
+
+**Status:** Technisch begrip
+
+Het endpoint van de API waarmee een informatieobject beschikbaar wordt gesteld
+voor inzage.
+
+## Inzage-pad
+
+**Status:** Technisch begrip
+
+Het pad binnen een API waarmee een specifieke resourcecategorie wordt ontsloten.

@@ -3,7 +3,7 @@
 ## Inleiding
 
 Binnen *Samen Onder Handbereik* worden gebeurtenissen uitgewisseld
-conform de standaard **CloudEvents** van de Cloud Native Computing
+conform de standaard CloudEvents van de Cloud Native Computing
 Foundation (CNCF).
 
 Een CloudEvent beschrijft een gebeurtenis die binnen een
@@ -14,13 +14,13 @@ gegevens worden bepaald door de betreffende samenwerkfunctie.
 
 Een CloudEvent bestaat uit:
 
-1.  **Context-attributen**
+1.  Context-attributen
 
     Gestandaardiseerde metadata-attributen die informatie geven over de
     gebeurtenis, zoals de bron, het type gebeurtenis en het tijdstip
     waarop de gebeurtenis heeft plaatsgevonden.
 
-2.  **`data`**
+2.  `data`
 
     De gegevens die inhoudelijk bij de gebeurtenis horen.
 

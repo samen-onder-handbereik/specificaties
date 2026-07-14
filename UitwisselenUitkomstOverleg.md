@@ -1,5 +1,3 @@
-# Uitwisselen Uitkomst Overleg
-
 ## Inleiding
 
 Deze specificatie beschrijft de samenwerkfunctie **Uitwisselen Uitkomst
@@ -159,7 +157,7 @@ casusoverleg.
 
 | Concept | PROV-type | Betekenis |
 |---|---|---|
-| UitkomstOverleg | Entity | De via de API beschikbare resource. De Entity bevat tevens de datumtijd waarop de Uitkomst Overleg beschikbaar is gesteld. |
+| UitkomstOverleg | Entity | De via de inzage-API beschikbare resource. De Entity bevat tevens de datumtijd waarop de Uitkomst Overleg beschikbaar is gesteld en de technische informatie waarmee de resource via de inzage-API kan worden geraadpleegd. |
 | Betrokkene | Entity | Zoekanker voor personen. |
 | BeschikbaarStellenUitkomst | Activity | Activiteit waarmee de uitkomst beschikbaar wordt gesteld. |
 | InzienUitkomst | Activity | Activiteit waarmee de uitkomst wordt geraadpleegd. |
@@ -223,7 +221,7 @@ de CloudEvent-payload worden opgenomen.
 
 | Informatiemodel | PROV-element | Toelichting |
 |---|---|---|
-| UitkomstOverleg | Entity | De informatiebron die via de inzage-API beschikbaar wordt gesteld. |
+| UitkomstOverleg | Entity | De informatiebron die via de inzage-API beschikbaar wordt gesteld. De Entity bevat tevens het endpoint en het pad van de inzage-API. De identifier van de resource is gelijk aan de identifier van de Entity. |
 | Betrokkene | Entity | Domeinanker waarmee gezocht kan worden op bijvoorbeeld BSN. |
 | BeschikbaarStellenUitkomst | Activity | De activiteit waarbij de Uitkomst Overleg beschikbaar wordt gesteld. |
 | InzienUitkomst | Activity | De activiteit waarbij een organisatie de Uitkomst Overleg raadpleegt. |
@@ -236,6 +234,16 @@ eenduidig identificeerbaar zijn.
 
 Voor Entities en Agents wordt gebruik gemaakt van identifiers die aansluiten
 bij de domeinidentificatie.
+
+Naast de identifier van de Entity kan technische informatie worden opgenomen
+waarmee de resource via de inzage-API kan worden geraadpleegd. Deze informatie
+bestaat uit het endpoint en het pad van de inzage-API. De identifier van de
+resource is gelijk aan de identifier van de betreffende Uitkomst Overleg Entity.
+
+Hiermee blijft de identiteit van de Uitkomst Overleg onafhankelijk van de
+technische inrichting van de inzage-API. Bij een wijziging van provider of
+technische infrastructuur kunnen endpoint en pad worden aangepast, terwijl de
+identifier van de Entity ongewijzigd blijft.
 
 Voor Activities geldt dat iedere uitvoering van een activiteit een eigen
 identifier krijgt. Deze identifier heeft geen betekenis in het domeinmodel,
@@ -269,7 +277,7 @@ De provenance-graaf bevat de volgende elementen:
 
 | Concept | PROV-type | Toelichting |
 |---|---|---|
-| UitkomstOverleg | Entity | De informatiebron die via de inzage-API beschikbaar wordt gesteld. |
+| UitkomstOverleg | Entity | De informatiebron die via de inzage-API beschikbaar wordt gesteld. De Entity bevat tevens het endpoint en het pad van de inzage-API. De identifier van de resource is gelijk aan de identifier van de Entity. |
 | Betrokkene | Entity | Domeinanker waarop onder andere gezocht kan worden via burgerservicenummer. |
 | BeschikbaarStellenUitkomst | Activity | De activiteit waarmee de Uitkomst Overleg beschikbaar wordt gesteld. |
 | Organisatie | Agent | De organisatie die de activiteit uitvoert. |
@@ -320,9 +328,14 @@ Voorbeeld:
     "prov:Entity",
     "soh:UitkomstOverleg"
   ],
-  "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+  "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z",
+  "soh:inzageEndpoint": "https://api.organisatie.nl",
+  "soh:inzagePad": "/uitkomsten-overleg",
 }
 ```
+
+De attributen `soh:inzageEndpoint` en `soh:inzagePad` vormen samen met de
+identifier van de Entity de technische verwijzing naar de inzage-API.
 
 Het attribuut `soh:beschikbaarGesteldOp` ondersteunt operationele queries op
 beschikbare Uitkomsten Overleg.
@@ -593,7 +606,9 @@ Het voorbeeld bevat:
         ],
         "prov:wasGeneratedBy": "<identifier-beschikbaarstelling>",
         "soh:betreft": "<identifier-betrokkene>",
-        "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+        "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z",
+        "soh:inzageEndpoint": "https://api.organisatie.nl",
+        "soh:inzagePad": "/uitkomsten-overleg",
       },
       {
         "@id": "<identifier-betrokkene>",

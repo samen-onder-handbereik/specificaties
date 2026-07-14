@@ -94,6 +94,23 @@ De Status-API is uitsluitend beschikbaar voor de partij die het CloudEvent heeft
 
 ## Verwerkingsstatussen
 
+De Status-API retourneert informatie over de actuele toestand van een
+asynchrone verwerking.
+
+Een statusresponse bevat de volgende attributen:
+
+| Attribuut | Betekenis |
+| --- | --- |
+| `transactieId` | Identificeert de technische verwerking van de interactie |
+| `status` | Geeft de actuele toestand van de verwerking aan |
+| `resultaat` | Bevat aanvullende informatie over de uitkomst van de verwerking |
+
+Het attribuut `resultaat` bevat aanvullende informatie die afhankelijk is van
+de status en het type interactie. Bij een succesvolle verwerking kan het
+attribuut een inhoudelijk resultaat bevatten. Bij een fout bevat het informatie
+over de opgetreden fout. Tijdens een lopende verwerking wordt het attribuut niet
+opgenomen.
+
 De Status-API kent drie mogelijke statussen:
 
 | Status | Betekenis |
@@ -102,13 +119,43 @@ De Status-API kent drie mogelijke statussen:
 | `IN_PROGRESS` | De verwerking is nog niet afgerond |
 | `ERROR` | Tijdens de verwerking is een fout opgetreden |
 
-## Fout tijdens verwerking
+### Status OK
+
+De status `OK` geeft aan dat de verwerking van het aangeboden CloudEvent
+succesvol is afgerond.
+
+Voorbeeld:
+
+```json
+{
+  "transactieId": "<transactie-id>",
+  "status": "OK"
+}
+```
+
+### Status IN_PROGRESS
+
+De status `IN_PROGRESS` geeft aan dat de verwerking nog niet is afgerond.
+
+Voorbeeld:
+
+```json
+{
+  "transactieId": "<transactie-id>",
+  "status": "IN_PROGRESS"
+}
+```
+
+### Status ERROR
+
+De status `ERROR` geeft aan dat tijdens de verwerking een fout is opgetreden.
 
 Een fout kan een functionele of een technische oorzaak hebben.
 
-### Functionele fout
+#### Functionele fout
 
-Een functionele fout ontstaat wanneer het aangeboden CloudEvent inhoudelijk niet verwerkt kan worden.
+Een functionele fout ontstaat wanneer het aangeboden CloudEvent inhoudelijk
+niet verwerkt kan worden.
 
 ```json
 {
@@ -123,9 +170,10 @@ Een functionele fout ontstaat wanneer het aangeboden CloudEvent inhoudelijk niet
 }
 ```
 
-### Technische fout
+#### Technische fout
 
-Een technische fout ontstaat wanneer tijdens de verwerking een technische storing optreedt.
+Een technische fout ontstaat wanneer tijdens de verwerking een technische
+storing optreedt.
 
 ```json
 {
@@ -225,45 +273,6 @@ Binnen de verwerking van CloudEvents worden verschillende identifiers gebruikt.
 De ontvangstbevestiging van de CloudEvent API bevat uitsluitend de transactie-ID.
 De CloudEvent `id` maakt onderdeel uit van het aangeboden CloudEvent en wordt niet
 opnieuw geretourneerd.
-
-## Standaardisatie van statusresponses
-
-De statusresponse bevat de transactie-ID en de actuele verwerkingsstatus.
-Het attribuut `resultaat` wordt alleen opgenomen wanneer de status `ERROR` is.
-
-Voorbeeld succesvolle verwerking:
-
-```json
-{
-  "transactieId": "<transactie-id>",
-  "status": "OK"
-}
-```
-
-Voorbeeld verwerking nog niet afgerond:
-
-```json
-{
-  "transactieId": "<transactie-id>",
-  "status": "IN_PROGRESS"
-}
-```
-
-Voorbeeld fout:
-
-```json
-{
-  "transactieId": "<transactie-id>",
-  "status": "ERROR",
-  "resultaat": {
-    "fout": "Er heeft een fout plaatsgevonden tijdens de verwerking.",
-    "info": null
-  }
-}
-```
-
-De exacte foutcodes en foutstructuur worden nog vastgesteld.
-
 
 ## Herhaald opvragen van de verwerkingsstatus
 

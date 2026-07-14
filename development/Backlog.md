@@ -86,3 +86,12 @@
 - [x] Relatie tussen Query-API en Knowledge graph verduidelijkt.
 - [x] Informatievoorziening van aanbieder Uitkomst Overleg als extern onderdeel opgenomen.
 - [x] CloudEvent buiten de Knowledge graph gepositioneerd.
+
+
+## Sprint 15 afgerond
+
+- [x] Statusresponses verder uitgewerkt binnen het generieke asynchrone interactiepatroon.
+- [x] Attribuut `resultaat` als onderdeel van de statusresponse beschreven.
+- [x] Verwerkingsstatussen uitgebreid met JSON-voorbeelden voor `OK`, `IN_PROGRESS` en `ERROR`.
+- [x] Inzage-referentie voor Uitkomst Overleg verfijnd: identifier van de inzage-resource gelijkgesteld aan de identifier van de Entity.
+- [x] Scheiding tussen identiteit van informatieobjecten en technische ontsluiting verder verduidelijkt.
