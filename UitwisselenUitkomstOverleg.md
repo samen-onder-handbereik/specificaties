@@ -1,8 +1,5 @@
 # Uitwisselen Uitkomst Overleg
 
-> Status: Concept\
-> Versie: 1.0-draft Sprint 2
-
 ## Inleiding
 
 Deze specificatie beschrijft de samenwerkfunctie **Uitwisselen Uitkomst
