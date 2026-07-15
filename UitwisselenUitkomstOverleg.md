@@ -54,7 +54,7 @@ flowchart LR
     classDef external stroke-dasharray: 5 5
 ```
 
-De inzage-API is de bron voor de inhoudelijke gegevens.
+De inzage-API is de bron voor de inhoudelijke gegevens. Alle deelnemers die Uitkomsten Overleg beschikbaar stellen, dienen de inzage-API te implementeren, volgens de OpenAPI-specificatie die via deze [link](yaml/UitkomstOverleg.yaml) gedownload kan worden. 
 
 De Query-API ondersteunt deelnemers bij het vinden van beschikbare Uitkomsten
 Overleg. De Query-API is specifiek voor deze samenwerkfunctie en bevat

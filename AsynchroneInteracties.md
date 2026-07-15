@@ -2,7 +2,7 @@
 
 ## Inleiding
 
-Binnen Samen Onder Handbereik worden interacties asynchroon afgehandeld.
+Binnen Samen Onder Handbereik worden veel interacties asynchroon afgehandeld.
 
 Dit betekent dat het aanbieden van een gebeurtenis of het indienen van een
 verzoek niet direct leidt tot een inhoudelijk resultaat. De verdere verwerking
@@ -11,21 +11,21 @@ vindt plaats buiten de context van de oorspronkelijke interactie.
 De voortgang van de verwerking kan worden gevolgd. Afhankelijk van het type
 interactie kan daarnaast een inhoudelijk resultaat beschikbaar worden gesteld.
 
-Dit generieke patroon geldt voor verschillende typen interacties binnen het
+Dit generieke interactiepatroon geldt voor verschillende typen interacties binnen het
 stelsel. Specifieke API's geven invulling aan dit patroon voor verschillende
 soorten interacties.
 
 Een samenwerkfunctie bepaalt de inhoudelijke betekenis en structuur van de
 gegevens die binnen een interactie worden gebruikt. De wijze waarop de
-asynchrone verwerking plaatsvindt, volgt het generieke patroon zoals beschreven
+asynchrone verwerking plaatsvindt, volgt het generieke interactiepatroon zoals beschreven
 in dit hoofdstuk.
 
 ## Generiek interactiepatroon
 
 Een asynchrone interactie bestaat uit de volgende stappen:
 
-1. Een deelnemer initieert een interactie.
-2. De interactie wordt geaccepteerd en krijgt een technische identificatie.
+1. Een deelnemer initieert een interactie (naar de ketenindex CloudEvent-API).
+2. De interactie wordt geaccepteerd door de ketenindex CloudEvent-API en krijgt een technische identificatie (het transactie-ID).
 3. De verwerking vindt asynchroon plaats.
 4. De voortgang en/of het resultaat van de verwerking kan worden geraadpleegd.
 
@@ -89,8 +89,6 @@ Voorbeeld endpoint:
 ```http
 GET https://<host>/api/status/{transactieId}
 ```
-
-De Status-API is uitsluitend beschikbaar voor de partij die het CloudEvent heeft aangeboden.
 
 ## Verwerkingsstatussen
 
@@ -244,10 +242,10 @@ De volgende onderwerpen worden later verder uitgewerkt:
 
 ## API-specificaties
 
-De formele technische contracten van de API's worden beschreven met behulp van
-OpenAPI-specificaties.
+De formele technische contracten van de API's worden beschreven met behulp van een
+OpenAPI-specificatie.
 
-De OpenAPI-specificaties bevatten onder andere:
+De OpenAPI-specificatie bevat onder andere:
 
 - beschikbare endpoints;
 - HTTP-methodes;
@@ -255,10 +253,8 @@ De OpenAPI-specificaties bevatten onder andere:
 - foutafhandeling;
 - technische validatieregels.
 
-De actuele specificaties worden gepubliceerd via:
+De actuele specificatie is te downloaden via deze [link](yaml/CORV2.0.yaml).
 
-- OpenAPI-specificatie CloudEvent API: `<URL-placeholder>`
-- OpenAPI-specificatie Status-API: `<URL-placeholder>`
 
 ## Identificatie en relatie tussen identifiers
 
