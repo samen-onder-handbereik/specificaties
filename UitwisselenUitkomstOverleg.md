@@ -68,7 +68,7 @@ De graph ondersteunt:
 -   zoeken naar eerdere betrokkenheid van personen;
 -   zoeken naar beschikbare Uitkomsten Overleg op basis van beschikbaarheidsdatum.
 
-## Query-API
+## Query-API en informatievragen
 
 De Query-API ondersteunt deelnemers bij het uitvoeren van queries op beschikbare
 Uitkomsten Overleg.
@@ -204,7 +204,51 @@ InzienUitkomst
 Organisatie
 ```
 
-## Betrokkene
+## Domeinmodellering
+
+Dit hoofdstuk beschrijft de domeinconcepten die naast de provenance-informatie
+worden opgenomen in de Knowledge graph. Deze concepten ondersteunen de
+informatievragen die via de Query-API worden gesteld.
+
+### Uitkomst Overleg
+
+De Uitkomst Overleg is het informatieobject dat via de inzage-API beschikbaar
+wordt gesteld en waarop via de Query-API kan worden gezocht.
+
+#### Beschikbaarheidsdatum Uitkomst Overleg
+
+Een deelnemer moet kunnen vaststellen welke Uitkomsten Overleg beschikbaar zijn
+gekomen sinds een bepaald moment.
+
+Daarvoor wordt aan de Entity `UitkomstOverleg` een domeinattribuut toegevoegd
+dat de datumtijd van beschikbaarstelling bevat.
+
+Voorbeeld:
+
+```json
+{
+  "@id": "<identifier-uitkomst-overleg>",
+  "@type": [
+    "prov:Entity",
+    "soh:UitkomstOverleg"
+  ],
+  "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z",
+  "soh:inzageEndpoint": "https://api.organisatie.nl",
+  "soh:inzagePad": "/uitkomsten-overleg"
+}
+```
+
+Het attribuut `soh:beschikbaarGesteldOp` ondersteunt operationele queries op
+beschikbare Uitkomsten Overleg.
+
+Het attribuut heeft een andere betekenis dan het CloudEvent-attribuut `time`.
+
+- `time` in het CloudEvent beschrijft het tijdstip waarop de gebeurtenis
+  plaatsvond.
+- `soh:beschikbaarGesteldOp` beschrijft vanaf welk moment de Uitkomst Overleg
+  beschikbaar is voor raadpleging.
+
+### Betrokkene
 
 De Betrokkene wordt als afzonderlijke Entity opgenomen.
 
@@ -213,6 +257,21 @@ burgerservicenummer, bijvoorbeeld tijdens een ZSM-overleg.
 
 De Betrokkene vormt geen onderdeel van de provenance, maar is een
 domeinanker binnen de graph.
+
+#### Modellering burgerservicenummer
+
+Het burgerservicenummer wordt opgenomen als attribuut van de Entity
+`Betrokkene`.
+
+Het burgerservicenummer:
+
+- is een domeinattribuut van de Betrokkene;
+- wordt gebruikt om de graph bevraagbaar te maken;
+- wordt niet gebruikt als technische identifier van de PROV Entity;
+- wordt niet als afzonderlijke Entity gemodelleerd.
+
+De technische identifier van de Entity Betrokkene staat los van het
+burgerservicenummer.
 
 Een toekomstige uitbreiding kan ondersteuning voor het
 vreemdelingennummer toevoegen.
@@ -268,13 +327,12 @@ maar maakt het mogelijk om provenance-relaties eenduidig vast te leggen.
 Een Activity-identifier is daarmee een technische identifier en geen
 businessidentifier.
 
-## Eerste PROV-JSONLD-uitwerking
+## PROV-JSON-LD modellering
 
 Een CloudEvent bevat in het attribuut `data` een PROV-JSONLD-graaf.
 
-Een eerste uitwerking van het event
-`uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld` bestaat conceptueel
-uit:
+De conceptuele uitwerking van het event
+`uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld` bestaat uit:
 
 - een Entity voor de Uitkomst Overleg;
 - een Activity voor het beschikbaar stellen;
@@ -285,7 +343,7 @@ De exacte JSON-LD-uitwerking wordt in een volgende iteratie verder
 gespecificeerd.
 
 
-## Concrete PROV-JSONLD-uitwerking
+### Concrete PROV-JSONLD-uitwerking
 
 In dit hoofdstuk wordt het PROV-JSONLD-model beschreven dat in de CloudEvent-payload wordt gebruikt. De volledige JSON-LD-uitwerking is opgenomen in het volledige CloudEvent-voorbeeld verderop in dit document.
 
@@ -311,60 +369,6 @@ Organisatie
 ```
 
 De concrete serialisatie van deze graaf als JSON-LD maakt onderdeel uit van het volledige CloudEvent-voorbeeld.
-
-## Modellering burgerservicenummer
-
-Het burgerservicenummer wordt opgenomen als attribuut van de Entity
-`Betrokkene`.
-
-Het burgerservicenummer:
-
-- is een domeinattribuut van de Betrokkene;
-- wordt gebruikt om de graph bevraagbaar te maken;
-- wordt niet gebruikt als technische identifier van de PROV Entity;
-- wordt niet als afzonderlijke Entity gemodelleerd.
-
-De technische identifier van de Entity Betrokkene staat los van het
-burgerservicenummer.
-
-## Beschikbaarheidsdatum Uitkomst Overleg
-
-Een deelnemer moet kunnen vaststellen welke Uitkomsten Overleg beschikbaar zijn
-gekomen sinds een bepaald moment.
-
-Daarvoor wordt aan de Entity `UitkomstOverleg` een domeinattribuut toegevoegd
-dat de datumtijd van beschikbaarstelling bevat.
-
-Voorbeeld:
-
-```json
-{
-  "@id": "<identifier-uitkomst-overleg>",
-  "@type": [
-    "prov:Entity",
-    "soh:UitkomstOverleg"
-  ],
-  "soh:beschikbaarGesteldOp": "2026-01-01T12:00:00Z",
-  "soh:inzageEndpoint": "https://api.organisatie.nl",
-  "soh:inzagePad": "/uitkomsten-overleg",
-}
-```
-
-De attributen `soh:inzageEndpoint` en `soh:inzagePad` vormen samen met de
-identifier van de Entity de technische verwijzing naar de inzage-API.
-
-Het attribuut `soh:beschikbaarGesteldOp` ondersteunt operationele queries op
-beschikbare Uitkomsten Overleg.
-
-Het attribuut heeft een andere betekenis dan het CloudEvent-attribuut `time`.
-
-- `time` in het CloudEvent beschrijft het tijdstip waarop de gebeurtenis
-  plaatsvond.
-- `soh:beschikbaarGesteldOp` beschrijft vanaf welk moment de Uitkomst Overleg
-  beschikbaar is voor raadpleging.
-
-De provenance-informatie blijft de relatie tussen de beschikbaarstelling als
-Activity en de Entity UitkomstOverleg beschrijven.
 
 
 ## Event uitkomst ingezien

@@ -272,3 +272,20 @@ samenwerkfunctie-specifieke specificaties.
   CloudEvent-profielen en Query-API's verduidelijkt.
 - Verwijzingen naar OpenAPI-specificaties toegevoegd aan de
   samenwerkfunctie-specificaties.
+
+
+
+
+## Sprint 17
+
+### Doel
+
+Aanscherpen van de structuur van de samenwerkfunctie-specificatie.
+
+### Gewijzigd
+
+- Onderscheid tussen PROV-JSON-LD-modellering en domeinmodellering verduidelijkt.
+- Domeinconcepten binnen de specificatie Uitwisselen Uitkomst Overleg logischer
+  geordend.
+- Historische ontwikkelstappen zijn niet langer bepalend voor de structuur van
+  de inhoudelijke specificatie.

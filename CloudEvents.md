@@ -236,3 +236,12 @@ De generieke API's zijn:
 
 Daarnaast kunnen samenwerkfuncties specifieke API's definiëren, zoals
 een Inzage-API of Query-API.
+
+
+## Relatie met samenwerkfunctie-specificaties
+
+De generieke CloudEvents-afspraken beschrijven de structuur en betekenis van
+de standaard CloudEvent-attributen. De samenwerkfunctie bepaalt welke
+gebeurtenissen worden uitgewisseld en hoe het attribuut `data` inhoudelijk
+wordt ingevuld.
+

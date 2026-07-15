@@ -208,3 +208,20 @@ OpenAPI-specificaties en samenwerkfunctie-specifieke OpenAPI-specificaties.
 
 Een samenwerkfunctie-specifieke invulling van een CloudEvent waarin wordt
 vastgelegd welke gebeurtenistypen bestaan en welke structuur de payload heeft.
+
+
+
+
+## Domeinmodellering
+
+**Status:** Technisch begrip
+
+Het modelleren van betekenisvolle objecten, eigenschappen en relaties binnen
+het domein waarvoor informatie wordt uitgewisseld.
+
+
+## Provenance-informatie
+
+**Status:** Technisch begrip
+
+Informatie over de herkomst, totstandkoming en het gebruik van gegevens.

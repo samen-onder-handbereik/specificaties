@@ -295,3 +295,32 @@ nemen.
 Nieuwe samenwerkfuncties kunnen een eigen OpenAPI-specificatie opstellen voor
 hun CloudEvent-profielen en Query-API's, terwijl zij gebruikmaken van hetzelfde
 generieke asynchrone interactiepatroon.
+
+
+
+
+## ADR-019 -- Scheiding provenance- en domeinmodellering in specificaties
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Binnen samenwerkfunctie-specificaties wordt onderscheid gemaakt tussen:
+
+- provenance-modellering: beschrijving van herkomst, activiteiten en verantwoordelijke actoren volgens PROV;
+- domeinmodellering: beschrijving van informatieobjecten, domeinconcepten en domeinkenmerken.
+
+### Motivatie
+
+Provenance-informatie en domeininformatie hebben verschillende betekenissen.
+Door deze gescheiden te beschrijven blijft duidelijk welke informatie de
+totstandkoming en het gebruik van gegevens beschrijft en welke informatie
+onderdeel is van het domeinmodel.
+
+### Consequenties
+
+Domeinconcepten zoals Betrokkene en Uitkomst Overleg worden beschreven binnen
+de domeinmodellering. PROV-elementen zoals Entity, Activity en Agent worden
+beschreven binnen de provenance-modellering.

@@ -315,3 +315,12 @@ volgen.
 De definitieve afspraken over retry-intervallen en eventuele maximale
 herhaalduur worden later vastgesteld.
 
+
+
+## Relatie met samenwerkfunctie-specifieke OpenAPI-specificaties
+
+De generieke OpenAPI-specificatie beschrijft het technische mechanisme voor
+asynchrone interacties. Een samenwerkfunctie-specifieke OpenAPI-specificatie
+beschrijft de betekenisvolle invulling van CloudEvents en eventuele
+samenwerkfunctie-specifieke API's.
+

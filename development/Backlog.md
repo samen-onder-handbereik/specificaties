@@ -105,3 +105,12 @@
 - [x] Samenwerkfunctie-specifieke OpenAPI-specificatie opgesteld voor Uitwisselen Uitkomst Overleg.
 - [x] Scheiding tussen generieke API-contracten en samenwerkfunctie-specifieke API-contracten verduidelijkt.
 - [x] Verwijzingen naar OpenAPI-specificaties toegevoegd aan de specificaties.
+
+
+
+
+## Sprint 17 afgerond
+
+- [x] Structuur van de samenwerkfunctie-specificatie Uitwisselen Uitkomst Overleg aangescherpt.
+- [x] Scheiding tussen PROV-JSON-LD-modellering en domeinmodellering verduidelijkt.
+- [x] Domeinconcepten binnen de specificatie logischer geordend.
