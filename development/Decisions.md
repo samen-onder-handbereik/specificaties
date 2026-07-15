@@ -257,3 +257,41 @@ van de technische inrichting van de inzage-API.
 
 De technische ontsluiting wordt bepaald door endpoint en pad van de inzage-API.
 Deze kunnen wijzigen zonder dat de identiteit van het informatieobject verandert.
+
+
+
+
+## ADR-018 -- Scheiding generieke en samenwerkfunctie-specifieke OpenAPI-specificaties
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Binnen Samen Onder Handbereik wordt onderscheid gemaakt tussen:
+
+- een generieke OpenAPI-specificatie voor het asynchrone interactiepatroon;
+- samenwerkfunctie-specifieke OpenAPI-specificaties.
+
+De generieke OpenAPI-specificatie beschrijft het aanbieden van CloudEvents,
+de ontvangstbevestiging en de Status-API.
+
+De samenwerkfunctie-specifieke OpenAPI-specificatie beschrijft de
+CloudEvent-profielen, payloadstructuren en Query-API's die bij een specifieke
+samenwerkfunctie horen.
+
+### Motivatie
+
+Het generieke mechanisme voor asynchrone verwerking moet losstaan van de
+inhoudelijke betekenis van gebeurtenissen en informatievragen.
+
+Door deze scheiding kan het asynchrone interactiepatroon worden hergebruikt
+zonder samenwerkfunctie-specifieke semantiek in generieke API-contracten op te
+nemen.
+
+### Consequenties
+
+Nieuwe samenwerkfuncties kunnen een eigen OpenAPI-specificatie opstellen voor
+hun CloudEvent-profielen en Query-API's, terwijl zij gebruikmaken van hetzelfde
+generieke asynchrone interactiepatroon.

@@ -1,0 +1,198 @@
+# Generieke Asynchrone Interactie API
+#
+# Dit document beschrijft het generieke interactiepatroon voor het
+# aanbieden van CloudEvents en het volgen van de asynchrone verwerking.
+#
+# Belangrijk ontwerpprincipe:
+# - Deze OAS beschrijft NIET de betekenis van specifieke gebeurtenissen.
+# - De samenwerkfunctie bepaalt welke eventtypen bestaan en hoe data eruitziet.
+# - Deze OAS beschrijft alleen het generieke mechanisme.
+
+openapi: 3.1.0
+
+info:
+  title: Generieke Asynchrone Interactie API
+  version: 1.0.0
+  description: |
+    Generieke API voor:
+    - het aanbieden van CloudEvents;
+    - het verkrijgen van een transactie-id;
+    - het opvragen van de status van de verwerking.
+
+    Samenwerkfuncties verwijzen naar deze API en vullen het CloudEvent
+    inhoudelijk in via een eigen CloudEvent-profiel.
+
+tags:
+  - name: CloudEvent API
+    description: Endpoint voor het aanbieden van CloudEvents.
+  - name: Status API
+    description: Endpoint voor het volgen van asynchrone verwerking.
+
+paths:
+
+  /events:
+    post:
+      tags:
+        - CloudEvent API
+      summary: Bied een CloudEvent aan
+      description: |
+        Een deelnemer biedt een CloudEvent aan voor verwerking.
+
+        Het attribuut type en de inhoud van data worden niet door deze
+        generieke API vastgesteld. Deze worden bepaald door het
+        CloudEvent-profiel van een samenwerkfunctie.
+      operationId: aanbiedCloudEvent
+
+      requestBody:
+        required: true
+        content:
+          application/cloudevents+json:
+            schema:
+              $ref: '#/components/schemas/CloudEvent'
+
+      responses:
+        '202':
+          description: CloudEvent geaccepteerd voor verwerking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptatieResponse'
+
+  /status/{transactieId}:
+    get:
+      tags:
+        - Status API
+      summary: Vraag verwerkingsstatus op
+      description: |
+        Geeft de actuele status van een eerder aangeboden CloudEvent.
+
+        De transactie-id is niet hetzelfde als het CloudEvent-id.
+      operationId: vraagStatusOp
+
+      parameters:
+        - name: transactieId
+          in: path
+          required: true
+          description: Identifier van de asynchrone verwerking.
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Status van de verwerking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+components:
+
+  schemas:
+
+    # Basisschema voor CloudEvents.
+    # De samenwerkfunctie specificeert de toegestane waarden voor type
+    # en de structuur van data.
+    CloudEvent:
+      type: object
+      required:
+        - specversion
+        - id
+        - source
+        - type
+        - time
+        - data
+      properties:
+        specversion:
+          type: string
+          enum:
+            - "1.0"
+        id:
+          type: string
+          description: Unieke identifier van het CloudEvent.
+        source:
+          type: string
+          description: Bron die het CloudEvent heeft geproduceerd.
+        type:
+          type: string
+          description: |
+            Gebeurtenistype volgens het CloudEvent-profiel van de
+            betreffende samenwerkfunctie.
+        time:
+          type: string
+          format: date-time
+        subject:
+          type: string
+        data:
+          type: object
+          description: Samenwerkfunctie-specifieke payload.
+
+    AcceptatieResponse:
+      type: object
+      required:
+        - transactieId
+      properties:
+        transactieId:
+          type: string
+          description: Identifier van de asynchrone verwerking.
+
+    StatusResponse:
+      description: |
+        Statusresponse. De concrete variant wordt bepaald door de waarde
+        van status.
+      oneOf:
+        - $ref: '#/components/schemas/StatusOK'
+        - $ref: '#/components/schemas/StatusInProgress'
+        - $ref: '#/components/schemas/StatusError'
+      discriminator:
+        propertyName: status
+
+    StatusOK:
+      type: object
+      required:
+        - transactieId
+        - status
+      properties:
+        transactieId:
+          type: string
+        status:
+          const: OK
+        resultaat:
+          type: object
+          description: |
+            Optioneel resultaat. De structuur wordt vastgesteld door de
+            samenwerkfunctie.
+
+    StatusInProgress:
+      type: object
+      required:
+        - transactieId
+        - status
+      properties:
+        transactieId:
+          type: string
+        status:
+          const: IN_PROGRESS
+
+    StatusError:
+      type: object
+      required:
+        - transactieId
+        - status
+        - resultaat
+      properties:
+        transactieId:
+          type: string
+        status:
+          const: ERROR
+        resultaat:
+          $ref: '#/components/schemas/ErrorResultaat'
+
+    ErrorResultaat:
+      type: object
+      required:
+        - fout
+      properties:
+        fout:
+          type: string
+        info:
+          type: object

@@ -253,3 +253,22 @@ technische ontsluiting van Uitkomst Overleg.
   aan de identifier van de Entity.
 - Scheiding tussen informatieobjectidentiteit en technische ontsluiting verder
   verduidelijkt.
+
+
+
+
+## Sprint 16
+
+### Doel
+
+Uitwerken van de technische API-contracten en de relatie tussen generieke en
+samenwerkfunctie-specifieke specificaties.
+
+### Toegevoegd
+
+- Generieke OpenAPI-specificatie voor het asynchrone interactiepatroon opgesteld.
+- Samenwerkfunctie-specifieke OpenAPI-specificatie voor Uitwisselen Uitkomst Overleg opgesteld.
+- Scheiding tussen generieke API-contracten en samenwerkfunctie-specifieke
+  CloudEvent-profielen en Query-API's verduidelijkt.
+- Verwijzingen naar OpenAPI-specificaties toegevoegd aan de
+  samenwerkfunctie-specificaties.

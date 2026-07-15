@@ -95,3 +95,13 @@
 - [x] Verwerkingsstatussen uitgebreid met JSON-voorbeelden voor `OK`, `IN_PROGRESS` en `ERROR`.
 - [x] Inzage-referentie voor Uitkomst Overleg verfijnd: identifier van de inzage-resource gelijkgesteld aan de identifier van de Entity.
 - [x] Scheiding tussen identiteit van informatieobjecten en technische ontsluiting verder verduidelijkt.
+
+
+
+
+## Sprint 16 afgerond
+
+- [x] Generieke OpenAPI-specificatie voor het asynchrone interactiepatroon opgesteld.
+- [x] Samenwerkfunctie-specifieke OpenAPI-specificatie opgesteld voor Uitwisselen Uitkomst Overleg.
+- [x] Scheiding tussen generieke API-contracten en samenwerkfunctie-specifieke API-contracten verduidelijkt.
+- [x] Verwijzingen naar OpenAPI-specificaties toegevoegd aan de specificaties.

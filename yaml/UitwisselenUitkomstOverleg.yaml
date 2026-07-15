@@ -1,0 +1,114 @@
+# Samenwerkfunctie-specifieke API
+#
+# Dit document beschrijft:
+# - de CloudEvent-profielen voor Uitwisselen Uitkomst Overleg;
+# - de Query API.
+#
+# Het aanbieden van CloudEvents zelf gebeurt via de generieke
+# Asynchrone Interactie API.
+#
+# De scheiding is bewust:
+# - AsynchroneInteracties.yaml beschrijft HOE events worden uitgewisseld.
+# - Dit document beschrijft WELKE events binnen deze samenwerkfunctie bestaan.
+
+openapi: 3.1.0
+
+info:
+  title: Uitwisselen Uitkomst Overleg API
+  version: 1.0.0
+  description: |
+    Samenwerkfunctie-specifieke contracten voor CloudEvents en Query API.
+
+externalDocs:
+  description: Generieke Asynchrone Interactie API
+  url: ./AsynchroneInteracties.yaml
+
+tags:
+  - name: CloudEvent profiel
+    description: Beschrijving van de events binnen deze samenwerkfunctie.
+  - name: Query API
+    description: Informatievragen op de Knowledge Graph.
+
+paths:
+
+  /uitkomsten-overleg:
+    get:
+      tags:
+        - Query API
+      summary: Zoek beschikbare Uitkomsten Overleg
+      description: |
+        Voorbeeld van een samenwerkfunctie-specifieke query.
+
+        De Query API bevraagt de informatie die beschikbaar is gesteld
+        binnen de Knowledge Graph.
+      operationId: zoekUitkomstenOverleg
+
+      responses:
+        '200':
+          description: Queryresultaat.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResult'
+
+components:
+
+  schemas:
+
+    # Het generieke CloudEvent-contract wordt uitgebreid met de afspraken
+    # voor deze samenwerkfunctie.
+    UitkomstBeschikbaarGesteldEvent:
+      description: CloudEvent-profiel voor beschikbaarstelling van een Uitkomst Overleg.
+      allOf:
+        - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
+        - type: object
+          properties:
+            type:
+              const: uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld
+            data:
+              $ref: '#/components/schemas/ProvenancePayload'
+
+    UitkomstIngezienEvent:
+      description: CloudEvent-profiel voor inzage van een Uitkomst Overleg.
+      allOf:
+        - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
+        - type: object
+          properties:
+            type:
+              const: uitwisselen-uitkomst-overleg.uitkomst-ingezien
+            data:
+              $ref: '#/components/schemas/ProvenancePayload'
+
+    ProvenancePayload:
+      description: |
+        Voorbeeld van een PROV-JSON-LD payload.
+        De definitieve modellering wordt bepaald door de samenwerkfunctie.
+      type: object
+
+    QueryResult:
+      description: |
+        Resultaat van een query.
+        De exacte structuur is afhankelijk van de informatievraag.
+      type: object
+      required:
+        - results
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+
+  examples:
+
+    UitkomstBeschikbaarGesteldVoorbeeld:
+      summary: Voorbeeld CloudEvent uitkomst beschikbaar gesteld
+      value:
+        specversion: "1.0"
+        id: "voorbeeld-event-id"
+        source: "voorbeeld-bron"
+        type: "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
+        time: "2026-01-01T12:00:00Z"
+        subject: "uitkomst-123"
+        data:
+          "@context": {}
+          "@graph": []

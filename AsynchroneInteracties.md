@@ -53,6 +53,9 @@ De aanbieder stelt een CloudEvent samen conform de afspraken van de betreffende 
 
 Het CloudEvent wordt aangeboden via de CloudEvent API.
 
+De technische beschrijving van deze API is opgenomen in de OpenAPI-specificatie
+voor het generieke asynchrone interactiepatroon: [AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml).
+
 Voorbeeld endpoint:
 
 ```http
@@ -253,7 +256,17 @@ De OpenAPI-specificatie bevat onder andere:
 - foutafhandeling;
 - technische validatieregels.
 
-De actuele specificatie is te downloaden via deze [link](yaml/CORV2.0.yaml).
+De formele technische contracten van de generieke API's zijn vastgelegd in de OpenAPI-specificatie.
+
+De OpenAPI-specificatie voor het generieke asynchrone interactiepatroon bevat:
+- het aanbieden van CloudEvents via de CloudEvent API;
+- het opvragen van de verwerkingsstatus via de Status-API;
+- de generieke request- en responsemodellen.
+
+De actuele specificatie is te vinden via deze [link](yaml/AsynchroneInteracties.yaml).
+
+De inhoudelijke betekenis van CloudEvents en de structuur van de payload worden
+vastgelegd in een samenwerkfunctie-specifieke OpenAPI-specificatie.
 
 
 ## Identificatie en relatie tussen identifiers

@@ -91,8 +91,19 @@ De volgende paragrafen beschrijven de onderliggende modellering en de gegevens
 die beschikbaar zijn voor het beantwoorden van deze vragen. Daarna worden
 voorbeelden gegeven van query's en de bijbehorende resultaten.
 
-De technische specificatie van de Query-API wordt vastgelegd in een
-samenwerkfunctie-specifieke OpenAPI-specificatie.
+De technische specificaties van de samenwerkfunctie-specifieke API's worden
+vastgelegd in een samenwerkfunctie-specifieke OpenAPI-specificatie.
+
+Deze specificatie bevat:
+- de CloudEvent-profielen die binnen deze samenwerkfunctie worden gebruikt;
+- de structuur van de CloudEvent-payload;
+- de Query-API en de bijbehorende request- en responsemodellen.
+
+De actuele specificatie is te vinden via deze [link](yaml/UitwisselenUitkomstOverleg.yaml).
+
+Het aanbieden van CloudEvents en het opvragen van de verwerkingsstatus zijn
+generieke functies en worden beschreven in de [OpenAPI-specificatie voor het
+generieke asynchrone interactiepatroon](yaml/AsynchroneInteracties.yaml).
 
 ## CloudEvents
 
@@ -105,6 +116,11 @@ Binnen deze samenwerkfunctie worden twee eventtypen gebruikt:
 
 
 ### CloudEvent-profiel
+
+De technische uitwerking van de CloudEvent-profielen is opgenomen in de
+samenwerkfunctie-specifieke OpenAPI-specificatie:
+[UitwisselenUitkomstOverleg.yaml](yaml/UitwisselenUitkomstOverleg.yaml).
+
 
 De producer vult de standaard CloudEvent-attributen volgens de afspraken
 uit het hoofdstuk *Toepassing van de CloudEvents-standaard*.

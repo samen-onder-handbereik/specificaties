@@ -188,3 +188,23 @@ voor inzage.
 **Status:** Technisch begrip
 
 Het pad binnen een API waarmee een specifieke resourcecategorie wordt ontsloten.
+
+
+
+
+## OpenAPI-specificatie
+
+**Status:** Technisch begrip
+
+Een formele beschrijving van een API-contract volgens de OpenAPI Specification.
+
+Binnen Samen Onder Handbereik wordt onderscheid gemaakt tussen generieke
+OpenAPI-specificaties en samenwerkfunctie-specifieke OpenAPI-specificaties.
+
+
+## CloudEvent-profiel
+
+**Status:** Technisch begrip
+
+Een samenwerkfunctie-specifieke invulling van een CloudEvent waarin wordt
+vastgelegd welke gebeurtenistypen bestaan en welke structuur de payload heeft.
