@@ -8,7 +8,7 @@ van de uitkomst van een casusoverleg tussen ketenpartners.
 
 De oplossing bestaat uit drie complementaire onderdelen:
 
-1.  De inzage-API waarmee de inhoud van de Uitkomst Overleg beschikbaar
+1.  De inzage-API waarmee de inhoudelijke informatie van de Uitkomst Overleg beschikbaar
     wordt gesteld.
 2.  De Query-API waarmee deelnemers kunnen zoeken naar beschikbare Uitkomsten
     Overleg.
@@ -40,7 +40,7 @@ besluiten en acties of de interne totstandkoming daarvan.
 ``` mermaid
 flowchart LR
     C[Casusoverleg] --> U[Uitkomst Overleg]
-    U --> API[Inzage-API]
+    U --> API[inzage-API]
     U --> Q[Query-API]
     U --> CE[CloudEvent]
 
@@ -86,6 +86,21 @@ Voorbeelden van mogelijke queries binnen Uitwisselen Uitkomst Overleg zijn:
   gesteld.
 
 De Query-API gebruikt de gegevens uit de graph om deze vragen te beantwoorden.
+
+Een resultaat van een query bevat naast de identificatie en beschikbaarheidsdatum
+ook de technische verwijzing waarmee de inhoudelijke Uitkomst Overleg via de
+inzage-API kan worden geraadpleegd.
+
+Een resultaat bevat daarmee de informatie die nodig is om een gevonden Uitkomst
+Overleg te identificeren en de bijbehorende inhoud via de inzage-API op te vragen.
+
+Deze verwijzing wordt opgebouwd uit drie onderdelen:
+- het inzage-endpoint;
+- het pad van de inzage-API;
+- de identifier van de betreffende Uitkomst Overleg.
+
+De Knowledge graph bevat daarmee niet alleen de betekenis van de Uitkomst Overleg,
+maar ook de informatie die nodig is om de resource via de inzage-API te vinden.
 
 De volgende paragrafen beschrijven de onderliggende modellering en de gegevens
 die beschikbaar zijn voor het beantwoorden van deze vragen. Daarna worden
@@ -240,6 +255,15 @@ Voorbeeld:
 
 Het attribuut `soh:beschikbaarGesteldOp` ondersteunt operationele queries op
 beschikbare Uitkomsten Overleg.
+
+De attributen `soh:inzageEndpoint` en `soh:inzagePad` vormen samen met de
+identifier van de Uitkomst Overleg de basis voor de `inzageUrl` waarmee de
+resource via de inzage-API kan worden geraadpleegd.
+
+De attributen `soh:inzageEndpoint` en `soh:inzagePad` worden gebruikt om de URL
+voor inzage van de Uitkomst Overleg op te bouwen. De uiteindelijke URL bestaat uit:
+
+`inzageEndpoint` + `inzagePad` + identifier van de Uitkomst Overleg.
 
 Het attribuut heeft een andere betekenis dan het CloudEvent-attribuut `time`.
 
@@ -511,7 +535,8 @@ Voorbeeld response:
   "results": [
     {
       "id": "<identifier-uitkomst-overleg>",
-      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z",
+      "inzageUrl": "https://api.organisatie.nl/uitkomsten-overleg/<identifier-uitkomst-overleg>"
     }
   ]
 }
@@ -535,7 +560,8 @@ Voorbeeld response:
   "results": [
     {
       "id": "<identifier-uitkomst-overleg>",
-      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z",
+      "inzageUrl": "https://api.organisatie.nl/uitkomsten-overleg/<identifier-uitkomst-overleg>"
     }
   ]
 }
@@ -559,7 +585,8 @@ Voorbeeld response:
   "results": [
     {
       "id": "<identifier-uitkomst-overleg>",
-      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z"
+      "beschikbaarGesteldOp": "2026-01-01T12:00:00Z",
+      "inzageUrl": "https://api.organisatie.nl/uitkomsten-overleg/<identifier-uitkomst-overleg>"
     }
   ]
 }
@@ -578,6 +605,10 @@ Daarbij wordt onderscheid gemaakt tussen:
 Een namespace voor begrippen en schema's is niet hetzelfde als de definitieve strategie voor identifiers van instanties.
 
 Bij het bepalen van de strategie worden relevante overheidsbrede afspraken en standaarden betrokken.
+
+De huidige uitwerking gaat ervan uit dat de inzageUrl wordt opgebouwd uit het
+inzage-endpoint, het pad van de inzage-API en de identifier van de Uitkomst
+Overleg. De definitieve URI- en identifierstrategie wordt nog vastgesteld.
 
 ## Open punt
 

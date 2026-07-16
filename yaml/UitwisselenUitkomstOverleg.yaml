@@ -19,13 +19,20 @@ info:
   description: |
     Samenwerkfunctie-specifieke contracten voor CloudEvents en Query API.
 
+    Deze specificatie bevat:
+    - de CloudEvent-profielen die binnen deze samenwerkfunctie worden gebruikt;
+    - de structuur van de CloudEvent-payload;
+    - de Query API voor het bevragen van de beschikbare informatie.
+
+    De CloudEvent-profielen zijn opgenomen onder Components → Schemas.
+    Het aanbieden van CloudEvents zelf gebeurt via de generieke
+    Asynchrone Interactie API.
+
 externalDocs:
   description: Generieke Asynchrone Interactie API
   url: ./AsynchroneInteracties.yaml
 
 tags:
-  - name: CloudEvent profiel
-    description: Beschrijving van de events binnen deze samenwerkfunctie.
   - name: Query API
     description: Informatievragen op de Knowledge Graph.
 
@@ -37,11 +44,42 @@ paths:
         - Query API
       summary: Zoek beschikbare Uitkomsten Overleg
       description: |
-        Voorbeeld van een samenwerkfunctie-specifieke query.
+        Zoekt beschikbare Uitkomsten Overleg in de Knowledge Graph.
 
         De Query API bevraagt de informatie die beschikbaar is gesteld
-        binnen de Knowledge Graph.
+        binnen de Knowledge Graph. Het resultaat bestaat uit informatie-
+        objecten en niet uit gereconstrueerde CloudEvents.
       operationId: zoekUitkomstenOverleg
+
+      parameters:
+        - name: burgerservicenummer
+          in: query
+          required: false
+          description: |
+            BSN van de Betrokkene waarvoor beschikbare Uitkomsten Overleg
+            worden gezocht.
+          schema:
+            type: string
+
+        - name: beschikbaarVanaf
+          in: query
+          required: false
+          description: |
+            Geef alleen Uitkomsten Overleg terug die vanaf dit moment
+            beschikbaar zijn gesteld.
+          schema:
+            type: string
+            format: date-time
+
+        - name: beschikbaarTot
+          in: query
+          required: false
+          description: |
+            Geef alleen Uitkomsten Overleg terug die tot dit moment
+            beschikbaar zijn gesteld.
+          schema:
+            type: string
+            format: date-time
 
       responses:
         '200':
@@ -50,15 +88,70 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/QueryResult'
+              examples:
+                voorbeeld:
+                  $ref: '#/components/examples/UitkomstOverlegQueryResultaat'
 
 components:
+
+  examples:
+
+    UitkomstBeschikbaarGesteldVoorbeeld:
+      summary: CloudEvent waarmee een Uitkomst Overleg beschikbaar wordt gesteld
+      value:
+        specversion: "1.0"
+        id: "event-12345"
+        source: "urn:organisatie:voorbeeld"
+        type: "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
+        time: "2026-01-15T10:30:00Z"
+        subject: "uitkomst-overleg-98765"
+        datacontenttype: "application/ld+json"
+        data:
+          "@context":
+            prov: "http://www.w3.org/ns/prov#"
+            soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
+          "@graph":
+            - "@id": "urn:uitkomst-overleg-98765"
+              "@type":
+                - "prov:Entity"
+                - "soh:UitkomstOverleg"
+              "soh:beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
+
+    UitkomstOverlegQueryResultaat:
+      summary: Voorbeeld van een Query API-resultaat
+      value:
+        results:
+          - identifier: "uitkomst-overleg-98765"
+            beschikbaarGesteldOp: "2026-01-15T10:30:00Z"
 
   schemas:
 
     # Het generieke CloudEvent-contract wordt uitgebreid met de afspraken
     # voor deze samenwerkfunctie.
     UitkomstBeschikbaarGesteldEvent:
-      description: CloudEvent-profiel voor beschikbaarstelling van een Uitkomst Overleg.
+      description: |
+        CloudEvent-profiel voor beschikbaarstelling van een Uitkomst Overleg.
+
+        Een voorbeeld van een instantie van dit CloudEvent is opgenomen in:
+        components/examples/UitkomstBeschikbaarGesteldVoorbeeld.
+
+        Dit profiel beschrijft de inhoudelijke invulling van een CloudEvent
+        binnen deze samenwerkfunctie. Het aanbieden van het CloudEvent zelf
+        gebeurt via de generieke Asynchrone Interactie API.
+      examples:
+        - specversion: "1.0"
+          id: "event-12345"
+          source: "urn:organisatie:voorbeeld"
+          type: "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
+          time: "2026-01-15T10:30:00Z"
+          subject: "uitkomst-overleg-98765"
+          datacontenttype: "application/ld+json"
+          data:
+            "@context":
+              # De prefix soh verwijst naar het vocabularium van Samen Onder Handbereik.
+              prov: "http://www.w3.org/ns/prov#"
+              soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
+            "@graph": []
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
         - type: object
@@ -87,8 +180,11 @@ components:
 
     QueryResult:
       description: |
-        Resultaat van een query.
-        De exacte structuur is afhankelijk van de informatievraag.
+        Resultaat van een query op de Knowledge Graph.
+
+        Het resultaat bevat informatieobjecten die voldoen aan de
+        informatievraag. Het resultaat is geen CloudEvent en bevat geen
+        gereconstrueerde gebeurtenis.
       type: object
       required:
         - results
@@ -97,18 +193,3 @@ components:
           type: array
           items:
             type: object
-
-  examples:
-
-    UitkomstBeschikbaarGesteldVoorbeeld:
-      summary: Voorbeeld CloudEvent uitkomst beschikbaar gesteld
-      value:
-        specversion: "1.0"
-        id: "voorbeeld-event-id"
-        source: "voorbeeld-bron"
-        type: "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
-        time: "2026-01-01T12:00:00Z"
-        subject: "uitkomst-123"
-        data:
-          "@context": {}
-          "@graph": []

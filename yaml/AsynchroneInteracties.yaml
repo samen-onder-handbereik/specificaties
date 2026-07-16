@@ -22,6 +22,17 @@ info:
     Samenwerkfuncties verwijzen naar deze API en vullen het CloudEvent
     inhoudelijk in via een eigen CloudEvent-profiel.
 
+    Endpoint-naamgeving en versiebeheer:
+
+    De API gebruikt resourcegerichte endpoints. Daarom worden geen
+    actiewoorden zoals 'registreer' of 'verwerk' opgenomen in endpointnamen.
+    De HTTP-methode beschrijft de uit te voeren actie.
+
+    Er wordt geen versienummer opgenomen in het endpointpad zolang wijzigingen
+    compatibel blijven met het bestaande API-contract. Versiebeheer vindt
+    plaats via de versie van de OpenAPI-specificatie. Bij niet-compatibele
+    wijzigingen kan een nieuwe API-versie worden geïntroduceerd.
+
 tags:
   - name: CloudEvent API
     description: Endpoint voor het aanbieden van CloudEvents.
@@ -37,6 +48,11 @@ paths:
       summary: Bied een CloudEvent aan
       description: |
         Een deelnemer biedt een CloudEvent aan voor verwerking.
+
+        Het endpoint vertegenwoordigt een verzameling aangeboden events.
+        Het registreren of verwerken van het event is geen afzonderlijke
+        actie in de resource-naam; dit wordt uitgedrukt door de HTTP POST-
+        methode.
 
         Het attribuut type en de inhoud van data worden niet door deze
         generieke API vastgesteld. Deze worden bepaald door het
@@ -137,8 +153,22 @@ components:
 
     StatusResponse:
       description: |
-        Statusresponse. De concrete variant wordt bepaald door de waarde
-        van status.
+        Statusresponse. Er bestaan meerdere varianten van een statusresponse.
+
+        Het sleutelwoord oneOf geeft aan dat precies één van de hieronder
+        beschreven schema's van toepassing is:
+        - StatusOK: verwerking is afgerond;
+        - StatusInProgress: verwerking loopt nog;
+        - StatusError: verwerking is beëindigd met een fout.
+
+        De discriminator geeft aan welk veld gebruikt moet worden om de
+        juiste variant te herkennen. In dit geval bepaalt het attribuut
+        status welke structuur van toepassing is.
+
+        Bijvoorbeeld:
+        - status = OK        -> StatusOK
+        - status = IN_PROGRESS -> StatusInProgress
+        - status = ERROR     -> StatusError
       oneOf:
         - $ref: '#/components/schemas/StatusOK'
         - $ref: '#/components/schemas/StatusInProgress'

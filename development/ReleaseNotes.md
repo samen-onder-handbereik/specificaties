@@ -289,3 +289,28 @@ Aanscherpen van de structuur van de samenwerkfunctie-specificatie.
   geordend.
 - Historische ontwikkelstappen zijn niet langer bepalend voor de structuur van
   de inhoudelijke specificatie.
+
+
+
+
+## Sprint 18
+
+### Doel
+
+Verdere verfijning van de API-contracten en de samenhang tussen semantische
+modellering, Knowledge graph en technische ontsluiting.
+
+### Gewijzigd
+
+- OpenAPI-specificaties verder aangescherpt.
+- Generieke en samenwerkfunctie-specifieke API-verantwoordelijkheden verder
+  verduidelijkt.
+- Query-resultaten uitgebreid met een inzageUrl voor het benaderen van de
+  inhoudelijke resource.
+- JSON-LD namespacegebruik afgestemd op het vocabularium van Samen Onder Handbereik.
+
+### Resultaat
+
+De relatie tussen CloudEvents, Knowledge graph, Query-API en inzage-API is verder
+verduidelijkt zonder de scheiding tussen semantiek en technische ontsluiting los
+te laten.

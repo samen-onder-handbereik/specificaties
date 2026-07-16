@@ -114,3 +114,14 @@
 - [x] Structuur van de samenwerkfunctie-specificatie Uitwisselen Uitkomst Overleg aangescherpt.
 - [x] Scheiding tussen PROV-JSON-LD-modellering en domeinmodellering verduidelijkt.
 - [x] Domeinconcepten binnen de specificatie logischer geordend.
+
+
+
+
+## Sprint 18 afgerond
+
+- [x] OpenAPI-specificaties verder verfijnd.
+- [x] Scheiding tussen generieke asynchrone interacties en samenwerkfunctie-specifieke API-contracten verder verduidelijkt.
+- [x] Query-resultaten uitgebreid met een inzageUrl voor toegang tot de inhoudelijke resource.
+- [x] JSON-LD namespace voor Samen Onder Handbereik afgestemd tussen specificatie en API-contracten.
+- [x] Samenhang tussen Knowledge graph, Query-API en inzage-API verder verduidelijkt.

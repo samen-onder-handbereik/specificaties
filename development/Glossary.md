@@ -225,3 +225,15 @@ het domein waarvoor informatie wordt uitgewisseld.
 **Status:** Technisch begrip
 
 Informatie over de herkomst, totstandkoming en het gebruik van gegevens.
+
+
+
+
+## Inzage-URL
+
+**Status:** Technisch begrip
+
+Een URL waarmee een specifieke resource via de inzage-API beschikbaar wordt gesteld.
+
+De URL wordt opgebouwd uit het inzage-endpoint, het inzage-pad en de identifier
+van de betreffende resource.

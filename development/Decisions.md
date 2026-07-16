@@ -324,3 +324,30 @@ onderdeel is van het domeinmodel.
 Domeinconcepten zoals Betrokkene en Uitkomst Overleg worden beschreven binnen
 de domeinmodellering. PROV-elementen zoals Entity, Activity en Agent worden
 beschreven binnen de provenance-modellering.
+
+
+
+
+## ADR-020 -- Query-resultaat bevat verwijzing naar inzage-resource
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Een resultaat van een Query-API bevat naast de identificatie en relevante kenmerken
+van een informatieobject ook een verwijzing (`inzageUrl`) waarmee de inhoudelijke
+resource via de inzage-API kan worden geraadpleegd.
+
+### Motivatie
+
+De Query-API ontsluit informatie uit de Knowledge graph. De gebruiker van een query
+heeft naast de gevonden objectidentificatie ook behoefte aan een eenduidige manier
+om de inhoudelijke informatie op te vragen.
+
+### Consequenties
+
+De Knowledge graph bevat de informatie die nodig is om de inzageUrl op te bouwen.
+De technische ontsluiting blijft gescheiden van de identiteit van het
+informatieobject.

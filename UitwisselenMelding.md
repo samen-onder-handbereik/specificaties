@@ -1,3 +1,12 @@
+> **Let op — deze beschrijving wordt momenteel herzien**
+>
+> De inhoud van dit hoofdstuk is gebaseerd op een eerdere uitwerking van de samenwerkfunctie Uitwisselen Melding.
+> Deze beschrijving is op onderdelen verouderd en wordt in een toekomstige versie van deze specificatie aangepast.
+> Gebruik deze informatie daarom niet als definitief technisch of inhoudelijk contract.
+>
+> De verdere uitwerking zal onder meer aansluiten op de inmiddels gehanteerde uitgangspunten voor CloudEvents,
+> OpenAPI-specificaties en de generieke patronen voor asynchrone interacties.
+>
 ## Protocol 
 
 Hier moet een plantuml-diagram komen. 
