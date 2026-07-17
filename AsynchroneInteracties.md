@@ -2,137 +2,158 @@
 
 ## Inleiding
 
-Binnen Samen Onder Handbereik worden veel interacties asynchroon afgehandeld.
+### Doel
 
-Dit betekent dat het aanbieden van een gebeurtenis of het indienen van een
-verzoek niet direct leidt tot een inhoudelijk resultaat. De verdere verwerking
-vindt plaats buiten de context van de oorspronkelijke interactie.
+Het generieke patroon voor asynchrone interacties beschrijft hoe interacties binnen Samen Onder Handbereik (SOH) worden aangeboden, asynchroon worden verwerkt en gevolgd.
 
-De voortgang van de verwerking kan worden gevolgd. Afhankelijk van het type
-interactie kan daarnaast een inhoudelijk resultaat beschikbaar worden gesteld.
+Het patroon is bedoeld voor situaties waarin de verwerking van een interactie niet direct kan worden afgerond binnen de oorspronkelijke HTTP-aanroep. Na acceptatie vindt de verdere verwerking plaats buiten de context van de initiële interactie.
 
-Dit generieke interactiepatroon geldt voor verschillende typen interacties binnen het
-stelsel. Specifieke API's geven invulling aan dit patroon voor verschillende
-soorten interacties.
+De generieke verwerking bepaalt hoe interacties technisch worden aangeboden en gevolgd. Een samenwerkfunctie bepaalt de inhoudelijke betekenis van de interactie, de gegevens die daarbij worden uitgewisseld en eventuele domeinspecifieke validaties.
 
-Een samenwerkfunctie bepaalt de inhoudelijke betekenis en structuur van de
-gegevens die binnen een interactie worden gebruikt. De wijze waarop de
-asynchrone verwerking plaatsvindt, volgt het generieke interactiepatroon zoals beschreven
-in dit hoofdstuk.
+De technische contracten van de generieke API's zijn vastgelegd in de OpenAPI-specificatie [AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml).
+
+### Toepassingsgebied
+
+Binnen SOH kunnen verschillende typen interacties asynchroon worden verwerkt. Dit generieke patroon ondersteunt deze interacties door een uniforme wijze te bieden voor:
+
+- het aanbieden van een interactie;
+- het identificeren van een interactie;
+- het volgen van de voortgang van de verwerking;
+- het beschikbaar stellen van een eventueel resultaat.
+
+Het patroon wordt door samenwerkfuncties toegepast wanneer een directe synchrone verwerking niet passend of niet mogelijk is.
+
+## Kernbegrippen
+
+| Begrip | Betekenis |
+| --- | --- |
+| Asynchrone interactie | Een interactie waarvan de verwerking na acceptatie buiten de oorspronkelijke HTTP-aanroep plaatsvindt. |
+| CloudEvent | Een gebeurtenis die wordt aangeboden conform de CloudEvents-specificatie. |
+| interactieId | De unieke identificatie van een asynchrone interactie. Voor CloudEvents is het `interactieId` gelijk aan `CloudEvent.id`. |
+| Status-API | De generieke API waarmee de actuele status van een asynchrone interactie kan worden opgevraagd. |
+| Samenwerkfunctie | Een domeinspecifieke invulling van het generieke interactiepatroon. |
 
 ## Generiek interactiepatroon
 
-Een asynchrone interactie bestaat uit de volgende stappen:
+Een asynchrone interactie verloopt volgens een vast patroon:
 
-1. Een deelnemer initieert een interactie (naar de ketenindex CloudEvent-API).
-2. De interactie wordt geaccepteerd door de ketenindex CloudEvent-API en krijgt een technische identificatie (het transactie-ID).
-3. De verwerking vindt asynchroon plaats.
-4. De voortgang en/of het resultaat van de verwerking kan worden geraadpleegd.
+1. Een deelnemer biedt een CloudEvent aan via de CloudEvent API.
+2. De CloudEvent API accepteert de interactie.
+3. De verwerking van de interactie vindt asynchroon plaats.
+4. De deelnemer kan de voortgang volgen via de Status-API.
+5. Na afronding kan een resultaat beschikbaar worden gesteld.
 
-```
+```text
 Initiator
     |
-    | verzoek of gebeurtenis aanbieden
+    | aanbieden CloudEvent
     v
-API
+CloudEvent API
     |
     | acceptatie
     v
 Asynchrone verwerking
     |
-    +--> status beschikbaar
+    +--> status beschikbaar via Status-API
     |
     +--> resultaat beschikbaar
-```
 
-De volgende paragrafen beschrijven concrete toepassingen van dit patroon.
+## CloudEvent API
 
-## Aanbieden van een CloudEvent
+### Doel
 
-De aanbieder stelt een CloudEvent samen conform de afspraken van de betreffende samenwerkfunctie.
+De CloudEvent API biedt de mogelijkheid om een CloudEvent aan te bieden binnen het generieke interactiepatroon.
 
-Het CloudEvent wordt aangeboden via de CloudEvent API.
+Een deelnemer gebruikt deze API om een interactie te initiëren. Na acceptatie wordt de verdere verwerking asynchroon uitgevoerd.
 
-De technische beschrijving van deze API is opgenomen in de OpenAPI-specificatie
-voor het generieke asynchrone interactiepatroon: [AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml).
+De CloudEvent API is verantwoordelijk voor:
 
-Voorbeeld endpoint:
+- het ontvangen van het CloudEvent;
+- het uitvoeren van technische controles;
+- het accepteren van de interactie;
+- het mogelijk maken om de interactie verder te volgen.
+
+De inhoudelijke betekenis van het CloudEvent en de gegevens in de payload worden bepaald door de betreffende samenwerkfunctie.
+
+### Aanbieden van een CloudEvent
+
+Een deelnemer biedt een CloudEvent aan conform de afspraken van de betreffende samenwerkfunctie.
+
+Het CloudEvent wordt aangeboden via een HTTP POST-aanroep.
+
+Voorbeeld:
 
 ```http
 POST https://<host>/api/handeling
 ```
 
-De exacte URL wordt later vastgesteld.
+De exacte URL wordt vastgesteld in de technische API-specificatie.
 
-## Ontvangstbevestiging en transactie-ID
+Het aangeboden CloudEvent bevat een unieke identifier in het attribuut `id`.
 
-Na ontvangst van het CloudEvent retourneert de API een transactie-ID.
+Binnen het generieke interactiepatroon geldt:
 
-De transactie-ID identificeert de technische verwerking van de aanbieding en is niet hetzelfde als de identifier van het CloudEvent.
-
-| Identifier | Betekenis |
-| --- | --- |
-| CloudEvent `id` | Identificeert het aangeboden CloudEvent |
-| Transactie-ID | Identificeert de technische verwerking van de aanbieding |
-
-Voorbeeld antwoord:
-
-```json
-{
-  "transactieId": "<transactie-id>"
-}
+```text
+interactieId = CloudEvent.id
 ```
 
-## Opvragen van de verwerkingsstatus
+Deze identificatie wordt gebruikt om de interactie later via de Status-API te volgen.
 
-De aanbieder kan met behulp van de Status-API de voortgang van de verwerking opvragen.
+### Acceptatie van een interactie
 
-Voorbeeld endpoint:
+Na ontvangst controleert de CloudEvent API het aangeboden CloudEvent.
 
-```http
-GET https://<host>/api/status/{transactieId}
-```
+Wanneer het CloudEvent technisch kan worden geaccepteerd, retourneert de API een HTTP-response met status `202 Accepted`.
 
-## Verwerkingsstatussen
+De status `202 Accepted` betekent dat de interactie is geaccepteerd voor verdere asynchrone verwerking. De verwerking zelf hoeft op dat moment nog niet te zijn afgerond.
 
-De Status-API retourneert informatie over de actuele toestand van een
-asynchrone verwerking.
+De aanbieder kan vervolgens de Status-API gebruiken om de voortgang van de verwerking te volgen.
 
-Een statusresponse bevat de volgende attributen:
+Wanneer het CloudEvent niet kan worden geaccepteerd, retourneert de API een foutmelding volgens de geldende HTTP- en foutafhandelingsafspraken.
 
-| Attribuut | Betekenis |
-| --- | --- |
-| `transactieId` | Identificeert de technische verwerking van de interactie |
-| `status` | Geeft de actuele toestand van de verwerking aan |
-| `resultaat` | Bevat aanvullende informatie over de uitkomst van de verwerking |
+## Status-API
 
-Het attribuut `resultaat` bevat aanvullende informatie die afhankelijk is van
-de status en het type interactie. Bij een succesvolle verwerking kan het
-attribuut een inhoudelijk resultaat bevatten. Bij een fout bevat het informatie
-over de opgetreden fout. Tijdens een lopende verwerking wordt het attribuut niet
-opgenomen.
+### Doel
 
-De Status-API kent drie mogelijke statussen:
+De Status-API ondersteunt het volgen van een asynchrone interactie.
 
-| Status | Betekenis |
-| --- | --- |
-| `OK` | Het CloudEvent is succesvol verwerkt |
-| `IN_PROGRESS` | De verwerking is nog niet afgerond |
-| `ERROR` | Tijdens de verwerking is een fout opgetreden |
+Met deze API kan een deelnemer de actuele status van een eerder aangeboden interactie opvragen.
 
-### Status OK
+De Status-API bepaalt niet de inhoudelijke betekenis van de verwerking. Deze betekenis wordt bepaald door de betreffende samenwerkfunctie.
 
-De status `OK` geeft aan dat de verwerking van het aangeboden CloudEvent
-succesvol is afgerond.
+### Opvragen van de status
+
+De status van een interactie wordt opgevraagd met het `interactieId`.
 
 Voorbeeld:
 
-```json
-{
-  "transactieId": "<transactie-id>",
-  "status": "OK"
-}
+```http
+GET https://<host>/api/status/{interactieId}
 ```
+
+De Status-API retourneert de actuele status van de interactie.
+
+Een statusresponse bevat de volgende gegevens:
+
+| Attribuut | Betekenis |
+| --- | --- |
+| `interactieId` | Identificeert de asynchrone interactie. |
+| `status` | Geeft de actuele toestand van de verwerking aan. |
+| `resultaat` | Bevat aanvullende informatie over de uitkomst van de verwerking, indien beschikbaar. |
+
+Het attribuut `resultaat` is afhankelijk van de status en de betreffende samenwerkfunctie.
+
+Bij een succesvolle verwerking kan het resultaat inhoudelijke gegevens bevatten. Bij een fout kan het informatie bevatten over de oorzaak van de fout.
+
+### Verwerkingsstatussen
+
+De Status-API kent de volgende statussen:
+
+| Status | Betekenis |
+| --- | --- |
+| `IN_PROGRESS` | De verwerking is gestart maar nog niet afgerond. |
+| `OK` | De verwerking is succesvol afgerond. |
+| `ERROR` | Tijdens de verwerking is een fout opgetreden. |
 
 ### Status IN_PROGRESS
 
@@ -142,8 +163,24 @@ Voorbeeld:
 
 ```json
 {
-  "transactieId": "<transactie-id>",
+  "interactieId": "<interactie-id>",
   "status": "IN_PROGRESS"
+}
+```
+
+### Status OK
+
+De status `OK` geeft aan dat de verwerking succesvol is afgerond.
+
+Wanneer een resultaat beschikbaar is, bevat de response het attribuut `resultaat`.
+
+Voorbeeld:
+
+```json
+{
+  "interactieId": "<interactie-id>",
+  "status": "OK",
+  "resultaat": {}
 }
 ```
 
@@ -151,16 +188,19 @@ Voorbeeld:
 
 De status `ERROR` geeft aan dat tijdens de verwerking een fout is opgetreden.
 
-Een fout kan een functionele of een technische oorzaak hebben.
+Een fout kan een functionele of technische oorzaak hebben.
 
-#### Functionele fout
+### Functionele fout
 
-Een functionele fout ontstaat wanneer het aangeboden CloudEvent inhoudelijk
-niet verwerkt kan worden.
+Een functionele fout ontstaat wanneer het aangeboden CloudEvent inhoudelijk niet kan worden verwerkt.
+
+Een functionele fout kan bijvoorbeeld optreden wanneer gegevens niet voldoen aan de afspraken van de betreffende samenwerkfunctie.
+
+Voorbeeld:
 
 ```json
 {
-  "id": "<transactie-id>",
+  "interactieId": "<interactie-id>",
   "status": "ERROR",
   "resultaat": {
     "fout": "Het CloudEvent kan niet worden verwerkt vanwege een functionele fout.",
@@ -171,14 +211,17 @@ niet verwerkt kan worden.
 }
 ```
 
-#### Technische fout
+### Technische fout
 
-Een technische fout ontstaat wanneer tijdens de verwerking een technische
-storing optreedt.
+Een technische fout ontstaat wanneer tijdens de verwerking een technische storing optreedt.
+
+Een technische fout zegt niets over de inhoudelijke juistheid van het aangeboden CloudEvent, maar over het niet beschikbaar zijn of falen van de technische verwerking.
+
+Voorbeeld:
 
 ```json
 {
-  "id": "<transactie-id>",
+  "interactieId": "<interactie-id>",
   "status": "ERROR",
   "resultaat": {
     "fout": "Er heeft een technische fout plaatsgevonden. Neem contact op met de beheerder of probeer het later opnieuw.",
@@ -187,66 +230,124 @@ storing optreedt.
 }
 ```
 
+## Identificatie
+
+### Identificatie van een interactie
+
+Elke asynchrone interactie heeft een unieke identificatie waarmee de voortgang van de verwerking kan worden gevolgd.
+
+Binnen het generieke interactiepatroon wordt deze identificatie aangeduid als `interactieId`.
+
+Voor interacties die gebaseerd zijn op CloudEvents geldt:
+
+```text
+interactieId = CloudEvent.id
+```
+
+Het attribuut `id` van een CloudEvent identificeert daarmee niet alleen het aangeboden CloudEvent, maar tevens de asynchrone interactie die door het aanbieden van dit CloudEvent ontstaat.
+
+Dezelfde identificatie wordt gebruikt bij het opvragen van de status via de Status-API.
+
+### Relatie met andere identifiers
+
+Binnen een interactie kunnen verschillende soorten identifiers voorkomen. Deze hebben ieder een eigen betekenis en toepassingsgebied.
+
+| Identifier | Niveau | Betekenis |
+| --- | --- | --- |
+| `interactieId` (= CloudEvent `id`) | Interactieniveau | Identificeert de asynchrone interactie. |
+| JSON-LD `@id` | Semantisch niveau | Identificeert resources binnen een provenance-graaf. |
+| Domeinspecifieke identifiers | Domeinniveau | Identificeren objecten binnen een samenwerkfunctie. |
+
+Deze identifiers hebben geen onderlinge vervanging. Een `@id` identificeert bijvoorbeeld een resource binnen een gegevensmodel, terwijl het `interactieId` de uitwisseling identificeert waarmee deze resource wordt verwerkt.
+
 ## Relatie met samenwerkfuncties
 
-Het beschreven patroon is generiek en geldt voor alle samenwerkfuncties.
+### Generieke en specifieke onderdelen
 
-Een samenwerkfunctie bepaalt:
-- welke CloudEvents kunnen worden aangeboden;
-- welke gegevens in `data` worden opgenomen;
-- welke domeinspecifieke validaties gelden.
+Het generieke interactiepatroon beschrijft de technische wijze waarop asynchrone interacties worden afgehandeld.
 
-De generieke verwerking bepaalt:
-- hoe CloudEvents worden aangeboden;
+Een samenwerkfunctie bepaalt de inhoudelijke invulling van een interactie.
+
+De samenwerkfunctie bepaalt onder andere:
+
+- welke typen CloudEvents kunnen worden aangeboden;
+- welke gegevens in de `data` van een CloudEvent worden opgenomen;
+- welke domeinspecifieke validaties gelden;
+- welke betekenis een resultaat heeft.
+
+Het generieke patroon bepaalt:
+
+- hoe een CloudEvent wordt aangeboden;
+- hoe een interactie wordt geïdentificeerd;
 - hoe de verwerking asynchroon plaatsvindt;
-- hoe de status wordt opgevraagd.
+- hoe de status van een interactie kan worden opgevraagd.
 
-## Toepassingen en ondersteunende functies
+### Relatie tussen generiek patroon en samenwerkfunctie
 
-Het generieke patroon voor asynchrone interacties kent verschillende
-toepassingen en ondersteunende functies.
+Een samenwerkfunctie maakt gebruik van het generieke interactiepatroon door invulling te geven aan de inhoudelijke aspecten van een interactie.
 
-### Aanbieden van CloudEvents
+De verwerking verloopt daarbij volgens het volgende principe:
 
-Het aanbieden van CloudEvents is een toepassing van het generieke patroon.
-Een producer biedt een gebeurtenis aan via de CloudEvent API. De verdere
-verwerking van deze gebeurtenis vindt asynchroon plaats volgens het in dit
-hoofdstuk beschreven patroon.
+```text
+Generiek interactiepatroon
+        |
+        +-- aanbieden CloudEvent
+        |
+        +-- identificeren interactie
+        |
+        +-- volgen status
+        |
+        v
+Samenwerkfunctie
+        |
+        +-- betekenis gegevens
+        |
+        +-- validaties
+        |
+        +-- resultaat
+```
 
-### Uitvoeren van queries
+Door deze scheiding blijft het mechanisme voor asynchrone interacties uniform, terwijl verschillende samenwerkfuncties hun eigen inhoudelijke betekenis kunnen behouden.
 
-Een samenwerkfunctie kan een Query-API definiëren voor het ondersteunen van
-informatievragen.
+## Herhaald opvragen van de status
 
-De inhoud en mogelijkheden van een Query-API kunnen niet generiek worden
-vastgesteld, omdat deze afhankelijk zijn van de betekenis van de gegevens en de
-informatiebehoefte binnen de betreffende samenwerkfunctie.
+### Retry-strategie
 
-### Status-API als ondersteunende functie
+Wanneer de Status-API de status `IN_PROGRESS` retourneert, is de verwerking van de interactie nog niet afgerond.
 
-De Status-API is geen afzonderlijke toepassing van het interactiepatroon, maar
-een ondersteunende functie waarmee de voortgang van een asynchrone interactie
-kan worden gevolgd.
+De aanbieder kan de Status-API op een later moment opnieuw aanroepen met hetzelfde `interactieId`.
 
-De Status-API heeft geen eigen inhoudelijke betekenis binnen een
-samenwerkfunctie, maar ondersteunt het generieke mechanisme voor het volgen van
-asynchroon uitgevoerde interacties.
+Het opnieuw opvragen van de status wordt uitgevoerd volgens een retry-strategie. De aanbieder bepaalt daarbij het interval tussen opeenvolgende verzoeken binnen de daarvoor geldende afspraken.
+
+Een mogelijke strategie is een oplopend interval (exponential backoff). Daarbij wordt de wachttijd tussen opeenvolgende verzoeken geleidelijk verhoogd.
+
+Voorbeeld:
+
+| Poging | Wachttijd |
+| --- | --- |
+| Eerste statusopvraag na acceptatie | 1 seconde |
+| Tweede statusopvraag | 2 seconden |
+| Derde statusopvraag | 4 seconden |
+| Vierde statusopvraag | 8 seconden |
+
+De gekozen retry-strategie kan afhankelijk zijn van de eigenschappen van de betreffende toepassing.
+
+Het doel van een retry-strategie is om onnodige belasting van de Status-API te voorkomen, terwijl de aanbieder de status van de interactie kan blijven volgen.
 
 ## Nog vast te stellen
 
-De volgende onderwerpen worden later verder uitgewerkt:
+De volgende onderwerpen worden verder uitgewerkt:
 
 - definitieve API-URL's;
 - exacte HTTP-contracten;
 - foutcodes;
 - autorisatie en authenticatie;
-- bewaartermijn van transactiegegevens;
-- afspraken rondom opnieuw aanbieden van een CloudEvent.
+- bewaartermijnen van interactiegegevens;
+- afspraken rondom het opnieuw aanbieden van een CloudEvent.
 
-## API-specificaties
+## OpenAPI-specificatie
 
-De formele technische contracten van de API's worden beschreven met behulp van een
-OpenAPI-specificatie.
+De technische contracten van de generieke API's worden beschreven met behulp van een OpenAPI-specificatie.
 
 De OpenAPI-specificatie bevat onder andere:
 
@@ -256,71 +357,12 @@ De OpenAPI-specificatie bevat onder andere:
 - foutafhandeling;
 - technische validatieregels.
 
-De formele technische contracten van de generieke API's zijn vastgelegd in de OpenAPI-specificatie.
+De OpenAPI-specificatie voor het generieke asynchrone interactiepatroon is opgenomen in [AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml).
 
-De OpenAPI-specificatie voor het generieke asynchrone interactiepatroon bevat:
+Deze specificatie beschrijft:
+
 - het aanbieden van CloudEvents via de CloudEvent API;
-- het opvragen van de verwerkingsstatus via de Status-API;
+- het opvragen van de status van een interactie via de Status-API;
 - de generieke request- en responsemodellen.
 
-De actuele specificatie is te vinden via deze [link](yaml/AsynchroneInteracties.yaml).
-
-De inhoudelijke betekenis van CloudEvents en de structuur van de payload worden
-vastgelegd in een samenwerkfunctie-specifieke OpenAPI-specificatie.
-
-
-## Identificatie en relatie tussen identifiers
-
-Binnen de verwerking van CloudEvents worden verschillende identifiers gebruikt.
-
-| Identifier | Niveau | Betekenis |
-| --- | --- | --- |
-| CloudEvent `id` | Berichtniveau | Identificeert het aangeboden CloudEvent |
-| Transactie-ID | Verwerkingsniveau | Identificeert de technische verwerking van de aanbieding |
-| JSON-LD `@id` | Semantisch niveau | Identificeert resources binnen de provenance-graaf |
-
-De ontvangstbevestiging van de CloudEvent API bevat uitsluitend de transactie-ID.
-De CloudEvent `id` maakt onderdeel uit van het aangeboden CloudEvent en wordt niet
-opnieuw geretourneerd.
-
-## Herhaald opvragen van de verwerkingsstatus
-
-Wanneer de Status-API de status `IN_PROGRESS` retourneert, is de verwerking van
-het aangeboden CloudEvent nog niet afgerond.
-
-De aanbieder kan in dat geval de Status-API op een later moment opnieuw
-aanroepen met dezelfde transactie-ID.
-
-Het opnieuw opvragen van de status wordt uitgevoerd volgens een retry-strategie.
-De aanbieder bepaalt daarbij zelf het interval tussen opeenvolgende verzoeken,
-binnen de daarvoor geldende afspraken.
-
-Een mogelijke strategie is een oplopend interval (exponential backoff). Daarbij
-wordt de wachttijd tussen opeenvolgende verzoeken geleidelijk verhoogd.
-
-Voorbeeld:
-
-| Poging | Wachttijd |
-| --- | --- |
-| Eerste statusopvraag na ontvangst | 1 seconde |
-| Tweede statusopvraag | 2 seconden |
-| Derde statusopvraag | 4 seconden |
-| Vierde statusopvraag | 8 seconden |
-
-De gekozen retry-strategie kan afhankelijk zijn van de eigenschappen van de
-betreffende toepassing. Het doel is om onnodige belasting van de Status-API te
-voorkomen, terwijl de aanbieder de voortgang van de verwerking kan blijven
-volgen.
-
-De definitieve afspraken over retry-intervallen en eventuele maximale
-herhaalduur worden later vastgesteld.
-
-
-
-## Relatie met samenwerkfunctie-specifieke OpenAPI-specificaties
-
-De generieke OpenAPI-specificatie beschrijft het technische mechanisme voor
-asynchrone interacties. Een samenwerkfunctie-specifieke OpenAPI-specificatie
-beschrijft de betekenisvolle invulling van CloudEvents en eventuele
-samenwerkfunctie-specifieke API's.
-
+De inhoudelijke betekenis van CloudEvents en de structuur van de payload worden vastgelegd in een samenwerkfunctie-specifieke OpenAPI-specificatie.

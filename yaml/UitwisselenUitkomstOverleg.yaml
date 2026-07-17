@@ -38,8 +38,8 @@ tags:
 
 paths:
 
-  /uitkomsten-overleg:
-    get:
+  /uitkomsten-overleg/query:
+    post:
       tags:
         - Query API
       summary: Zoek beschikbare Uitkomsten Overleg
@@ -49,37 +49,17 @@ paths:
         De Query API bevraagt de informatie die beschikbaar is gesteld
         binnen de Knowledge Graph. Het resultaat bestaat uit informatie-
         objecten en niet uit gereconstrueerde CloudEvents.
+
+        Een POST wordt gebruikt zodat zoekcriteria, waaronder mogelijk
+        gevoelige gegevens zoals een BSN, geen onderdeel vormen van de URL.
       operationId: zoekUitkomstenOverleg
 
-      parameters:
-        - name: burgerservicenummer
-          in: query
-          required: false
-          description: |
-            BSN van de Betrokkene waarvoor beschikbare Uitkomsten Overleg
-            worden gezocht.
-          schema:
-            type: string
-
-        - name: beschikbaarVanaf
-          in: query
-          required: false
-          description: |
-            Geef alleen Uitkomsten Overleg terug die vanaf dit moment
-            beschikbaar zijn gesteld.
-          schema:
-            type: string
-            format: date-time
-
-        - name: beschikbaarTot
-          in: query
-          required: false
-          description: |
-            Geef alleen Uitkomsten Overleg terug die tot dit moment
-            beschikbaar zijn gesteld.
-          schema:
-            type: string
-            format: date-time
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
 
       responses:
         '200':
@@ -126,6 +106,29 @@ components:
 
   schemas:
 
+    QueryRequest:
+      description: |
+        Zoekcriteria voor beschikbare Uitkomsten Overleg.
+      type: object
+      properties:
+        burgerservicenummer:
+          type: string
+          description: |
+            BSN van de Betrokkene waarvoor beschikbare Uitkomsten Overleg
+            worden gezocht.
+        beschikbaarVanaf:
+          type: string
+          format: date-time
+          description: |
+            Geef alleen Uitkomsten Overleg terug die vanaf dit moment
+            beschikbaar zijn gesteld.
+        beschikbaarTot:
+          type: string
+          format: date-time
+          description: |
+            Geef alleen Uitkomsten Overleg terug die tot dit moment
+            beschikbaar zijn gesteld.
+
     # Het generieke CloudEvent-contract wordt uitgebreid met de afspraken
     # voor deze samenwerkfunctie.
     UitkomstBeschikbaarGesteldEvent:
@@ -151,7 +154,24 @@ components:
               # De prefix soh verwijst naar het vocabularium van Samen Onder Handbereik.
               prov: "http://www.w3.org/ns/prov#"
               soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
-            "@graph": []
+            "@graph":
+              - "@id": "urn:uitkomst-overleg-98765"
+                "@type":
+                  - "prov:Entity"
+                  - "soh:UitkomstOverleg"
+                "prov:wasGeneratedBy":
+                  "@id": "urn:activity:beschikbaarstellen:12345"
+
+              - "@id": "urn:activity:beschikbaarstellen:12345"
+                "@type":
+                  - "prov:Activity"
+                "prov:wasAssociatedWith":
+                  "@id": "urn:organisatie:voorbeeld"
+
+              - "@id": "urn:organisatie:voorbeeld"
+                "@type":
+                  - "prov:Agent"
+
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
         - type: object
@@ -162,7 +182,44 @@ components:
               $ref: '#/components/schemas/ProvenancePayload'
 
     UitkomstIngezienEvent:
-      description: CloudEvent-profiel voor inzage van een Uitkomst Overleg.
+      description: |
+        CloudEvent-profiel voor inzage van een Uitkomst Overleg.
+
+        De provenance Activity representeert de feitelijke inzagehandeling.
+        De bijbehorende Agent representeert de organisatie die de inzage
+        heeft uitgevoerd.
+
+        Bij inzage wordt vastgelegd welke organisatie de Uitkomst Overleg
+        heeft ingezien. Deze informatie maakt onderdeel uit van de
+        provenance-informatie.
+      examples:
+        - specversion: "1.0"
+          id: "event-67890"
+          source: "urn:organisatie:voorbeeld"
+          type: "uitwisselen-uitkomst-overleg.uitkomst-ingezien"
+          time: "2026-01-15T11:00:00Z"
+          subject: "uitkomst-overleg-98765"
+          datacontenttype: "application/ld+json"
+          data:
+            "@context":
+              prov: "http://www.w3.org/ns/prov#"
+              soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
+            "@graph":
+              - "@id": "urn:activity:inzage:67890"
+                "@type":
+                  - "prov:Activity"
+                  - "soh:InzienUitkomstOverleg"
+                "prov:used":
+                  "@id": "urn:uitkomst-overleg-98765"
+                "prov:wasAssociatedWith":
+                  "@id": "urn:organisatie:inzage"
+
+              - "@id": "urn:organisatie:inzage"
+                "@type":
+                  - "prov:Agent"
+                # Agent die de inzage heeft uitgevoerd.
+
+
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
         - type: object
@@ -171,6 +228,35 @@ components:
               const: uitwisselen-uitkomst-overleg.uitkomst-ingezien
             data:
               $ref: '#/components/schemas/ProvenancePayload'
+
+    UitkomstOverleg:
+      description: |
+        Representatie van een Uitkomst Overleg.
+
+        Deze resource bevat de gegevens waarmee een Uitkomst Overleg
+        kan worden geraadpleegd via de inzagevoorziening.
+      type: object
+      required:
+        - identifier
+      properties:
+        identifier:
+          type: string
+          description: Unieke identifier van de UitkomstOverleg-resource.
+        beschikbaarGesteldOp:
+          type: string
+          format: date-time
+          description: Moment waarop de Uitkomst Overleg beschikbaar is gesteld.
+        inzageUrl:
+          type: string
+          format: uri
+          description: |
+            URL waarmee de Uitkomst Overleg kan worden ingezien.
+
+            De inzageUrl verwijst naar de inzagevoorziening en is geen
+            primaire identifier van de UitkomstOverleg-resource.
+
+            De opbouw van de inzageUrl wordt beschreven in de
+            specificatie UitwisselenUitkomstOverleg.
 
     ProvenancePayload:
       description: |
@@ -192,4 +278,38 @@ components:
         results:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/UitkomstOverlegReferentie'
+
+    UitkomstOverlegReferentie:
+      description: |
+        Referentie naar een beschikbare Uitkomst Overleg.
+
+        De referentie bevat de gegevens die nodig zijn om een
+        Uitkomst Overleg via de inzagevoorziening te raadplegen.
+      type: object
+      required:
+        - identifier
+        - inzageUrl
+      properties:
+        identifier:
+          type: string
+          description: |
+            Identifier van de UitkomstOverleg-resource.
+
+            Deze identifier wordt ook gebruikt als identifier van de
+            overeenkomstige prov:Entity in de provenance-informatie.
+        beschikbaarGesteldOp:
+          type: string
+          format: date-time
+          description: Moment waarop de Uitkomst Overleg beschikbaar is gesteld.
+        inzageUrl:
+          type: string
+          format: uri
+          description: |
+            URL waarmee de Uitkomst Overleg kan worden ingezien.
+
+            De inzageUrl verwijst naar de inzagevoorziening en is geen
+            primaire identifier van de UitkomstOverleg-resource.
+
+            De opbouw van de inzageUrl wordt beschreven in de
+            specificatie UitwisselenUitkomstOverleg.

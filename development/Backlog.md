@@ -125,3 +125,18 @@
 - [x] Query-resultaten uitgebreid met een inzageUrl voor toegang tot de inhoudelijke resource.
 - [x] JSON-LD namespace voor Samen Onder Handbereik afgestemd tussen specificatie en API-contracten.
 - [x] Samenhang tussen Knowledge graph, Query-API en inzage-API verder verduidelijkt.
+
+
+## Sprint 19 afgerond
+
+- [x] AsynchroneInteracties.md en AsynchroneInteracties.yaml afgestemd.
+- [x] UitwisselenUitkomstOverleg.md en UitwisselenUitkomstOverleg.yaml afgestemd.
+- [x] Query-model, UitkomstOverleg-resource en inzageUrl verder uitgewerkt.
+- [x] CloudEvent-profielen en PROV-JSONLD-voorbeelden verder afgestemd.
+
+
+## Openstaande uitwerkingspunten
+
+- [ ] URI- en identifierstrategie verder uitwerken.
+- [ ] Graph Build Specification maken.
+- [ ] Neo4j-model en Cypher-query voorbeelden uitwerken.

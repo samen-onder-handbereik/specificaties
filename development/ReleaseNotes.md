@@ -314,3 +314,24 @@ modellering, Knowledge graph en technische ontsluiting.
 De relatie tussen CloudEvents, Knowledge graph, Query-API en inzage-API is verder
 verduidelijkt zonder de scheiding tussen semantiek en technische ontsluiting los
 te laten.
+
+
+## Sprint 19
+
+### Doel
+
+Consolidatie van de generieke asynchrone interacties en de
+samenwerkfunctie-specifieke specificatie voor Uitwisselen Uitkomst Overleg.
+
+### Gewijzigd
+
+-   `AsynchroneInteracties.md` en `AsynchroneInteracties.yaml` afgestemd.
+-   `UitwisselenUitkomstOverleg.md` en `UitwisselenUitkomstOverleg.yaml`
+    afgestemd.
+-   Query-model, UitkomstOverleg-resource en inzageUrl verder uitgewerkt.
+-   CloudEvent-profielen en PROV-JSONLD-voorbeelden verder aangescherpt.
+
+### Resultaat
+
+De Markdown-specificaties en OpenAPI-specificaties vormen samen een
+consistente basis voor verdere technische uitwerking.
