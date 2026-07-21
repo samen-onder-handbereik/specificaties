@@ -237,3 +237,23 @@ Een URL waarmee een specifieke resource via de inzage-API beschikbaar wordt gest
 
 De URL wordt opgebouwd uit het inzage-endpoint, het inzage-pad en de identifier
 van de betreffende resource.
+
+
+
+
+
+## Graph node
+
+**Status:** Technisch begrip
+
+Een element in de Knowledge graph dat een informatieobject, activiteit of
+actor representeert en meerdere semantische typen kan hebben.
+
+
+## Domeinspecifiek type
+
+**Status:** Technisch begrip
+
+Een type waarmee de betekenis van een object binnen een specifieke
+samenwerkfunctie wordt vastgelegd.
+

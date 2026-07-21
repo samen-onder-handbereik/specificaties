@@ -351,3 +351,30 @@ om de inhoudelijke informatie op te vragen.
 De Knowledge graph bevat de informatie die nodig is om de inzageUrl op te bouwen.
 De technische ontsluiting blijft gescheiden van de identiteit van het
 informatieobject.
+
+
+
+
+
+## ADR-021 -- Graph-nodes combineren PROV- en domeintypen
+
+### Status
+
+Geaccepteerd
+
+### Besluit
+
+Binnen de Knowledge graph kan één node zowel een PROV-type als een
+domeinspecifiek type representeren.
+
+### Motivatie
+
+Een informatieobject kan vanuit meerdere perspectieven worden beschreven.
+Het PROV-model beschrijft de rol binnen provenance, terwijl het
+domeintype de betekenis binnen het domeinmodel beschrijft.
+
+### Consequenties
+
+PROV-typen en domeintypen worden niet als afzonderlijke graph-objecten
+gemodelleerd. Een node kan meerdere semantische typen hebben.
+

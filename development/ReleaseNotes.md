@@ -363,3 +363,36 @@ asynchrone interactiepatroon.
 
 De generieke CloudEvents-afspraken, het asynchrone interactiepatroon en
 de samenwerkfunctie-specifieke specificaties blijven onderling consistent.
+
+
+
+
+
+## Sprint 21
+
+### Doel
+
+Uitwerken van het generieke Knowledge graph-model als basis voor de
+technische realisatie.
+
+### Toegevoegd
+
+-   Nieuw hoofdstuk `KnowledgeGraphModel.md` toegevoegd.
+-   Relatie tussen PROV-modellering, domeinmodellering en Neo4j-model
+    beschreven.
+-   Gebruik van meerdere semantische typen binnen één graph-node
+    verduidelijkt.
+-   Relatie tussen CloudEvents en provenance-activiteiten verder
+    uitgewerkt.
+
+### Gewijzigd
+
+-   Conceptueel Neo4j-model toegevoegd aan de specificatie.
+-   Backlog bijgewerkt: conceptueel Neo4j-model is uitgevoerd; technische
+    uitwerking blijft open.
+
+### Resultaat
+
+Het conceptuele Knowledge graph- en Neo4j-model is vastgelegd als basis
+voor verdere technische uitwerking.
+
