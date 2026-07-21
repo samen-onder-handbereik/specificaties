@@ -244,7 +244,7 @@ Voor interacties die gebaseerd zijn op CloudEvents geldt:
 interactieId = CloudEvent.id
 ```
 
-Het attribuut `id` van een CloudEvent identificeert daarmee niet alleen het aangeboden CloudEvent, maar tevens de asynchrone interactie die door het aanbieden van dit CloudEvent ontstaat.
+Het attribuut `id` van een CloudEvent wordt binnen het generieke interactiepatroon gebruikt als identificatie van de asynchrone interactie die door het aanbieden van dit CloudEvent ontstaat.
 
 Dezelfde identificatie wordt gebruikt bij het opvragen van de status via de Status-API.
 

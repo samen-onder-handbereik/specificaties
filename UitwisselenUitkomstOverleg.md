@@ -1,5 +1,3 @@
-# Uitwisselen Uitkomst Overleg
-
 ## Inleiding
 
 Deze specificatie beschrijft de samenwerkfunctie **Uitwisselen Uitkomst

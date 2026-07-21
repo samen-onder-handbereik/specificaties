@@ -8,9 +8,18 @@ Foundation (CNCF).
 
 Een CloudEvent beschrijft een gebeurtenis die binnen een
 samenwerkfunctie heeft plaatsgevonden. Het CloudEvent bevat de
-informatie die nodig is om de gebeurtenis te herkennen en te verwerken.
-De betekenis van de gebeurtenis en de inhoud van de bijbehorende
-gegevens worden bepaald door de betreffende samenwerkfunctie.
+informatie die nodig is om de gebeurtenis te identificeren, te verwerken
+en te relateren aan de betreffende samenwerkfunctie.
+
+Het CloudEvent bevat niet de inhoudelijke gegevens waarop de gebeurtenis
+betrekking heeft. De betekenis van de gebeurtenis, het betrokken object
+en de inhoud van de bijbehorende gegevens worden bepaald door de
+betreffende samenwerkfunctie.
+
+Binnen *Samen Onder Handbereik* wordt het attribuut `id` van een
+CloudEvent gebruikt als unieke identificatie van het CloudEvent. Voor
+asynchrone interacties is deze identificatie tevens de identificatie
+waarmee de interactie kan worden gevolgd.
 
 Een CloudEvent bestaat uit:
 
@@ -22,7 +31,8 @@ Een CloudEvent bestaat uit:
 
 2.  `data`
 
-    De gegevens die inhoudelijk bij de gebeurtenis horen.
+    De gegevens die bij de gebeurtenis horen. De structuur en betekenis
+    hiervan worden bepaald door de betreffende samenwerkfunctie.
 
 Een CloudEvent heeft in hoofdlijnen de volgende structuur:
 
@@ -69,6 +79,8 @@ Identificeert het CloudEvent.
 
 ### Afspraken
 
+-   Het attribuut `id` identificeert het CloudEvent waarin een
+    gebeurtenis wordt beschreven.
 -   Het attribuut `id` wordt gegenereerd door de producerende partij.
 -   De waarde is uniek binnen de context waarin de producer CloudEvents
     uitgeeft.
@@ -76,6 +88,9 @@ Identificeert het CloudEvent.
     UUIDv4.
 -   Een eenmaal gebruikt `id` wordt niet opnieuw gebruikt, ook niet
     wanneer een CloudEvent opnieuw wordt aangeboden.
+-   Binnen het generieke patroon voor asynchrone interacties wordt het
+    attribuut `id` gebruikt als identificatie van de interactie
+    (`interactieId`).
 
 ## `source`
 
@@ -167,20 +182,24 @@ payload.
 
 ### Doel
 
-Geeft het object aan waarop de gebeurtenis betrekking heeft.
+Geeft het primaire object aan waarop de gebeurtenis betrekking heeft.
 
 ### Afspraken
 
 -   Het attribuut wordt gebruikt wanneer de gebeurtenis betrekking heeft
     op een specifiek object binnen de bron.
--   De betekenis en structuur van `subject` worden vastgesteld per
-    samenwerkfunctie.
+-   De waarde identificeert niet het CloudEvent zelf, maar het primaire
+    object waarop de gebeurtenis betrekking heeft.
+-   Een gebeurtenis kan betrekking hebben op meerdere objecten. De
+    samenwerkfunctie bepaalt welk object als `subject` wordt aangewezen
+    en hoe dit object wordt geïdentificeerd.
 -   De waarde sluit aan bij de identifierstrategie van het betreffende
     domeinobject.
 
 # Het attribuut `data`
 
-Het attribuut `data` bevat de gegevens die horen bij de gebeurtenis.
+Het attribuut `data` bevat de gegevens die nodig zijn om de gebeurtenis
+te interpreteren en te verwerken.
 
 De exacte structuur en betekenis van `data` worden vastgesteld per
 samenwerkfunctie.
@@ -188,13 +207,17 @@ samenwerkfunctie.
 Binnen *Samen Onder Handbereik* kan `data` onder andere worden gebruikt
 voor:
 
--   semantische gegevens die nodig zijn voor de interpretatie van de
-    gebeurtenis;
--   provenance-informatie over de totstandkoming of het gebruik van
-    gegevens.
+-   gegevens die de gebeurtenis nader beschrijven;
+-   verwijzingen naar objecten waarop de gebeurtenis betrekking heeft;
+-   provenance-informatie die nodig is voor het vastleggen van de
+    herkomst of het gebruik van gegevens.
 
-Een samenwerkfunctie bepaalt welke gegevens worden opgenomen en welke
-semantische afspraken gelden.
+Een samenwerkfunctie bepaalt welke gegevens in `data` worden opgenomen.
+Inhoudelijke gegevens van domeinobjecten worden alleen opgenomen wanneer
+deze nodig zijn voor de betreffende gebeurtenis.
+
+Een samenwerkfunctie kan `data` gebruiken voor een specifieke
+representatie van de gebeurtenis, zoals een PROV-JSONLD-graaf.
 
 # Relatie tussen generieke afspraken en samenwerkfuncties
 
@@ -219,10 +242,11 @@ patroon.
 Een aanbieder levert een CloudEvent aan via de CloudEvent API. De
 verwerking vindt vervolgens asynchroon plaats.
 
-Na ontvangst ontvangt de aanbieder een technische transactie-ID waarmee
-de status van de verwerking kan worden opgevraagd.
+Het attribuut `id` van het CloudEvent identificeert de asynchrone
+interactie die door het aanbieden van het CloudEvent ontstaat.
 
-De transactie-ID maakt geen onderdeel uit van het CloudEvent zelf.
+De status van de verwerking kan met deze identificatie via de Status-API
+worden gevolgd.
 
 # Samenhang met API's
 
@@ -237,11 +261,13 @@ De generieke API's zijn:
 Daarnaast kunnen samenwerkfuncties specifieke API's definiëren, zoals
 een Inzage-API of Query-API.
 
-
 ## Relatie met samenwerkfunctie-specificaties
 
-De generieke CloudEvents-afspraken beschrijven de structuur en betekenis van
-de standaard CloudEvent-attributen. De samenwerkfunctie bepaalt welke
-gebeurtenissen worden uitgewisseld en hoe het attribuut `data` inhoudelijk
-wordt ingevuld.
+De generieke CloudEvents-afspraken beschrijven de structuur en betekenis
+van de standaard CloudEvent-attributen.
 
+De samenwerkfunctie bepaalt:
+
+-   welke gebeurtenissen worden uitgewisseld;
+-   welk object als `subject` wordt gebruikt;
+-   hoe het attribuut `data` inhoudelijk wordt ingevuld.

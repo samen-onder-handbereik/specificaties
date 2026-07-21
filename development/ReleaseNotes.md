@@ -335,3 +335,31 @@ samenwerkfunctie-specifieke specificatie voor Uitwisselen Uitkomst Overleg.
 
 De Markdown-specificaties en OpenAPI-specificaties vormen samen een
 consistente basis voor verdere technische uitwerking.
+
+## Sprint 20
+
+### Doel
+
+Afstemming van de CloudEvents-documentatie en het generieke
+asynchrone interactiepatroon.
+
+### Gewijzigd
+
+-   `CloudEvents.md` aangescherpt op de betekenis van CloudEvent-attributen
+    zoals `id`, `subject` en `data`.
+-   `AsynchroneInteracties.md` aangescherpt op het onderscheid tussen
+    CloudEvent-identificatie en interactie-identificatie.
+-   Consistentie gecontroleerd tussen Markdown-specificaties en
+    OpenAPI-specificaties.
+-   Development-documentatie gecontroleerd op aansluiting met de
+    aangescherpte specificaties.
+
+### Niet gewijzigd
+
+-   `Decisions.md`, `Glossary.md` en `Backlog.md` zijn gecontroleerd en
+    vereisten geen aanpassingen als gevolg van deze wijzigingen.
+
+### Resultaat
+
+De generieke CloudEvents-afspraken, het asynchrone interactiepatroon en
+de samenwerkfunctie-specifieke specificaties blijven onderling consistent.
