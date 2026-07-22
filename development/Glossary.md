@@ -176,6 +176,19 @@ Een graaf waarin informatieobjecten, hun onderlinge relaties en
 provenance-informatie worden vastgelegd zodat deze semantisch bevraagbaar zijn.
 
 
+## Graph Build Specification
+
+**Status:** Technisch begrip
+
+Een specificatie waarin de regels worden beschreven waarmee een
+Knowledge graph wordt opgebouwd vanuit gebeurtenissen en
+domeingegevens.
+
+De Graph Build Specification beschrijft de verbinding tussen
+CloudEvents, provenance-modellering, domeinmodellering en de technische
+realisatie van de Knowledge graph.
+
+
 ## Inzage-endpoint
 
 **Status:** Technisch begrip

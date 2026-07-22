@@ -17,7 +17,10 @@ Historische informatie over afgeronde werkzaamheden is opgenomen in
 
 ### Knowledge graph en Neo4j
 
--   [ ] Graph Build Specification maken.
+-   [x] Eerste versie van de Graph Build Specification opgesteld.
+    *(Sprint 22)*
+-   [ ] Graph Build Specification verder uitwerken met concrete
+    mappings, validatieregels en technische uitwerkingsregels.
 -   [ ] Mapping van het semantische model naar het Neo4j-model
     vastleggen.
 -   [ ] Technische Neo4j-inrichting uitwerken (labels, properties,

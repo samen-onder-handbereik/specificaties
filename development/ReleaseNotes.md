@@ -396,3 +396,33 @@ technische realisatie.
 Het conceptuele Knowledge graph- en Neo4j-model is vastgelegd als basis
 voor verdere technische uitwerking.
 
+
+
+
+
+
+## Sprint 22
+
+### Doel
+
+Toevoegen van de Graph Build Specification als verdere uitwerking van
+het Knowledge graph-model.
+
+### Toegevoegd
+
+-   Nieuw hoofdstuk `GraphBuildSpecification.md` toegevoegd.
+-   Regels beschreven voor de opbouw van de Knowledge graph vanuit
+    CloudEvents en domeingegevens.
+-   Relatie tussen CloudEvents, PROV Activities en domeinobjecten verder
+    uitgewerkt.
+-   Eerste beschrijving opgenomen van eventtype naar graphmapping.
+
+### Gewijzigd
+
+-   Backlog aangepast: de eerste versie van de Graph Build Specification
+    is gerealiseerd; verdere technische uitwerking blijft open.
+
+### Resultaat
+
+De specificatie bevat nu naast het conceptuele Knowledge graph-model ook
+een eerste beschrijving van de regels waarmee de graph wordt opgebouwd.
