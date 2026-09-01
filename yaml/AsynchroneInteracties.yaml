@@ -35,6 +35,20 @@ info:
     compatibel blijven met het bestaande API-contract. Versiebeheer vindt
     plaats via de versie van de OpenAPI-specificatie.
 
+    Statusmodel:
+
+    StatusResponse is gemodelleerd als een basisschema met een discriminator
+    op het attribuut 'status'. De specifieke statusvarianten (StatusOK,
+    StatusInProgress en StatusError) breiden dit basisschema uit via allOf.
+    Hierdoor wordt het gedeelde contract (interactieId en status) eenmalig
+    vastgelegd en blijft het polymorfe model bruikbaar voor codegeneratie.
+
+    Voorbeelden:
+
+    Voorbeelden zijn opgenomen op mediatype-niveau bij de betreffende
+    request- en responsdefinities. Zij maken geen deel uit van het
+    schemacontract en hebben daarmee geen invloed op codegeneratie.
+
 tags:
   - name: CloudEvent API
     description: Endpoint voor het aanbieden van CloudEvents.
@@ -65,6 +79,18 @@ paths:
           application/cloudevents+json:
             schema:
               $ref: '#/components/schemas/CloudEvent'
+            examples:
+              cloudEvent:
+                summary: CloudEvent met samenwerkfunctie-specifieke payload
+                value:
+                  specversion: "1.0"
+                  id: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                  source: "urn:nl:justid:deelnemer:voorbeeld"
+                  type: "nl.justid.samenwerkfunctie.voorbeeld.gebeurtenis"
+                  time: "2026-01-15T09:30:00Z"
+                  subject: "voorbeeldonderwerp"
+                  data:
+                    bericht: "Samenwerkfunctie-specifieke inhoud"
 
       responses:
         '202':
@@ -73,6 +99,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AcceptatieResponse'
+              examples:
+                geaccepteerd:
+                  summary: Interactie geregistreerd
+                  value:
+                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
 
   /status/{interactieId}:
     get:
@@ -92,6 +123,7 @@ paths:
           description: Identifier van de asynchrone interactie.
           schema:
             type: string
+          example: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
 
       responses:
         '200':
@@ -100,10 +132,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StatusResponse'
+              examples:
+                ok:
+                  summary: Verwerking succesvol afgerond
+                  value:
+                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                    status: OK
+                    resultaat:
+                      voorbeeld: "resultaat"
+                inProgress:
+                  summary: Verwerking loopt nog
+                  value:
+                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                    status: IN_PROGRESS
+                fout:
+                  summary: Verwerking beëindigd met een fout
+                  value:
+                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                    status: ERROR
+                    resultaat:
+                      fout: "Validatie mislukt"
+                      typeFout: FUNCTIONEEL
+                      info:
+                        veld: "identifier"
+                        reden: "Waarde ontbreekt"
 
 components:
 
   schemas:
+
+    StatusValue:
+      type: string
+      enum: [ OK, IN_PROGRESS, ERROR ]
+      description: Mogelijke statuswaarden van de interactie.
 
     CloudEvent:
       type: object
@@ -141,9 +202,6 @@ components:
         data:
           type: object
           description: Samenwerkfunctie-specifieke payload.
-          examples:
-            - voorbeeld:
-                bericht: "Samenwerkfunctie-specifieke inhoud"
 
     AcceptatieResponse:
       type: object
@@ -155,102 +213,80 @@ components:
           description: |
             Identificatie van de asynchrone interactie.
             Voor CloudEvents is deze waarde gelijk aan CloudEvent.id.
-      examples:
-        - interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
 
     StatusResponse:
+      type: object
       description: |
-        Statusresponse van een asynchrone interactie.
+        Basisschema voor de statusresponse van een asynchrone interactie.
 
         Het attribuut status bepaalt welke variant van toepassing is:
         - OK: verwerking succesvol afgerond;
         - IN_PROGRESS: verwerking loopt nog;
         - ERROR: verwerking beëindigd met een fout.
-      oneOf:
-        - $ref: '#/components/schemas/StatusOK'
-        - $ref: '#/components/schemas/StatusInProgress'
-        - $ref: '#/components/schemas/StatusError'
+      required:
+        - interactieId
+        - status
+      properties:
+        interactieId:
+          type: string
+          description: Identificatie van de asynchrone interactie.
+        status:
+          $ref: '#/components/schemas/StatusValue'
       discriminator:
         propertyName: status
+        mapping:
+          OK: '#/components/schemas/StatusOK'
+          IN_PROGRESS: '#/components/schemas/StatusInProgress'
+          ERROR: '#/components/schemas/StatusError'
 
     StatusOK:
-      type: object
-      required:
-        - interactieId
-        - status
-      properties:
-        interactieId:
-          type: string
-        status:
-          const: OK
-        resultaat:
-          type: object
-          description: |
-            Optioneel resultaat. De structuur wordt vastgesteld door de
-            samenwerkfunctie.
-      examples:
-        - interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
-          status: OK
-          resultaat:
-            voorbeeld: "resultaat"
+      description: |
+        De interactie is succesvol verwerkt.
+      allOf:
+        - $ref: '#/components/schemas/StatusResponse'
+        - type: object
+          properties:
+            resultaat:
+              type: object
+              description: |
+                Optioneel resultaat. De structuur wordt vastgesteld door de
+                samenwerkfunctie.
+              additionalProperties: true
 
     StatusInProgress:
-      type: object
-      required:
-        - interactieId
-        - status
-      properties:
-        interactieId:
-          type: string
-        status:
-          const: IN_PROGRESS
-      examples:
-        - interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
-          status: IN_PROGRESS
+      description: |
+        De interactie is aangeboden en wordt nog verwerkt.
+      allOf:
+        - $ref: '#/components/schemas/StatusResponse'
+        - type: object
 
     StatusError:
-      type: object
-      required:
-        - interactieId
-        - status
-        - resultaat
-      properties:
-        interactieId:
-          type: string
-        status:
-          const: ERROR
-        resultaat:
-          $ref: '#/components/schemas/ErrorResultaat'
-      examples:
-        - interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
-          status: ERROR
-          resultaat:
-            fout: "Validatie mislukt"
-            typeFout: FUNCTIONEEL
+      description: |
+        De verwerking van de interactie is niet geslaagd.
+      allOf:
+        - $ref: '#/components/schemas/StatusResponse'
+        - type: object
+          required:
+            - resultaat
+          properties:
+            resultaat:
+              $ref: '#/components/schemas/ErrorResultaat'
 
     ErrorResultaat:
       type: object
-      required:
-        - fout
-        - typeFout
+      required: [ fout, typeFout ]
       properties:
         fout:
           type: string
           description: Beschrijving van de fout.
         typeFout:
           type: string
-          enum:
-            - FUNCTIONEEL
-            - TECHNISCH
-          description: Classificatie van de fout.
+          enum: [ FUNCTIONEEL, TECHNISCH ]
+          description: |
+            Classificatie van de fout.
         info:
           type: object
           description: |
             Aanvullende informatie over de fout.
             De structuur kan afhankelijk zijn van het fouttype.
-      examples:
-        - fout: "Validatie mislukt"
-          typeFout: FUNCTIONEEL
-          info:
-            veld: "identifier"
-            reden: "Waarde ontbreekt"
+          additionalProperties: true
