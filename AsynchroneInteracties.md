@@ -29,7 +29,7 @@ Het patroon wordt door samenwerkfuncties toegepast wanneer een directe synchrone
 | --- | --- |
 | Asynchrone interactie | Een interactie waarvan de verwerking na acceptatie buiten de oorspronkelijke HTTP-aanroep plaatsvindt. |
 | CloudEvent | Een gebeurtenis die wordt aangeboden conform de CloudEvents-specificatie. |
-| interactieId | De unieke identificatie van een asynchrone interactie. Voor CloudEvents is het `interactieId` gelijk aan `CloudEvent.id`. |
+| interactieId | De unieke identificatie van een asynchrone interactie. Het `interactieId` wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking van de interactie. |
 | Status-API | De generieke API waarmee de actuele status van een asynchrone interactie kan worden opgevraagd. |
 | Samenwerkfunctie | Een domeinspecifieke invulling van het generieke interactiepatroon. |
 
@@ -90,15 +90,9 @@ POST https://<host>/api/handeling
 
 De exacte URL wordt vastgesteld in de technische API-specificatie.
 
-Het aangeboden CloudEvent bevat een unieke identifier in het attribuut `id`.
+Het aangeboden CloudEvent bevat een unieke identifier in het attribuut `id`. Deze identifier identificeert het CloudEvent zelf en is niet de identificatie van de asynchrone interactie.
 
-Binnen het generieke interactiepatroon geldt:
-
-```text
-interactieId = CloudEvent.id
-```
-
-Deze identificatie wordt gebruikt om de interactie later via de Status-API te volgen.
+Bij acceptatie van de interactie wordt door de voorziening die verantwoordelijk is voor de verwerking een `interactieId` uitgegeven. Deze identificatie wordt gebruikt om de interactie later via de Status-API te volgen.
 
 ### Acceptatie van een interactie
 
@@ -239,23 +233,20 @@ Elke asynchrone interactie heeft een unieke identificatie waarmee de voortgang v
 
 Binnen het generieke interactiepatroon wordt deze identificatie aangeduid als `interactieId`.
 
-Voor interacties die gebaseerd zijn op CloudEvents geldt:
+Het `interactieId` is de unieke identificatie van de asynchrone interactie. Het wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking van de interactie.
 
-```text
-interactieId = CloudEvent.id
-```
+Bij een interactie die ontstaat door het aanbieden van een CloudEvent staat het `interactieId` los van het `id` van het CloudEvent. Het CloudEvent `id` identificeert het CloudEvent zelf.
 
-Het attribuut `id` van een CloudEvent wordt binnen het generieke interactiepatroon gebruikt als identificatie van de asynchrone interactie die door het aanbieden van dit CloudEvent ontstaat.
+Hetzelfde `interactieId` wordt gebruikt bij het opvragen van de status via de Status-API.
 
-Dezelfde identificatie wordt gebruikt bij het opvragen van de status via de Status-API.
-
-### Relatie met andere identifiers
+### Overzicht van identifiers
 
 Binnen een interactie kunnen verschillende soorten identifiers voorkomen. Deze hebben ieder een eigen betekenis en toepassingsgebied.
 
 | Identifier | Niveau | Betekenis |
 | --- | --- | --- |
-| `interactieId` (= CloudEvent `id`) | Interactieniveau | Identificeert de asynchrone interactie. |
+| `interactieId` | Interactieniveau | Identificeert de asynchrone interactie. Wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking. |
+| `CloudEvent.id` | Eventniveau | Identificeert het CloudEvent. Wordt uitgegeven door de producer van het CloudEvent. |
 | JSON-LD `@id` | Semantisch niveau | Identificeert resources binnen een provenance-graaf. |
 | Domeinspecifieke identifiers | Domeinniveau | Identificeren objecten binnen een samenwerkfunctie. |
 

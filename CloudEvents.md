@@ -17,9 +17,8 @@ en de inhoud van de bijbehorende gegevens worden bepaald door de
 betreffende samenwerkfunctie.
 
 Binnen *Samen Onder Handbereik* wordt het attribuut `id` van een
-CloudEvent gebruikt als unieke identificatie van het CloudEvent. Voor
-asynchrone interacties is deze identificatie tevens de identificatie
-waarmee de interactie kan worden gevolgd.
+CloudEvent gebruikt als unieke identificatie van het CloudEvent. Het
+CloudEvent `id` is niet de identificatie van een asynchrone interactie.
 
 Een CloudEvent bestaat uit:
 
@@ -88,9 +87,6 @@ Identificeert het CloudEvent.
     UUIDv4.
 -   Een eenmaal gebruikt `id` wordt niet opnieuw gebruikt, ook niet
     wanneer een CloudEvent opnieuw wordt aangeboden.
--   Binnen het generieke patroon voor asynchrone interacties wordt het
-    attribuut `id` gebruikt als identificatie van de interactie
-    (`interactieId`).
 
 ## `source`
 
@@ -242,11 +238,13 @@ patroon.
 Een aanbieder levert een CloudEvent aan via de CloudEvent API. De
 verwerking vindt vervolgens asynchroon plaats.
 
-Het attribuut `id` van het CloudEvent identificeert de asynchrone
-interactie die door het aanbieden van het CloudEvent ontstaat.
+Het attribuut `id` van het CloudEvent identificeert het CloudEvent zelf
+en niet de asynchrone interactie die door het aanbieden van dit CloudEvent
+ontstaat.
 
-De status van de verwerking kan met deze identificatie via de Status-API
-worden gevolgd.
+De voorziening die verantwoordelijk is voor de verwerking kent aan de
+asynchrone interactie een afzonderlijk `interactieId` toe. De status van
+de verwerking kan met dit `interactieId` via de Status-API worden gevolgd.
 
 # Samenhang met API's
 
