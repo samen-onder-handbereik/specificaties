@@ -57,6 +57,7 @@ Asynchrone verwerking
     +--> status beschikbaar via Status-API
     |
     +--> resultaat beschikbaar
+```
 
 ## CloudEvent API
 
