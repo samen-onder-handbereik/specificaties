@@ -12,9 +12,7 @@ De Knowledge graph combineert twee perspectieven:
 -   het provenanceperspectief, waarin de herkomst, totstandkoming en het
     gebruik van informatie wordt vastgelegd.
 
-De Knowledge graph wordt gerealiseerd met Neo4j. Neo4j is de technische
-opslagvoorziening voor het graphmodel, maar het semantische model is
-leidend voor de inrichting.
+De Knowledge Graph wordt gerealiseerd met behulp van een graph-database. Deze vormt de technische opslagvoorziening voor het graphmodel; het semantische model is leidend voor de inrichting.
 
 ## Uitgangspunten
 
@@ -27,7 +25,7 @@ kan aanleiding geven tot het vastleggen van provenance-informatie.
 
 De graph bevat:
 
--   informatieobjecten;
+-   entiteiten;
 -   activiteiten;
 -   actoren;
 -   relaties tussen deze elementen.
