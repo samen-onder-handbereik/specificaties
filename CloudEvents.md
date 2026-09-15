@@ -39,7 +39,7 @@ Een CloudEvent heeft in hoofdlijnen de volgende structuur:
 {
   "specversion": "1.0",
   "id": "550e8400-e29b-41d4-a716-446655440000",
-  "source": "/oin/<oin>/systeem/<systeemnaam>",
+  "source": "urn:nld:oin:<oin>:systeem:<systeemnaam>",
   "type": "<samenwerkfunctie>.<gebeurtenis>",
   "time": "2026-03-03T10:15:30Z",
   "datacontenttype": "application/ld+json",
@@ -99,12 +99,17 @@ Identificeert de bron die het CloudEvent heeft geproduceerd.
 -   De waarde identificeert de producerende organisatie of applicatie.
 -   De waarde wordt vastgelegd als URI.
 -   De URI hoeft niet resolvable te zijn.
--   Als basis wordt bij voorkeur het Organisatie-identificatienummer
+-   Voor een overheidsorganisatie wordt het Organisatie-identificatienummer
     (OIN) gebruikt.
+-   Voor een niet-overheidsorganisatie wordt het KVK-nummer gebruikt.
 
-Voorbeeldstructuur:
+Voorbeeldstructuur voor een overheidsorganisatie:
 
-    /oin/<oin>/systeem/<systeemnaam>
+    urn:nld:oin:<oin>:systeem:<systeemnaam>
+
+Voorbeeldstructuur voor een niet-overheidsorganisatie:
+
+    urn:nld:kvknr:<kvk-nummer>:systeem:<systeemnaam>
 
 De `source` verandert niet per gebeurtenis, maar is gekoppeld aan de
 producerende bron.

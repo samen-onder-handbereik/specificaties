@@ -325,7 +325,7 @@ Voorbeeld request:
 {
   "specversion": "1.0",
   "id": "urn:uuid:123e4567-e89b-12d3-a456-426614174000",
-  "source": "urn:organisatie:voorbeeld",
+  "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
   "time": "2026-01-10T12:00:00Z",
   "data": {
@@ -372,7 +372,7 @@ Voorbeeld request:
 {
   "specversion": "1.0",
   "id": "urn:uuid:987e6543-e21b-12d3-a456-426614174999",
-  "source": "urn:organisatie:raadpleger",
+  "source": "urn:nld:kvknr:09220932:systeem:uitkomstoverleg",
   "type": "uitwisselen-uitkomst-overleg.uitkomst-ingezien",
   "time": "2026-01-11T09:30:00Z",
   "data": {

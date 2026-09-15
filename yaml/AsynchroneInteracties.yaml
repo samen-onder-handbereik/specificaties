@@ -22,9 +22,6 @@ info:
     Een samenwerkfunctie bepaalt welke CloudEvent-profielen worden gebruikt
     en welke gegevens in de payload worden opgenomen.
 
-    Voor een CloudEvent geldt:
-    interactieId = CloudEvent.id
-
     Endpoint-naamgeving en versiebeheer:
 
     De API gebruikt resourcegerichte endpoints. Daarom worden geen
@@ -85,7 +82,7 @@ paths:
                 value:
                   specversion: "1.0"
                   id: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
-                  source: "urn:nl:justid:deelnemer:voorbeeld"
+                  source: "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg"
                   type: "nl.justid.samenwerkfunctie.voorbeeld.gebeurtenis"
                   time: "2026-01-15T09:30:00Z"
                   subject: "voorbeeldonderwerp"
@@ -113,7 +110,7 @@ paths:
       description: |
         Geeft de actuele status van een eerder aangeboden interactie.
 
-        Voor CloudEvents is de interactieId gelijk aan het CloudEvent.id.
+        De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
       operationId: vraagStatusOp
 
       parameters:
@@ -184,8 +181,8 @@ components:
           type: string
           description: |
             Unieke identifier van het CloudEvent.
-            Voor deze asynchrone interactie geldt:
-            interactieId = CloudEvent.id.
+            Het CloudEvent.id identificeert het CloudEvent zelf. De interactieId wordt
+            afzonderlijk uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
         source:
           type: string
           description: Bron die het CloudEvent heeft geproduceerd.
@@ -212,7 +209,8 @@ components:
           type: string
           description: |
             Identificatie van de asynchrone interactie.
-            Voor CloudEvents is deze waarde gelijk aan CloudEvent.id.
+            Deze waarde wordt uitgegeven door de voorziening die verantwoordelijk is
+            voor de verwerking van de interactie en staat los van CloudEvent.id.
 
     StatusResponse:
       type: object
