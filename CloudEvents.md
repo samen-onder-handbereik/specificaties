@@ -3,8 +3,17 @@
 ## Inleiding
 
 Binnen *Samen Onder Handbereik* worden gebeurtenissen uitgewisseld
-conform de standaard CloudEvents van de Cloud Native Computing
-Foundation (CNCF).
+conform de internationale standaard CloudEvents van de Cloud Native
+Computing Foundation (CNCF). Voor de Nederlandse overheidscontext
+sluit SOH daarbij aan op het **NL GOV profile for CloudEvents 1.1**,
+dat door Logius wordt beheerd. Het NL GOV-profiel bevat aanvullende
+Nederlandse afspraken en eisen voor het gebruik van CloudEvents en
+bouwt voort op de internationale CloudEvents-specificatie.
+
+De definitieve versie van het NL GOV profile for CloudEvents 1.1 is
+gepubliceerd op 17 maart 2026. De [specificatie van het NL GOV
+profile for CloudEvents 1.1](https://gitdocumentatie.logius.nl/publicatie/notificatieservices/cloudevents-nl/1.1/)
+is leidend voor de toepassing van het profiel binnen SOH.
 
 Een CloudEvent beschrijft een gebeurtenis die binnen een
 samenwerkfunctie heeft plaatsgevonden. Het CloudEvent bevat de
@@ -181,12 +190,15 @@ payload.
 -   Een JSON Schema beschrijft de JSON-structuur en kan ook profielafspraken
     vastleggen, zoals verplichte eigenschappen en toegestane datatypen.
 -   Een JSON Schema valideert daarmee niet automatisch de volledige
-    semantische betekenis van een JSON-LD-graaf.
+    betekenisvolle samenhang van een JSON-LD-graaf.
 -   Voor een PROV-JSON-LD-payload wordt binnen SOH het
     [PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json)
     gebruikt voor structurele validatie.
--   Aanvullende semantische validatie van de provenance-graaf, bijvoorbeeld
-    met SHACL, kan in een later stadium worden toegevoegd.
+-   Aanvullende validatie van de betekenisvolle samenhang binnen de
+    provenance-graaf, bijvoorbeeld met SHACL, kan in een later stadium
+    worden toegevoegd. Hiermee kan bijvoorbeeld worden gecontroleerd of
+    activiteiten, entiteiten en actoren op de juiste wijze met elkaar zijn
+    verbonden.
 
 Het JSON Schema is als zelfstandig bestand opgenomen in de repository,
 zodat het rechtstreeks door validatietools en applicaties kan worden
