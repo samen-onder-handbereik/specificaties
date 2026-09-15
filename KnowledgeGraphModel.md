@@ -187,6 +187,17 @@ Voorbeeld:
         cloudEventId: "event-12345"
     })
 
+## Validatie van provenance-gegevens
+
+Wanneer provenance-informatie via een CloudEvent als PROV-JSONLD wordt
+aangeleverd, kan de JSON-structuur worden gecontroleerd met het
+[PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json).
+
+Deze validatie ondersteunt de technische verwerking van de payload, maar
+garandeert niet dat de volledige provenance-graaf semantisch correct is.
+Semantische validatie, bijvoorbeeld met SHACL, kan in een toekomstige
+uitbreiding worden toegevoegd.
+
 ## Identificatie
 
 Binnen de Knowledge graph bestaan verschillende soorten identifiers:

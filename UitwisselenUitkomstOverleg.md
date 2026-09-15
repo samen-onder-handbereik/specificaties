@@ -133,6 +133,27 @@ De payload bevat minimaal:
 De inhoudelijke gegevens van de Uitkomst Overleg maken geen onderdeel
 uit van de CloudEvent payload.
 
+## Validatie van de CloudEvent payload
+
+Het attribuut `data` van de CloudEvents binnen deze samenwerkfunctie bevat
+een PROV-JSONLD-graaf. De structurele vorm van deze payload wordt beschreven
+met het [PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json).
+
+Het schema controleert onder andere de aanwezigheid van `@context` en
+`@graph`, de structuur van de graafelementen en de aanwezigheid van de
+generieke PROV-typen `prov:Entity`, `prov:Activity` en `prov:Agent`.
+
+Het schema is bedoeld voor structurele validatie. Het controleert niet de
+volledige semantische samenhang van de provenance-graaf. Semantische
+validatie, bijvoorbeeld met SHACL, kan in een toekomstige uitbreiding worden
+toegevoegd.
+
+In het CloudEvent wordt het schema aangewezen met het attribuut `dataschema`:
+
+```text
+https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json
+```
+
 ## Conceptueel graphmodel
 
 De Knowledge graph bevat zowel domeinobjecten als provenance-objecten.
@@ -328,6 +349,7 @@ Voorbeeld request:
   "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
   "time": "2026-01-10T12:00:00Z",
+  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
     "@context": {
       "prov": "http://www.w3.org/ns/prov#",
@@ -375,6 +397,7 @@ Voorbeeld request:
   "source": "urn:nld:kvknr:09220932:systeem:uitkomstoverleg",
   "type": "uitwisselen-uitkomst-overleg.uitkomst-ingezien",
   "time": "2026-01-11T09:30:00Z",
+  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
     "@context": {
       "prov": "http://www.w3.org/ns/prov#",
@@ -393,6 +416,13 @@ Voorbeeld request:
         "prov:wasAssociatedWith": {
           "@id": "urn:organisatie:raadpleger"
         }
+      },
+      {
+        "@id": "urn:uitkomst-overleg:12345",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ]
       },
       {
         "@id": "urn:organisatie:raadpleger",

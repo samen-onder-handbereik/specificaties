@@ -157,6 +157,22 @@ Deze node representeert zowel `prov:Entity` als
 Er wordt geen afzonderlijke node gemaakt voor het PROV-type en het
 domeintype.
 
+## Validatie van de provenance-payload
+
+Voordat een CloudEvent wordt verwerkt voor het opbouwen van de Knowledge
+graph, kan de structuur van een PROV-JSONLD-payload worden gevalideerd met
+het [PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json).
+
+Het JSON Schema ondersteunt met name de controle op de JSON-structuur van de
+payload en op enkele generieke profielafspraken. Het schema vervangt geen
+semantische validatie van de provenance-graaf.
+
+Een mogelijke vervolgstap is het toepassen van SHACL voor semantische
+validatieregels, bijvoorbeeld regels over de toegestane PROV-relaties tussen
+Entities, Activities en Agents. Dit maakt op dit moment geen onderdeel uit
+van de vastgestelde werking en kan als toekomstige uitbreiding worden
+onderzocht.
+
 ## Idempotente verwerking
 
 CloudEvents kunnen meer dan één keer worden aangeboden.

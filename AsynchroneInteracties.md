@@ -337,6 +337,25 @@ De volgende onderwerpen worden verder uitgewerkt:
 - bewaartermijnen van interactiegegevens;
 - afspraken rondom het opnieuw aanbieden van een CloudEvent.
 
+## Validatie van payloads
+
+De generieke API's controleren de technische structuur van een aangeboden
+CloudEvent. De inhoud van het attribuut `data` wordt bepaald door de
+betreffende samenwerkfunctie.
+
+Wanneer `data` een PROV-JSONLD-graaf bevat, kan de structuur daarvan worden
+gevalideerd met het [PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json).
+
+Het JSON Schema richt zich op structurele validatie, zoals de aanwezigheid
+van `@context` en `@graph`, de structuur van graafelementen en de aanwezigheid
+van PROV-typen. Het valideert niet de volledige semantische samenhang van de
+RDF-graaf.
+
+Aanvullende semantische validatie, bijvoorbeeld met SHACL, wordt binnen het
+huidige ontwerp niet als vereiste gesteld. Dit kan in een toekomstige
+uitbreiding worden toegevoegd wanneer daar voldoende ervaring en behoefte
+voor is.
+
 ## OpenAPI-specificatie
 
 De technische contracten van de generieke API's worden beschreven met behulp van een OpenAPI-specificatie.

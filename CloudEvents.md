@@ -176,8 +176,21 @@ payload.
 -   Het attribuut verwijst naar de technische beschrijving van de inhoud
     van `data`.
 -   De concrete invulling wordt bepaald per samenwerkfunctie.
--   Afhankelijk van de gebruikte representatie kan dit bijvoorbeeld een
-    JSON Schema en/of een semantische context bevatten.
+-   Voor JSON- of JSON-LD-payloads kan hiervoor een JSON Schema worden
+    gebruikt.
+-   Een JSON Schema beschrijft de JSON-structuur en kan ook profielafspraken
+    vastleggen, zoals verplichte eigenschappen en toegestane datatypen.
+-   Een JSON Schema valideert daarmee niet automatisch de volledige
+    semantische betekenis van een JSON-LD-graaf.
+-   Voor een PROV-JSON-LD-payload wordt binnen SOH het
+    [PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json)
+    gebruikt voor structurele validatie.
+-   Aanvullende semantische validatie van de provenance-graaf, bijvoorbeeld
+    met SHACL, kan in een later stadium worden toegevoegd.
+
+Het JSON Schema is als zelfstandig bestand opgenomen in de repository,
+zodat het rechtstreeks door validatietools en applicaties kan worden
+gebruikt.
 
 ## `subject`
 
