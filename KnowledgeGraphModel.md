@@ -167,7 +167,13 @@ aan het informatieobject.
 ## Relatie met CloudEvents
 
 Een CloudEvent beschrijft de gebeurtenis waarmee een activiteit wordt
-gemeld.
+gemeld. Het attribuut `time` van het CloudEvent geeft het tijdstip aan
+waarop de gebeurtenis is geregistreerd. Dit is niet noodzakelijk het
+tijdstip waarop de bijbehorende activiteit daadwerkelijk heeft plaatsgevonden.
+
+Als het daadwerkelijke tijdstip van de activiteit relevant is en beschikbaar
+is, wordt dit als onderdeel van de provenance-informatie van de Activity
+vastgelegd.
 
 Het attribuut `id` van een CloudEvent identificeert het CloudEvent zelf.
 

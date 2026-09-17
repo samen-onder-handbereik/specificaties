@@ -149,15 +149,20 @@ Geeft het type gebeurtenis aan.
 
 ### Doel
 
-Geeft het tijdstip aan waarop de gebeurtenis heeft plaatsgevonden.
+Geeft het tijdstip aan waarop de gebeurtenis is geregistreerd.
 
 ### Afspraken
 
 -   De producer vult het attribuut.
 -   Het formaat is ISO 8601.
 -   De waarde wordt vastgelegd in UTC.
--   Het tijdstip betreft het moment waarop de gebeurtenis plaatsvond en
-    niet het moment van verzending.
+-   Het tijdstip betreft het moment waarop de gebeurtenis is geregistreerd en
+    niet het moment waarop het CloudEvent wordt verzonden.
+-   Het tijdstip waarop de gebeurtenis zich feitelijk heeft voorgedaan, wordt
+    niet in `time` opgenomen.
+-   Als het tijdstip waarop de gebeurtenis zich feitelijk heeft voorgedaan
+    relevant is, wordt dit afzonderlijk vastgelegd, bijvoorbeeld in de
+    `data` van het CloudEvent of in een daarvoor bestemd contextattribuut.
 
 ## `datacontenttype`
 

@@ -133,6 +133,12 @@ De payload bevat minimaal:
 De inhoudelijke gegevens van de Uitkomst Overleg maken geen onderdeel
 uit van de CloudEvent payload.
 
+Het attribuut `time` van het CloudEvent geeft het tijdstip aan waarop de
+gebeurtenis is geregistreerd. Het `tijdstip` van de bijbehorende provenance-
+Activity geeft, indien beschikbaar, het tijdstip aan waarop de activiteit
+daadwerkelijk heeft plaatsgevonden. Deze tijdstippen kunnen van elkaar
+verschillen.
+
 ## Validatie van de CloudEvent payload
 
 Het attribuut `data` van de CloudEvents binnen deze samenwerkfunctie bevat
@@ -207,7 +213,7 @@ Activiteit waarbij een Uitkomst Overleg beschikbaar wordt gesteld.
 Eigenschappen:
 
 -   `identifier`;
--   `tijdstip`.
+-   `tijdstip` — het tijdstip waarop de activiteit daadwerkelijk heeft plaatsgevonden.
 
 ### InzienUitkomst
 
@@ -220,7 +226,7 @@ Activiteit waarbij een Uitkomst Overleg wordt geraadpleegd.
 Eigenschappen:
 
 -   `identifier`;
--   `tijdstip`;
+-   `tijdstip` — het tijdstip waarop de activiteit daadwerkelijk heeft plaatsgevonden;
 -   verantwoordelijke organisatie.
 
 ### Organisatie
@@ -369,6 +375,7 @@ Voorbeeld request:
           "prov:Activity",
           "soh:BeschikbaarStellenUitkomst"
         ],
+        "tijdstip": "2026-01-10T12:00:00Z",
         "prov:wasGeneratedBy": {
           "@id": "urn:activity:beschikbaarstellen:12345"
         },
@@ -410,6 +417,7 @@ Voorbeeld request:
           "prov:Activity",
           "soh:InzienUitkomst"
         ],
+        "tijdstip": "2026-01-11T09:30:00Z",
         "prov:used": {
           "@id": "urn:uitkomst-overleg:12345"
         },
