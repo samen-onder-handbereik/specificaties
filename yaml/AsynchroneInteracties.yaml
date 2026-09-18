@@ -83,7 +83,7 @@ paths:
                   specversion: "1.0"
                   id: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
                   source: "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg"
-                  type: "nl.justid.samenwerkfunctie.voorbeeld.gebeurtenis"
+                  type: "nl.jzv.voorbeeld-samenwerkfunctie.voorbeeld-gebeurtenis"
                   time: "2026-01-15T09:30:00Z"
                   subject: "voorbeeldonderwerp"
                   data:
@@ -100,7 +100,7 @@ paths:
                 geaccepteerd:
                   summary: Interactie geregistreerd
                   value:
-                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
 
   /status/{interactieId}:
     get:
@@ -133,19 +133,19 @@ paths:
                 ok:
                   summary: Verwerking succesvol afgerond
                   value:
-                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
                     status: OK
                     resultaat:
                       voorbeeld: "resultaat"
                 inProgress:
                   summary: Verwerking loopt nog
                   value:
-                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
                     status: IN_PROGRESS
                 fout:
                   summary: Verwerking beëindigd met een fout
                   value:
-                    interactieId: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
                     status: ERROR
                     resultaat:
                       fout: "Validatie mislukt"

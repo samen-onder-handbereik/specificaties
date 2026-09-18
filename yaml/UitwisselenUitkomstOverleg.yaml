@@ -82,7 +82,7 @@ components:
         specversion: "1.0"
         id: "event-12345"
         source: "urn:organisatie:voorbeeld"
-        type: "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
+        type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
         time: "2026-01-15T10:30:00Z"
         subject: "uitkomst-overleg-98765"
         datacontenttype: "application/ld+json"
@@ -145,7 +145,7 @@ components:
         - specversion: "1.0"
           id: "event-12345"
           source: "urn:organisatie:voorbeeld"
-          type: "uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
+          type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
           time: "2026-01-15T10:30:00Z"
           subject: "uitkomst-overleg-98765"
           datacontenttype: "application/ld+json"
@@ -177,7 +177,7 @@ components:
         - type: object
           properties:
             type:
-              const: uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld
+              const: nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld
             data:
               $ref: '#/components/schemas/ProvenancePayload'
 
@@ -196,7 +196,7 @@ components:
         - specversion: "1.0"
           id: "event-67890"
           source: "urn:organisatie:voorbeeld"
-          type: "uitwisselen-uitkomst-overleg.uitkomst-ingezien"
+          type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien"
           time: "2026-01-15T11:00:00Z"
           subject: "uitkomst-overleg-98765"
           datacontenttype: "application/ld+json"
@@ -225,7 +225,7 @@ components:
         - type: object
           properties:
             type:
-              const: uitwisselen-uitkomst-overleg.uitkomst-ingezien
+              const: nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien
             data:
               $ref: '#/components/schemas/ProvenancePayload'
 

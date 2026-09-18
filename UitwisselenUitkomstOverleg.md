@@ -104,7 +104,7 @@ gebeurtenissen relevant.
 
 Eventtype:
 
-`uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`
+`nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`
 
 Dit event geeft aan dat een Uitkomst Overleg beschikbaar is gesteld.
 
@@ -112,7 +112,7 @@ Dit event geeft aan dat een Uitkomst Overleg beschikbaar is gesteld.
 
 Eventtype:
 
-`uitwisselen-uitkomst-overleg.uitkomst-ingezien`
+`nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`
 
 Dit event geeft aan dat een Uitkomst Overleg is geraadpleegd.
 

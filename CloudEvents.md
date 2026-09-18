@@ -49,7 +49,7 @@ Een CloudEvent heeft in hoofdlijnen de volgende structuur:
   "specversion": "1.0",
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "source": "urn:nld:oin:<oin>:systeem:<systeemnaam>",
-  "type": "<samenwerkfunctie>.<gebeurtenis>",
+  "type": "nl.jzv.<samenwerkfunctie>.<gebeurtenis>",
   "time": "2026-03-03T10:15:30Z",
   "datacontenttype": "application/ld+json",
   "dataschema": "<schema-identificatie>",
@@ -135,15 +135,31 @@ Geeft het type gebeurtenis aan.
 -   Het attribuut beschrijft niet de technische verwerking van de
     gebeurtenis.
 -   De toegestane waarden worden vastgesteld per samenwerkfunctie.
+-   Het NL GOV Profile voor CloudEvents schrijft voor dat voor `type`
+    Reverse Domain Name Notation wordt gebruikt.
+-   Bij de invulling daarvan geeft het NL GOV Profile de voorkeur aan een
+    aanduiding van een gegevensbron, domein of wet/regel. Deze aanduiding
+    hoeft daarbij niet noodzakelijk overeen te komen met een daadwerkelijk
+    geregistreerde DNS-domeinnaam.
+-   Vanuit deze uitgangspunten wordt binnen SOH gekozen voor het prefix
+    `nl.jzv`.
+-   `JZV` staat voor *Jeugd, Zorg en Veiligheid* en wordt gebruikt als
+    inhoudelijke aanduiding van het domein waarop de samenwerking betrekking
+    heeft. Het is daarmee een domeinaanduiding en geen verwijzing naar de naam
+    van het SOH-initiatief of naar één specifieke producerende organisatie.
+-   `Samen Onder Handbereik` is de naam van het initiatief en beschrijft de
+    samenwerking als geheel, maar is geen inhoudelijke domeinaanduiding.
+    Daarom wordt `nl.samenonderhandbereik` niet als prefix gebruikt.
 -   Naamgeving volgt het patroon:
 
-```{=html}
-<!-- -->
-```
-    <samenwerkfunctie>.<gebeurtenis>
+        nl.jzv.<samenwerkfunctie>.<gebeurtenis>
 
 -   Er wordt gebruikgemaakt van lower-case en puntnotatie.
 -   Versienummers worden niet opgenomen in `type`.
+
+Een voorbeeld van een concreet eventtype is:
+
+        nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld
 
 ## `time`
 
