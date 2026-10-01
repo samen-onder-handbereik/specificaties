@@ -13,7 +13,7 @@ openapi: 3.1.0
 
 info:
   title: Generieke Asynchrone Interactie API
-  version: 1.0.0
+  version: 1.1.0
   description: |
     Generieke API voor:
     - het aanbieden van CloudEvents;
@@ -34,11 +34,11 @@ info:
 
     Statusmodel:
 
-    StatusResponse is gemodelleerd als een basisschema met een discriminator
-    op het attribuut 'status'. De specifieke statusvarianten (StatusOK,
-    StatusInProgress en StatusError) breiden dit basisschema uit via allOf.
-    Hierdoor wordt het gedeelde contract (interactieId en status) eenmalig
-    vastgelegd en blijft het polymorfe model bruikbaar voor codegeneratie.
+    StatusResponse is gemodelleerd als een polymorf schema met een discriminator
+    op het attribuut 'status'. De varianten StatusOK, StatusInProgress en
+    StatusError leggen ieder hun eigen statuswaarde vast. Hierdoor is de
+    statuswaarde onderdeel van het concrete schemacontract en blijft het
+    model bruikbaar voor codegeneratie.
 
     Voorbeelden:
 
@@ -65,6 +65,14 @@ paths:
         Het attribuut type en de inhoud van data worden niet door deze
         generieke API vastgesteld. Deze worden bepaald door het
         CloudEvent-profiel van een samenwerkfunctie.
+
+        Het HTTP-mediatype van het aangeboden CloudEvent is
+        application/cloudevents+json. Dit mediatype beschrijft de volledige
+        HTTP-body: de body is zelf het CloudEvent.
+
+        Het CloudEvent-attribuut datacontenttype beschrijft daarentegen het
+        mediatype van de inhoud van data, bijvoorbeeld application/ld+json
+        wanneer data een PROV/JSON-LD-graaf bevat.
 
         Bij succesvolle acceptatie wordt de interactie geregistreerd en
         wordt HTTP-status 202 Accepted geretourneerd.
@@ -196,6 +204,13 @@ components:
           format: date-time
         subject:
           type: string
+        datacontenttype:
+          type: string
+          description: Mediatype van de inhoud van het CloudEvent-attribuut data.
+        dataschema:
+          type: string
+          format: uri
+          description: Optionele verwijzing naar het schema van data.
         data:
           type: object
           description: Samenwerkfunctie-specifieke payload.
@@ -213,23 +228,14 @@ components:
             voor de verwerking van de interactie en staat los van CloudEvent.id.
 
     StatusResponse:
-      type: object
       description: |
-        Basisschema voor de statusresponse van een asynchrone interactie.
+        Statusresponse van een asynchrone interactie.
 
-        Het attribuut status bepaalt welke variant van toepassing is:
-        - OK: verwerking succesvol afgerond;
-        - IN_PROGRESS: verwerking loopt nog;
-        - ERROR: verwerking beëindigd met een fout.
-      required:
-        - interactieId
-        - status
-      properties:
-        interactieId:
-          type: string
-          description: Identificatie van de asynchrone interactie.
-        status:
-          $ref: '#/components/schemas/StatusValue'
+        De concrete variant wordt bepaald door de waarde van status.
+      oneOf:
+        - $ref: '#/components/schemas/StatusOK'
+        - $ref: '#/components/schemas/StatusInProgress'
+        - $ref: '#/components/schemas/StatusError'
       discriminator:
         propertyName: status
         mapping:
@@ -238,37 +244,49 @@ components:
           ERROR: '#/components/schemas/StatusError'
 
     StatusOK:
-      description: |
-        De interactie is succesvol verwerkt.
-      allOf:
-        - $ref: '#/components/schemas/StatusResponse'
-        - type: object
-          properties:
-            resultaat:
-              type: object
-              description: |
-                Optioneel resultaat. De structuur wordt vastgesteld door de
-                samenwerkfunctie.
-              additionalProperties: true
+      type: object
+      required:
+        - interactieId
+        - status
+      properties:
+        interactieId:
+          type: string
+          description: Identificatie van de asynchrone interactie.
+        status:
+          const: OK
+        resultaat:
+          type: object
+          description: |
+            Optioneel resultaat. De structuur wordt vastgesteld door de
+            samenwerkfunctie.
+          additionalProperties: true
 
     StatusInProgress:
-      description: |
-        De interactie is aangeboden en wordt nog verwerkt.
-      allOf:
-        - $ref: '#/components/schemas/StatusResponse'
-        - type: object
+      type: object
+      required:
+        - interactieId
+        - status
+      properties:
+        interactieId:
+          type: string
+          description: Identificatie van de asynchrone interactie.
+        status:
+          const: IN_PROGRESS
 
     StatusError:
-      description: |
-        De verwerking van de interactie is niet geslaagd.
-      allOf:
-        - $ref: '#/components/schemas/StatusResponse'
-        - type: object
-          required:
-            - resultaat
-          properties:
-            resultaat:
-              $ref: '#/components/schemas/ErrorResultaat'
+      type: object
+      required:
+        - interactieId
+        - status
+        - resultaat
+      properties:
+        interactieId:
+          type: string
+          description: Identificatie van de asynchrone interactie.
+        status:
+          const: ERROR
+        resultaat:
+          $ref: '#/components/schemas/ErrorResultaat'
 
     ErrorResultaat:
       type: object

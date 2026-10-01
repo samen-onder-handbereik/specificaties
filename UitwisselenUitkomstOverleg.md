@@ -72,6 +72,23 @@ De Query-API ondersteunt onder andere:
 -   zoeken op Betrokkene;
 -   zoeken op beschikbaarheidsdatum.
 
+### HTTP-mediatype van het queryresultaat
+
+Het resultaat van de Query-API wordt als een CloudEvent teruggegeven. De
+volledige HTTP-response-body is daarmee het CloudEvent. Het HTTP-mediatype
+is `application/cloudevents+json`.
+
+Het CloudEvent-attribuut `datacontenttype` beschrijft vervolgens het
+mediatype van de inhoud van `data`. Voor de PROV-JSON-LD-graaf is dit
+`application/ld+json`.
+
+Het onderscheid is daarmee:
+
+- HTTP `Content-Type: application/cloudevents+json` — de volledige
+  HTTP-response-body is het CloudEvent;
+- CloudEvent `datacontenttype: application/ld+json` — het attribuut `data`
+  bevat de PROV/JSON-LD-graaf.
+
 ## InzageUrl
 
 Een resultaat van de Query-API kan een `inzageUrl` bevatten.
@@ -133,6 +150,17 @@ Eventtype:
 `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`
 
 Dit event geeft aan dat een Uitkomst Overleg is geraadpleegd.
+
+### Uitkomst Overleg queryresultaat
+
+Eventtype:
+
+`nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`
+
+Dit event is het antwoordformaat van de Query-API. Het CloudEvent bevat in
+`data` de PROV/JSON-LD-graaf met het queryresultaat en de beschikbare
+provenance. Het event reconstrueert niet de oorspronkelijke gebeurtenis
+waarmee de gevonden informatie beschikbaar is gesteld.
 
 Vast uitgangspunt:
 
@@ -204,7 +232,7 @@ gesteld.
 Eigenschappen:
 
 -   `identifier`;
--   `beschikbaarSinds`;
+-   `beschikbaarGesteldOp`;
 -   `inzageUrl`.
 
 ### Betrokkene
@@ -268,7 +296,7 @@ Eigenschappen:
 
 | Node | Type | Belangrijkste eigenschappen |
 |---|---|---|
-| Uitkomst Overleg | `soh:UitkomstOverleg` | identifier, beschikbaarSinds, inzageUrl |
+| Uitkomst Overleg | `soh:UitkomstOverleg` | identifier, beschikbaarGesteldOp, inzageUrl |
 | Betrokkene | `soh:Betrokkene` | identifier, type |
 | Organisatie | `soh:Organisatie` | identifier, naam |
 | BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | identifier, tijdstip |
@@ -336,7 +364,7 @@ Voorbeeld request:
 
 ``` json
 {
-  "beschikbaarSinds": "2026-01-01"
+  "beschikbaarVanaf": "2026-01-01T00:00:00Z"
 }
 ```
 
@@ -352,9 +380,10 @@ Bijvoorbeeld:
   "specversion": "1.0",
   "id": "urn:uuid:query-resultaat-12345",
   "source": "urn:organisatie:voorbeeld:systeem:uitkomstoverleg",
-  "type": "nl.jzv.uitwisselen-uitkomst-overleg.query-resultaat",
+  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat",
   "time": "2026-01-10T12:05:00Z",
   "datacontenttype": "application/ld+json",
+  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
     "@context": {
       "prov": "http://www.w3.org/ns/prov#",
@@ -367,7 +396,7 @@ Bijvoorbeeld:
           "prov:Entity",
           "soh:UitkomstOverleg"
         ],
-        "beschikbaarSinds": "2026-01-10",
+        "beschikbaarGesteldOp": "2026-01-10",
         "inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
       }
     ]

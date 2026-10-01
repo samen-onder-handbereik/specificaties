@@ -122,6 +122,23 @@ betreffende samenwerkfunctie.
 
 Het CloudEvent wordt aangeboden via een HTTP POST-aanroep.
 
+Bij uitwisseling via HTTP wordt het CloudEvent als geheel als JSON
+verzonden. Het HTTP-mediatype is daarom `application/cloudevents+json`.
+Dit mediatype beschrijft de representatie van het volledige HTTP-bericht:
+de HTTP-body is zelf het CloudEvent.
+
+Het CloudEvent-attribuut `datacontenttype` heeft een andere betekenis. Dit
+attribuut beschrijft het mediatype van de inhoud van het attribuut `data`.
+Wanneer `data` een PROV-JSON-LD-graaf bevat, is de waarde bijvoorbeeld
+`application/ld+json`.
+
+Het onderscheid is daarmee:
+
+- HTTP `Content-Type: application/cloudevents+json` — de volledige HTTP-body
+  is een CloudEvent;
+- CloudEvent `datacontenttype: application/ld+json` — het attribuut `data`
+  bevat JSON-LD.
+
 Voorbeeld:
 
 ``` http
@@ -399,6 +416,16 @@ bevatten.
 
 ### CloudEvent als resultaatenvelop
 
+Een Query API-resultaat wordt via HTTP teruggegeven als een CloudEvent.
+De HTTP-response heeft daarbij het mediatype
+`application/cloudevents+json`: de volledige HTTP-body is het CloudEvent.
+
+Binnen dat CloudEvent geeft `datacontenttype` het mediatype van de `data`
+aan. Voor een resultaatgraaf in JSON-LD is dat bijvoorbeeld
+`application/ld+json`. `application/cloudevents+json` en
+`application/ld+json` beschrijven dus verschillende niveaus van de
+uitwisseling.
+
 Een Query API-resultaat heeft dezelfde generieke CloudEvent-structuur
 als andere informatie die binnen SOH wordt uitgewisseld.
 
@@ -449,6 +476,11 @@ CloudEvent-attributen:
                                       aan, bijvoorbeeld
                                       `application/ld+json`.
 
+  `dataschema`                         Identificeert het schema dat de
+                                      structuur van `data` beschrijft,
+                                      wanneer daarvoor een schema wordt
+                                      gebruikt.
+
   `data`                              De PROV-JSON-LD-graaf die het
                                       queryresultaat representeert.
   -----------------------------------------------------------------------
@@ -460,7 +492,10 @@ voor.
 
 Een queryresultaat kan er bijvoorbeeld op hoofdlijnen als volgt uitzien:
 
-``` json
+``` text
+HTTP/1.1 200 OK
+Content-Type: application/cloudevents+json
+
 {
   "specversion": "1.0",
   "id": "urn:uuid:<query-resultaat-event-id>",
