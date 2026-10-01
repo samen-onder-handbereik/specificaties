@@ -12,7 +12,9 @@ De Knowledge graph combineert twee perspectieven:
 -   het provenanceperspectief, waarin de herkomst, totstandkoming en het
     gebruik van informatie wordt vastgelegd.
 
-De Knowledge Graph wordt gerealiseerd met behulp van een graph-database. Deze vormt de technische opslagvoorziening voor het graphmodel; het semantische model is leidend voor de inrichting.
+De Knowledge Graph wordt gerealiseerd met behulp van een graph-database.
+Deze vormt de technische opslagvoorziening voor het graphmodel; het
+semantische model is leidend voor de inrichting.
 
 ## Uitgangspunten
 
@@ -58,13 +60,13 @@ Voorbeeld:
 }
 ```
 
-In Neo4j wordt dit bijvoorbeeld weergegeven als:
+Technisch wordt dit bijvoorbeeld weergegeven als:
 
     (:Entity:UitkomstOverleg)
 
 ## Generiek graphmodel
 
-Het generieke model gebruikt de PROV-concepten:
+Het generieke model gebruikt de volgende PROV-concepten:
 
 -   `prov:Entity`
     -   Informatieobject.
@@ -74,7 +76,15 @@ Het generieke model gebruikt de PROV-concepten:
 -   `prov:Agent`
     -   Actor die betrokken is bij activiteiten.
 
+Deze PROV-klassen worden verbonden door **PROV-relaties**, zoals
+`prov:wasGeneratedBy`, `prov:wasAssociatedWith` en
+`prov:wasAttributedTo`. De relaties beschrijven de provenance-verbanden
+tussen Entities, Activities en Agents.
+
 Deze concepten worden aangevuld met domeinspecifieke typen.
+Domeinspecifieke typen, eigenschappen en relaties worden vastgelegd
+binnen de eigen `soh:`-namespace. In de voorbeelden wordt hiervoor de
+prefix `soh:` gebruikt.
 
 Voorbeelden:
 
@@ -104,13 +114,24 @@ Voorbeelden van PROV-relaties:
             v
     (:Entity:UitkomstOverleg)
 
+In de grafische voorbeelden wordt de relatie weergegeven vanuit het
+perspectief dat voor de lezer het meest natuurlijk is. `prov:generated`
+wordt daarbij weergegeven van Activity naar Entity. In RDF is de
+corresponderende relatie `prov:wasGeneratedBy` gericht van Entity naar
+Activity.
+
 Voorbeelden van domeinspecifieke relaties:
 
     (:UitkomstOverleg)
             |
-            | heeftBetrokkene
+            | soh:heeftBetrokkene
             v
     (:Betrokkene)
+
+Domeinspecifieke relaties worden vastgelegd binnen een eigen namespace.
+In de voorbeelden wordt hiervoor de prefix `soh:` gebruikt. Hiermee
+wordt zichtbaar gemaakt dat de relatie geen onderdeel is van PROV, maar
+afkomstig is uit het domeinmodel van Samen Onder Handbereik.
 
 Een relatie beschrijft altijd een betekenisvol verband tussen twee
 objecten. Een samenwerkfunctie bepaalt welke domeinspecifieke relaties
@@ -169,11 +190,12 @@ aan het informatieobject.
 Een CloudEvent beschrijft de gebeurtenis waarmee een activiteit wordt
 gemeld. Het attribuut `time` van het CloudEvent geeft het tijdstip aan
 waarop de gebeurtenis is geregistreerd. Dit is niet noodzakelijk het
-tijdstip waarop de bijbehorende activiteit daadwerkelijk heeft plaatsgevonden.
+tijdstip waarop de bijbehorende activiteit daadwerkelijk heeft
+plaatsgevonden.
 
-Als het daadwerkelijke tijdstip van de activiteit relevant is en beschikbaar
-is, wordt dit als onderdeel van de provenance-informatie van de Activity
-vastgelegd.
+Als het daadwerkelijke tijdstip van de activiteit relevant is en
+beschikbaar is, wordt dit als onderdeel van de provenance-informatie van
+de Activity vastgelegd.
 
 Het attribuut `id` van een CloudEvent identificeert het CloudEvent zelf.
 
@@ -217,11 +239,15 @@ Binnen de Knowledge graph bestaan verschillende soorten identifiers:
 
 Deze identifiers worden niet door elkaar gebruikt.
 
-## Vertaling naar Neo4j
+## Technische representatie
+
+De technische representatie vertaalt het semantische graphmodel naar
+nodes, labels, properties en relaties. Deze representatie is
+productonafhankelijk beschreven.
 
 ### Labels
 
-Semantische typen worden vertaald naar Neo4j-labels.
+Semantische typen worden vertaald naar labels.
 
 Voorbeelden:
 
@@ -263,7 +289,7 @@ Een eenvoudige representatie van de samenhang:
               v
     (:Entity:UitkomstOverleg)
               |
-              | heeftBetrokkene
+              | soh:heeftBetrokkene
               v
     (:Entity:Betrokkene)
 

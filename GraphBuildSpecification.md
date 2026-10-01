@@ -5,20 +5,20 @@
 De Graph Build Specification beschrijft hoe de Knowledge graph wordt
 opgebouwd vanuit gebeurtenissen en domeingegevens.
 
-Het hoofdstuk [Knowledge graph-model](#knowledge-graph-model) beschrijft de
-betekenis en structuur van de Knowledge graph. Deze Graph Build
+Het hoofdstuk [Knowledge graph-model](#knowledge-graph-model) beschrijft
+de betekenis en structuur van de Knowledge graph. Deze Graph Build
 Specification beschrijft de regels waarmee die structuur wordt gevuld.
 
 De Graph Build Specification vormt de verbinding tussen:
 
-- de gebeurtenissen die via CloudEvents worden ontvangen;
-- de provenance-modellering volgens PROV;
-- de domeinmodellering binnen Samen Onder Handbereik;
-- de technische realisatie van de Knowledge graph.
+-   de gebeurtenissen die via CloudEvents worden ontvangen;
+-   de provenance-modellering volgens PROV;
+-   de domeinmodellering binnen Samen Onder Handbereik;
+-   de technische realisatie van de Knowledge graph.
 
-Deze specificatie beschrijft de functionele en semantische uitgangspunten
-voor het opbouwen van de graph. De concrete technische inrichting binnen
-Neo4j, zoals de keuze voor specifieke indexen, constraints en
+Deze specificatie beschrijft de functionele en semantische
+uitgangspunten voor het opbouwen van de graph. De concrete technische
+inrichting, zoals de keuze voor specifieke indexen, constraints en
 implementatiepatronen, wordt door de ontwikkelaars bepaald binnen de
 kaders van deze specificatie.
 
@@ -32,29 +32,25 @@ CloudEvents die binnen de samenwerkfuncties worden verwerkt.
 Een CloudEvent leidt niet rechtstreeks tot een domeinnode. Eerst wordt
 bepaald welke provenance-activiteit het event representeert.
 
-```
-CloudEvent
-    |
-    v
-prov:Activity
-    |
-    v
-prov:Entity
-```
+    CloudEvent
+        |
+        v
+    prov:Activity
+        |
+        v
+    prov:Entity
 
 ### Identiteiten worden niet hergebruikt
 
 Bij het opbouwen van de Knowledge graph worden verschillende soorten
 identificaties onderscheiden.
 
-- `CloudEvent.id`
-  - Identificeert het CloudEvent zelf.
-
-- `Activity.identifier`
-  - Identificeert de provenance-activiteit.
-
-- `Entity.identifier`
-  - Identificeert het domeinobject.
+-   `CloudEvent.id`
+    -   Identificeert het CloudEvent zelf.
+-   `Activity.identifier`
+    -   Identificeert de provenance-activiteit.
+-   `Entity.identifier`
+    -   Identificeert het domeinobject.
 
 Deze identificaties hebben ieder hun eigen betekenis en worden niet
 onderling vervangen.
@@ -63,41 +59,48 @@ onderling vervangen.
 
 ### CloudEvent naar Activity
 
-Een ontvangen CloudEvent wordt vertaald naar een PROV Activity wanneer
-het event aanleiding geeft tot het vastleggen van een betekenisvolle
-gebeurtenis binnen de Knowledge graph.
+Een ontvangen CloudEvent wordt vertaald naar maximaal één PROV Activity
+wanneer het event aanleiding geeft tot het vastleggen van een
+betekenisvolle gebeurtenis binnen de Knowledge graph.
+
+Per verwerkt CloudEvent wordt dus maximaal één `prov:Activity`
+gecreëerd. De Activity representeert de gebeurtenis die door het
+CloudEvent wordt beschreven. Deze mappingregel heeft betrekking op
+CloudEvents die als bron dienen voor het opbouwen van de Knowledge
+graph; een CloudEvent dat een queryresultaat als resultaatenvelop
+teruggeeft, valt niet onder deze mappingregel.
 
 De Activity bevat minimaal:
 
-- een eigen identifier;
-- het type activiteit;
-- een verwijzing naar het oorspronkelijke CloudEvent.
+-   een eigen identifier;
+-   het type activiteit;
+-   een verwijzing naar het oorspronkelijke CloudEvent.
 
 Voorbeeld:
 
-```
-(:Activity:BeschikbaarStellenUitkomstOverleg)
-{
-    identifier: "urn:activity:12345",
-    cloudEventId: "event-12345"
-}
-```
+    CloudEvent
+        |
+        | representeert
+        v
+    (:Activity:BeschikbaarStellenUitkomstOverleg)
+    {
+        identifier: "<activity-identifier>",
+        cloudEventId: "<cloud-event-id>"
+    }
 
-De waarde `cloudEventId` verwijst naar het oorspronkelijke CloudEvent en
-is niet de identifier van de Activity.
+De `cloudEventId` verwijst naar het oorspronkelijke CloudEvent. Deze
+identifier is onafhankelijk van de `identifier` van de Activity.
 
 ### Activity naar Entity
 
 Een Activity kan leiden tot het ontstaan of beschikbaar komen van een
 domeinobject.
 
-```
-(:Activity:BeschikbaarStellenUitkomstOverleg)
-        |
-        | prov:generated
-        v
-(:Entity:UitkomstOverleg)
-```
+    (:Activity:BeschikbaarStellenUitkomstOverleg)
+            |
+            | prov:generated
+            v
+    (:Entity:UitkomstOverleg)
 
 De Entity krijgt een eigen identifier.
 
@@ -113,25 +116,23 @@ Voorbeeld Uitwisselen Uitkomst Overleg:
 
 CloudEvent type:
 
-```
-uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld
-```
+    uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld
 
 leidt tot:
 
-```
-Activity:
-BeschikbaarStellenUitkomstOverleg
+    Activity:
+    BeschikbaarStellenUitkomstOverleg
 
-Entity:
-UitkomstOverleg
-```
+    Entity:
+    UitkomstOverleg
 
 met relatie:
 
-```
-(Activity)-[:GENERATED]->(Entity)
-```
+    (Activity)
+        |
+        | prov:generated
+        v
+    (Entity)
 
 De concrete mapping van eventtypen naar Activities, Entities en relaties
 maakt onderdeel uit van de samenwerkfunctie-specifieke uitwerking.
@@ -142,17 +143,14 @@ Een domeinobject wordt als één node opgenomen in de Knowledge graph.
 
 Een node kan meerdere typen hebben:
 
-- een PROV-type;
-- één of meer domeinspecifieke typen.
+-   een PROV-type;
+-   één of meer domeinspecifieke typen.
 
 Voorbeeld:
 
-```
-(:Entity:UitkomstOverleg)
-```
+    (:Entity:UitkomstOverleg)
 
-Deze node representeert zowel `prov:Entity` als
-`soh:UitkomstOverleg`.
+Deze node representeert zowel `prov:Entity` als `soh:UitkomstOverleg`.
 
 Er wordt geen afzonderlijke node gemaakt voor het PROV-type en het
 domeintype.
@@ -160,18 +158,18 @@ domeintype.
 ## Validatie van de provenance-payload
 
 Voordat een CloudEvent wordt verwerkt voor het opbouwen van de Knowledge
-graph, kan de structuur van een PROV-JSONLD-payload worden gevalideerd met
-het [PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json).
+graph, kan de structuur van een PROV-JSONLD-payload worden gevalideerd
+met het [PROV-JSON-LD JSON Schema](jsonschema/prov-jsonld.schema.json).
 
-Het JSON Schema ondersteunt met name de controle op de JSON-structuur van de
-payload en op enkele generieke profielafspraken. Het schema vervangt geen
-semantische validatie van de provenance-graaf.
+Het JSON Schema ondersteunt met name de controle op de JSON-structuur
+van de payload en op enkele generieke profielafspraken. Het schema
+vervangt geen semantische validatie van de provenance-graaf.
 
 Een mogelijke vervolgstap is het toepassen van SHACL voor semantische
-validatieregels, bijvoorbeeld regels over de toegestane PROV-relaties tussen
-Entities, Activities en Agents. Dit maakt op dit moment geen onderdeel uit
-van de vastgestelde werking en kan als toekomstige uitbreiding worden
-onderzocht.
+validatieregels, bijvoorbeeld regels over de toegestane PROV-relaties
+tussen Entities, Activities en Agents. Dit maakt op dit moment geen
+onderdeel uit van de vastgestelde werking en kan als toekomstige
+uitbreiding worden onderzocht.
 
 ## Idempotente verwerking
 
@@ -181,13 +179,14 @@ De opbouw van de Knowledge graph moet daarom idempotent zijn.
 
 Dit betekent:
 
-- hetzelfde CloudEvent mag niet leiden tot meerdere provenance-
-  activiteiten;
-- dezelfde activiteit mag niet leiden tot dubbele domeinobjecten;
-- bestaande relaties worden herkend en niet onnodig opnieuw aangemaakt.
+-   hetzelfde CloudEvent mag niet leiden tot meerdere provenance-
+    activiteiten;
+-   dezelfde activiteit mag niet leiden tot dubbele domeinobjecten;
+-   bestaande relaties worden herkend en niet onnodig opnieuw
+    aangemaakt.
 
 De wijze waarop deze herkenning technisch wordt gerealiseerd, wordt
-uitgewerkt in de technische Neo4j-inrichting.
+uitgewerkt in de technische inrichting.
 
 ## Relaties
 
@@ -196,24 +195,26 @@ tussen nodes.
 
 Daarbij wordt onderscheid gemaakt tussen:
 
-- PROV-relaties;
-- domeinspecifieke relaties.
+-   PROV-relaties;
+-   domeinspecifieke relaties.
 
-De exacte technische naamgeving van Neo4j-relaties wordt vastgesteld in
-de technische uitwerking.
+De semantische naamgeving en betekenis van relaties worden bepaald door
+het Knowledge graph-model en de samenwerkfunctie-specifieke
+specificatie. De technische representatie van deze relaties wordt
+vastgesteld in de technische uitwerking.
 
 ## Samenwerkfunctie-specifieke mappings
 
 Een samenwerkfunctie bepaalt:
 
-- welke CloudEvents relevant zijn;
-- welke Activities worden gemaakt;
-- welke Entities ontstaan;
-- welke relaties worden gelegd;
-- welke eigenschappen beschikbaar zijn.
+-   welke CloudEvents relevant zijn;
+-   welke Activities worden gemaakt;
+-   welke Entities ontstaan;
+-   welke relaties worden gelegd;
+-   welke eigenschappen beschikbaar zijn.
 
-De generieke Graph Build Specification beschrijft de uitgangspunten.
-De samenwerkfunctie-specifieke specificatie beschrijft de concrete
+De generieke Graph Build Specification beschrijft de uitgangspunten. De
+samenwerkfunctie-specifieke specificatie beschrijft de concrete
 invulling.
 
 ## Verdere technische uitwerking
@@ -223,9 +224,9 @@ implementatie.
 
 De volgende onderwerpen worden verder uitgewerkt:
 
-- concrete mappingtabellen;
-- Neo4j-labels en properties;
-- constraints en indexen;
-- validatieregels;
-- Cypher-query's;
-- verwerking van wijzigingen en nieuwe versies van informatieobjecten.
+-   concrete mappingtabellen;
+-   labels en properties;
+-   constraints en indexen;
+-   validatieregels;
+-   query's;
+-   verwerking van wijzigingen en nieuwe versies van informatieobjecten.
