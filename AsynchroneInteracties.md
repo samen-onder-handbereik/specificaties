@@ -38,36 +38,14 @@ synchrone verwerking niet passend of niet mogelijk is.
 
 ## Kernbegrippen
 
-  -----------------------------------------------------------------------
-  Begrip                              Betekenis
-  ----------------------------------- -----------------------------------
-  Asynchrone interactie               Een interactie waarvan de
-                                      verwerking na acceptatie buiten de
-                                      oorspronkelijke HTTP-aanroep
-                                      plaatsvindt.
-
-  CloudEvent                          Een gebeurtenis die conform de
-                                      CloudEvents-specificatie wordt
-                                      beschreven en aangeboden.
-
-  interactieId                        De unieke identificatie van een
-                                      asynchrone interactie. Het
-                                      interactieId wordt uitgegeven door
-                                      de voorziening die verantwoordelijk
-                                      is voor de verwerking van de
-                                      interactie.
-
-  Status-API                          De generieke API waarmee de actuele
-                                      status van een asynchrone
-                                      interactie kan worden opgevraagd.
-
-  Query API                           De API waarmee een informatievraag
-                                      aan de Knowledge graph kan worden
-                                      gesteld.
-
-  Samenwerkfunctie                    Een domeinspecifieke invulling van
-                                      het generieke interactiepatroon.
-  -----------------------------------------------------------------------
+| Begrip | Betekenis |
+|---|---|
+| Asynchrone interactie | Een interactie waarvan de verwerking na acceptatie buiten de oorspronkelijke HTTP-aanroep plaatsvindt. |
+| CloudEvent | Een gebeurtenis die conform de CloudEvents-specificatie wordt beschreven en aangeboden. |
+| interactieId | De unieke identificatie van een asynchrone interactie. Het interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking van de interactie. |
+| Status-API | De generieke API waarmee de actuele status van een asynchrone interactie kan worden opgevraagd. |
+| Query API | De API waarmee een informatievraag aan de Knowledge graph kan worden gesteld. |
+| Samenwerkfunctie | Een domeinspecifieke invulling van het generieke interactiepatroon. |
 
 ## Generiek interactiepatroon
 
@@ -196,10 +174,10 @@ De Status-API retourneert de actuele status van de interactie.
 
 Een statusresponse bevat de volgende gegevens:
 
-  Attribuut        Betekenis
-  ---------------- --------------------------------------------------
-  `interactieId`   Identificeert de asynchrone interactie.
-  `status`         Geeft de actuele toestand van de verwerking aan.
+| Attribuut | Betekenis |
+|---|---|
+| `interactieId` | Identificeert de asynchrone interactie. |
+| `status` | Geeft de actuele toestand van de verwerking aan. |
 
 De Status-API retourneert geen inhoudelijk resultaat van de verwerking.
 Een inhoudelijk resultaat wordt, wanneer daarvoor een API beschikbaar
@@ -209,11 +187,11 @@ is, via die API opgevraagd.
 
 De Status-API kent de volgende statussen:
 
-  Status          Betekenis
-  --------------- --------------------------------------------------
-  `IN_PROGRESS`   De verwerking is gestart maar nog niet afgerond.
-  `OK`            De verwerking is succesvol afgerond.
-  `ERROR`         Tijdens de verwerking is een fout opgetreden.
+| Status | Betekenis |
+|---|---|
+| `IN_PROGRESS` | De verwerking is gestart maar nog niet afgerond. |
+| `OK` | De verwerking is succesvol afgerond. |
+| `ERROR` | Tijdens de verwerking is een fout opgetreden. |
 
 ### Status `IN_PROGRESS`
 
@@ -440,50 +418,17 @@ resultaatgraaf worden binnen de PROV-JSON-LD-graaf zelf vastgelegd.
 Voor een queryresultaat gelden de volgende uitgangspunten voor de
 CloudEvent-attributen:
 
-  -----------------------------------------------------------------------
-  Attribuut                           Betekenis bij een queryresultaat
-  ----------------------------------- -----------------------------------
-  `specversion`                       De versie van de
-                                      CloudEvents-specificatie,
-                                      bijvoorbeeld `1.0`.
-
-  `id`                                Unieke identifier van het
-                                      CloudEvent. Deze wordt door de
-                                      producer van het CloudEvent
-                                      uitgegeven.
-
-  `source`                            Identificeert de partij of
-                                      voorziening die het queryresultaat
-                                      als CloudEvent produceert.
-
-  `type`                              Identificeert dat het CloudEvent
-                                      een queryresultaat bevat. De
-                                      concrete waarde wordt vastgesteld
-                                      door de betreffende
-                                      samenwerkfunctie.
-
-  `time`                              Tijdstip waarop het CloudEvent is
-                                      geproduceerd.
-
-  `subject`                           Alleen opnemen wanneer het
-                                      queryresultaat een eenduidig
-                                      onderwerp heeft. Bij een resultaat
-                                      dat een bredere subgraaf bevat,
-                                      hoeft `subject` niet te worden
-                                      gebruikt.
-
-  `datacontenttype`                   Geeft het mediatype van de `data`
-                                      aan, bijvoorbeeld
-                                      `application/ld+json`.
-
-  `dataschema`                         Identificeert het schema dat de
-                                      structuur van `data` beschrijft,
-                                      wanneer daarvoor een schema wordt
-                                      gebruikt.
-
-  `data`                              De PROV-JSON-LD-graaf die het
-                                      queryresultaat representeert.
-  -----------------------------------------------------------------------
+| Attribuut | Betekenis bij een queryresultaat |
+|---|---|
+| `specversion` | De versie van de CloudEvents-specificatie, bijvoorbeeld `1.0`. |
+| `id` | Unieke identifier van het CloudEvent. Deze wordt door de producer van het CloudEvent uitgegeven. |
+| `source` | Identificeert de partij of voorziening die het queryresultaat als CloudEvent produceert. |
+| `type` | Identificeert dat het CloudEvent een queryresultaat bevat. De concrete waarde wordt vastgesteld door de betreffende samenwerkfunctie. |
+| `time` | Tijdstip waarop het CloudEvent is geproduceerd. |
+| `subject` | Alleen opnemen wanneer het queryresultaat een eenduidig onderwerp heeft. Bij een resultaat dat een bredere subgraaf bevat, hoeft `subject` niet te worden gebruikt. |
+| `datacontenttype` | Geeft het mediatype van de `data` aan, bijvoorbeeld `application/ld+json`. |
+| `dataschema` | Identificeert het schema dat de structuur van `data` beschrijft, wanneer daarvoor een schema wordt gebruikt. |
+| `data` | De PROV-JSON-LD-graaf die het queryresultaat representeert. |
 
 De concrete waarde van `source` en de naamgeving van `type` worden
 vastgesteld in de samenwerkfunctie-specifieke specificatie. Het
@@ -540,23 +485,12 @@ via de Status-API.
 Binnen een interactie kunnen verschillende soorten identifiers
 voorkomen. Deze hebben ieder een eigen betekenis en toepassingsgebied.
 
-  -----------------------------------------------------------------------
-  Identifier              Niveau                  Betekenis
-  ----------------------- ----------------------- -----------------------
-  `interactieId`          Interactieniveau        Identificeert de
-                                                  asynchrone interactie.
-
-  `CloudEvent.id`         Eventniveau             Identificeert het
-                                                  CloudEvent.
-
-  JSON-LD `@id`           Semantisch niveau       Identificeert resources
-                                                  binnen een
-                                                  provenance-graaf.
-
-  Domeinspecifieke        Domeinniveau            Identificeren objecten
-  identifiers                                     binnen een
-                                                  samenwerkfunctie.
-  -----------------------------------------------------------------------
+| Identifier | Niveau | Betekenis |
+|---|---|---|
+| `interactieId` | Interactieniveau | Identificeert de asynchrone interactie. |
+| `CloudEvent.id` | Eventniveau | Identificeert het CloudEvent. |
+| JSON-LD `@id` | Semantisch niveau | Identificeert resources binnen een provenance-graaf. |
+| Domeinspecifieke identifiers | Domeinniveau | Identificeren objecten binnen een samenwerkfunctie. |
 
 Deze identifiers worden niet onderling vervangen.
 
@@ -604,12 +538,12 @@ Een mogelijke strategie is een oplopend interval (exponential backoff).
 
 Bijvoorbeeld:
 
-  Poging                               Wachttijd
-  ------------------------------------ ------------
-  Eerste statusopvraag na acceptatie   1 seconde
-  Tweede statusopvraag                 2 seconden
-  Derde statusopvraag                  4 seconden
-  Vierde statusopvraag                 8 seconden
+| Poging | Wachttijd |
+|---|---|
+| Eerste statusopvraag na acceptatie | 1 seconde |
+| Tweede statusopvraag | 2 seconden |
+| Derde statusopvraag | 4 seconden |
+| Vierde statusopvraag | 8 seconden |
 
 De gekozen retry-strategie kan afhankelijk zijn van de eigenschappen van
 de betreffende toepassing.
