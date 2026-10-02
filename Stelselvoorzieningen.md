@@ -1,13 +1,19 @@
-# Stelselvoorzieningen
-## Event Provenance Store en Event Hub (CORV2 Ketenindex)
-Relevante gebeurtenissen en tijdlijnen kunnen gevonden worden via deze voorziening en daar worden aangeleverd. Deze voorziening levert gestructureerde (graph based) onweerlegbare opslag van events in een onveranderlijke chronologische volgorde. Zie het afsprakenstelsel, onderdeel [stelselvoorzieningen](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-29-ketenvoorzieningen.html#event-provenance-store-en-event-hub), voor meer informatie.
+## Stelselvoorzieningen
 
-Hoe events aan te leveren of op te vragen is te vinden in de API specificaties van deze voorziening, zie:
-- Query API om de query aan te dienen (pull stap 1), **de link naar de API specificaties (naar het DevPortal) volgt** 
-- Pull API om de events op te halen (pull stap 2), **de link naar de API specificaties (naar het DevPortal) volgt** 
-- Push API voor het aanleveren van events, **de link naar de API specificaties (naar het DevPortal) volgt**
+Stelselvoorzieningen ondersteunen de samenwerking en de technische infrastructuur binnen Samen onder Handbereik.
 
-## API Catalogus
-De API-Catalogus voorziening vormt een centrale plek om keten-API’s te kunnen vinden. Zie het afsprakenstelsel, onderdeel [stelselvoorzieningen](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-29-ketenvoorzieningen.html#api-catalogus-optioneel), voor meer informatie.
+De inhoudelijke beschrijving en de afspraken over de stelselvoorzieningen zijn opgenomen in het [Samen onder Handbereik Afsprakenstelsel](https://samen-onder-handbereik.github.io/afsprakenstelsel/).
 
-De API-Catalogus is bereikbaar via deze link, **de link naar de API specificaties (naar het DevPortal) volgt**
+### Event Provenance Store en Event Hub
+
+De Event Provenance Store en Event Hub (CORV2 Ketenindex) ondersteunt het vastleggen en raadplegen van gebeurtenissen binnen de keten.
+
+Gebeurtenissen kunnen aan de voorziening worden aangeleverd en op basis van queries worden opgevraagd. Voor de voorziening worden verschillende API's onderscheiden voor het aanleveren, opvragen en ophalen van gebeurtenissen.
+
+Zie voor de beschrijving van deze voorziening het onderdeel [Stelselvoorzieningen](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-29-ketenvoorzieningen.html#event-provenance-store-en-event-hub) van het Afsprakenstelsel.
+
+### API-Catalogus
+
+De API-Catalogus biedt een centrale plek voor het vinden van API's die binnen Samen onder Handbereik beschikbaar zijn.
+
+Zie voor de beschrijving van deze voorziening het onderdeel [Stelselvoorzieningen](https://samen-onder-handbereik.github.io/afsprakenstelsel/jekyll/2025-09-29-ketenvoorzieningen.html#api-catalogus-optioneel) van het Afsprakenstelsel.

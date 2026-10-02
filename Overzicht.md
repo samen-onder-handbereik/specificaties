@@ -1,24 +1,25 @@
-# Overzicht en verwijzingen
-Om eenvoudig en snel door de specificaties gerelateerd aan de verschillende samenwerkfuncties te kunnen bladeren is hieronder een overzicht met links opgenomen.
+## Overzicht en verwijzingen
 
-## Stelselvoorzieningen
-Zie volgende [hoofdstuk](#secsv).
+Deze site bevat de technische specificaties van Samen onder Handbereik. De specificaties zijn onderverdeeld in stelselvoorzieningen, generieke technische specificaties en specificaties van afzonderlijke samenwerkfuncties.
 
-## Samenwerkfuncties
-_Opmerking: Als de genoemde samenwerkfunctie nog niet in de vorm van een verwijzing is weergegeven, dan wordt aan de uitwerking van de specificaties nog gewerkt en zijn deze nog niet gepubliceerd._
+### Stelselvoorzieningen
 
-- **Uitwisselen Melding**, [Protocol](#mldsub), [Gegevensdefinitie](#mldsub-cat)
-- Vaststellen Identiteit en Relatie(s)
-- Bepalen Bekendheid en Verrijking
-- Werken aan Preventie
-- Uitvoeren Triage en Taxatie
-- Opstellen Analyse & Advies
-- Inzien en Deelnemen door de Burger
-- Overleggen over de Casus
-- **Uitwisselen Uitkomst Overleg**, [Protocol](#uuosub), [Gegevensdefinitie](#uuosub-cat)
-- Opstellen en Regisseren Plan
-- Uitvoeren Actie
-- Nazorg en Afsluiten Casus
-- Uitwisselen beschikbare diensten
-- Inrichten en bijsturen samenwerking
-- Monitoring kwaliteit en effectiviteit
+Stelselvoorzieningen ondersteunen de samenwerking en de technische infrastructuur van Samen onder Handbereik.
+
+### Generieke technische specificaties
+
+Deze specificaties beschrijven technische uitgangspunten en bouwstenen die voor meerdere samenwerkfuncties kunnen worden toegepast.
+
+- Toepassing van de CloudEvents-standaard
+- Asynchrone Interacties
+- Knowledge Graph Model
+- Graph Build Specifications
+
+### Samenwerkfuncties
+
+Deze specificaties beschrijven de technische uitwerking van afzonderlijke samenwerkfuncties.
+
+- Uitwisselen Melding
+- Uitwisselen Uitkomst Overleg
+
+Aanvullende specificaties worden opgenomen zodra deze beschikbaar zijn.
