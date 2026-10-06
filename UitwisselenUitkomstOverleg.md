@@ -85,6 +85,12 @@ provenance- Activity geeft, indien beschikbaar, het tijdstip aan waarop
 de activiteit daadwerkelijk heeft plaatsgevonden. Deze tijdstippen
 kunnen van elkaar verschillen.
 
+In de voorbeelden hieronder identificeert het CloudEvent-attribuut
+`source` het systeem dat de gebeurtenis registreert en het CloudEvent
+publiceert. Dit hoeft niet dezelfde partij te zijn als de organisatie die
+de activiteit heeft uitgevoerd. Die partij wordt in de provenance-graaf
+als `prov:Agent` opgenomen.
+
 ### Voorbeeld: Uitkomst beschikbaar gesteld
 
 ``` json
@@ -124,7 +130,7 @@ kunnen van elkaar verschillen.
         }
       },
       {
-        "@id": "urn:organisatie:voorbeeld",
+        "@id": "urn:nld:oin:00000001823288444000",
         "@type": [
           "prov:Agent",
           "soh:Organisatie"
@@ -141,7 +147,7 @@ kunnen van elkaar verschillen.
 {
   "specversion": "1.0",
   "id": "urn:uuid:987e6543-e21b-12d3-a456-426614174999",
-  "source": "urn:nld:kvknr:09220932:systeem:uitkomstoverleg",
+  "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien",
   "time": "2026-01-11T09:30:00Z",
   "datacontenttype": "application/ld+json",
@@ -174,7 +180,7 @@ kunnen van elkaar verschillen.
         ]
       },
       {
-        "@id": "urn:organisatie:raadpleger",
+        "@id": "urn:nld:kvknr:09220932",
         "@type": [
           "prov:Agent",
           "soh:Organisatie"
@@ -185,80 +191,122 @@ kunnen van elkaar verschillen.
 }
 ```
 
-## PROV-model
+In dit voorbeeld meldt het systeem `urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg`
+dat de UitkomstOverleg is ingezien. De organisatie die de inzage
+daadwerkelijk heeft uitgevoerd, wordt in de provenance-graaf
+geïdentificeerd als `urn:nld:kvknr:09220932` en is daar getypeerd als
+`prov:Agent`.
 
-De Knowledge graph bevat zowel domeinobjecten als provenance-objecten.
+## Informatiemodel
 
-Er wordt onderscheid gemaakt tussen:
+De Knowledge graph bevat domeinobjecten en provenance-informatie in één
+samenhangend informatiemodel. PROV vormt daarbij geen afzonderlijk model
+naast het domeinmodel, maar biedt een provenance-perspectief op de
+objecten en activiteiten in de Knowledge graph.
 
--   domeinconcepten die de betekenis van informatie beschrijven;
--   provenance-concepten die beschrijven hoe informatie is ontstaan,
-    beschikbaar gesteld en gebruikt.
+Domeinconcepten worden waar relevant tevens getypeerd met een PROV-type.
+Zo is een `UitkomstOverleg` zowel een `soh:UitkomstOverleg` als een
+`prov:Entity`, is een `Organisatie` zowel een `soh:Organisatie` als een
+`prov:Agent` en zijn `BeschikbaarStellenUitkomstOverleg` en
+`InzienUitkomstOverleg` zowel domeinspecifieke concepten als
+`prov:Activity`.
 
-### Provenance-concepten
+De PROV-typering beschrijft daarmee niet een tweede object naast het
+domeinobject, maar een aanvullende semantische karakterisering van het
+object binnen de provenance-graaf.
 
-### BeschikbaarStellenUitkomstOverleg
+### Concepten
+
+#### UitkomstOverleg
 
 Type:
 
-`soh:BeschikbaarStellenUitkomstOverleg`
+- `soh:UitkomstOverleg`;
+- `prov:Entity`.
 
-Activiteit waarbij een Uitkomst Overleg beschikbaar wordt gesteld.
+Het domeinobject dat via de inzage-API beschikbaar wordt gesteld.
 
 Eigenschappen:
 
--   `identifier`;
--   `tijdstip` --- het tijdstip waarop de activiteit daadwerkelijk heeft
-    plaatsgevonden.
+- `identifier`;
+- `beschikbaarGesteldOp`;
+- `inzageUrl`.
 
-### InzienUitkomstOverleg
+#### Betrokkene
 
 Type:
 
-`soh:InzienUitkomstOverleg`
+`soh:Betrokkene`
 
-Activiteit waarbij een Uitkomst Overleg wordt geraadpleegd.
+Een persoon of organisatie waarop een UitkomstOverleg betrekking heeft.
+
+Een `Betrokkene` krijgt niet op grond van zijn rol als betrokkene
+automatisch een PROV-typering. Wanneer een betrokkene zelf als actor
+optreedt in een provenance-activiteit, kan hetzelfde domeinobject
+daarnaast worden getypeerd als `prov:Agent`. De PROV-typering is in dat
+geval dus afhankelijk van de rol die het object in de betreffende
+provenance-graaf vervult.
 
 Eigenschappen:
 
--   `identifier`;
--   `tijdstip` --- het tijdstip waarop de activiteit daadwerkelijk heeft
-    plaatsgevonden;
--   verantwoordelijke organisatie.
+- `identifier`;
+- `type`.
 
-### Organisatie
+#### Organisatie
 
 Type:
 
-`soh:Organisatie`
+- `soh:Organisatie`;
+- `prov:Agent`.
 
 Organisatie die verantwoordelijk is voor een activiteit.
 
 Eigenschappen:
 
--   `identifier`;
--   `naam`.
+- `identifier`;
+- `naam`.
 
-### Overzicht graphmodel
+#### BeschikbaarStellenUitkomstOverleg
 
-| Node | Type | Belangrijkste eigenschappen |
-|---|---|---|
-| Uitkomst Overleg | `soh:UitkomstOverleg` | identifier, beschikbaarGesteldOp, inzageUrl |
-| Betrokkene | `soh:Betrokkene` | identifier, type |
-| Organisatie | `soh:Organisatie` | identifier, naam |
-| BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | identifier, tijdstip |
-| InzienUitkomstOverleg | `soh:InzienUitkomstOverleg` | identifier, tijdstip |
+Type:
+
+- `soh:BeschikbaarStellenUitkomstOverleg`;
+- `prov:Activity`.
+
+Activiteit waarbij een Uitkomst Overleg beschikbaar wordt gesteld.
+
+Eigenschappen:
+
+- `identifier`;
+- `tijdstip` --- het tijdstip waarop de activiteit daadwerkelijk heeft
+  plaatsgevonden.
+
+#### InzienUitkomstOverleg
+
+Type:
+
+- `soh:InzienUitkomstOverleg`;
+- `prov:Activity`.
+
+Activiteit waarbij een Uitkomst Overleg wordt geraadpleegd.
+
+Eigenschappen:
+
+- `identifier`;
+- `tijdstip` --- het tijdstip waarop de activiteit daadwerkelijk heeft
+  plaatsgevonden;
+- verantwoordelijke organisatie.
 
 ### Relaties
 
-### `soh:heeftBetrokkene`
+#### `soh:heeftBetrokkene`
 
 Domeinrelatie waarmee een UitkomstOverleg aan een Betrokkene wordt
 gerelateerd.
 
-### `prov:wasAssociatedWith`
+#### `prov:wasAssociatedWith`
 
-Relatie tussen activiteit en verantwoordelijke organisatie.
+PROV-relatie tussen een activiteit en de verantwoordelijke organisatie.
 
 Voor inzage:
 
@@ -270,9 +318,9 @@ Organisatie
 InzienUitkomstOverleg
 ```
 
-### `prov:used`
+#### `prov:used`
 
-Relatie waarbij een activiteit gebruikmaakt van een Entity.
+PROV-relatie waarbij een activiteit gebruikmaakt van een Entity.
 
 Voor inzage:
 
@@ -284,51 +332,25 @@ InzienUitkomstOverleg
 UitkomstOverleg
 ```
 
-### `prov:wasGeneratedBy`
+#### `prov:wasGeneratedBy`
 
-Relatie tussen Entity en activiteit waardoor deze is ontstaan.
+PROV-relatie tussen een Entity en de activiteit waardoor deze is ontstaan.
 
 De exacte toepassing op beschikbaarstelling wordt nog vastgesteld.
 
-## Domeinmodel
+### Overzicht informatiemodel
 
-De Knowledge graph bevat zowel domeinobjecten als provenance-objecten. In
-het domeinmodel van deze samenwerkfunctie zijn de volgende
-domeinconcepten relevant.
+| Concept | Type | PROV-typering | Belangrijkste eigenschappen |
+|---|---|---|---|
+| UitkomstOverleg | `soh:UitkomstOverleg` | `prov:Entity` | identifier, beschikbaarGesteldOp, inzageUrl |
+| Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identifier, type |
+| Organisatie | `soh:Organisatie` | `prov:Agent` | identifier, naam |
+| BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
+| InzienUitkomstOverleg | `soh:InzienUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
 
-### UitkomstOverleg
-
-Type:
-
-`soh:UitkomstOverleg`
-
-De inhoudelijke resource die via de inzage-API beschikbaar wordt gesteld.
-
-Eigenschappen:
-
-- `identifier`;
-- `beschikbaarGesteldOp`;
-- `inzageUrl`.
-
-### Betrokkene
-
-Type:
-
-`soh:Betrokkene`
-
-Een persoon of organisatie waarop een Uitkomst Overleg betrekking heeft.
-
-Eigenschappen:
-
-- `identifier`;
-- `type`.
-
-### Overzicht domeinmodel
-
-| Node | Type | Belangrijkste eigenschappen |
-|---|---|---|
-| Uitkomst Overleg | `soh:UitkomstOverleg` | identifier, beschikbaarGesteldOp, inzageUrl |
-| Betrokkene | `soh:Betrokkene` | identifier, type |
+¹ Een `Betrokkene` is niet intrinsiek een `prov:Agent`. Wanneer de
+betrokkene zelf als actor optreedt in een provenance-activiteit, krijgt
+het betreffende domeinobject ook de typering `prov:Agent`.
 
 ## Informatievragen
 
