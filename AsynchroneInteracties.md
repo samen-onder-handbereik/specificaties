@@ -45,7 +45,7 @@ synchrone verwerking niet passend of niet mogelijk is.
 | interactieId | De unieke identificatie van een asynchrone interactie. Het interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking van de interactie. |
 | Status-API | De generieke API waarmee de actuele status van een asynchrone interactie kan worden opgevraagd. |
 | Query API | De API waarmee een informatievraag aan de Knowledge graph kan worden gesteld. |
-| Samenwerkfunctie | Een domeinspecifieke invulling van het generieke interactiepatroon. |
+| Resultaat-API | De API waarmee het inhoudelijke resultaat van een succesvol verwerkte asynchrone interactie kan worden opgevraagd. |
 
 ## Generiek interactiepatroon
 
@@ -54,8 +54,9 @@ Een asynchrone interactie verloopt volgens een vast patroon:
 1.  Een deelnemer biedt een interactie aan via een API.
 2.  De API accepteert de interactie voor verdere verwerking.
 3.  De verwerking van de interactie vindt asynchroon plaats.
-4.  De deelnemer kan de voortgang van de verwerking volgen.
-5.  Na afronding kan een resultaat beschikbaar worden gesteld.
+4.  De deelnemer kan de voortgang van de verwerking volgen via de Status-API.
+5.  Na succesvolle afronding kan een inhoudelijk resultaat beschikbaar zijn.
+6.  Wanneer een inhoudelijk resultaat beschikbaar is, kan dit via een daarvoor aangewezen Resultaat-API worden opgevraagd.
 
 ``` text
 Initiator
@@ -64,14 +65,25 @@ Initiator
     v
 API
     |
-    | acceptatie
+    | 202 Accepted + interactieId
     v
 Asynchrone verwerking
     |
-    +--> status beschikbaar
+    +--> Status-API
+    |       |
+    |       +--> IN_PROGRESS
+    |       |
+    |       +--> OK
+    |       |
+    |       +--> ERROR
     |
-    +--> resultaat beschikbaar
+    +--> Resultaat-API
+            |
+            v
+        inhoudelijk resultaat
 ```
+
+Niet iedere asynchrone interactie hoeft een inhoudelijk resultaat op te leveren. De betreffende samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en via welke Resultaat-API dit kan worden opgevraagd.
 
 ## CloudEvent API
 
@@ -282,6 +294,32 @@ Een mogelijke representatie van een technische fout is:
 De precieze structuur van `fout` en eventuele aanvullende details wordt
 vastgelegd in het technische API-contract.
 
+## Resultaat-API
+
+### Doel
+
+De Resultaat-API biedt de mogelijkheid om het inhoudelijke resultaat van een succesvol verwerkte asynchrone interactie op te vragen.
+
+De Resultaat-API wordt alleen gebruikt wanneer de betreffende asynchrone interactie een inhoudelijk resultaat oplevert. De samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en welke representatie dit resultaat heeft.
+
+### Opvragen van het resultaat
+
+Het resultaat wordt opgevraagd met het `interactieId` van de asynchrone interactie.
+
+Voorbeeld:
+
+``` http
+GET https://<host>/api/resultaat/{interactieId}
+```
+
+De exacte URL, HTTP-methode en structuur van de response worden vastgesteld in de technische API-specificatie van de betreffende samenwerkfunctie.
+
+Het resultaat kan pas worden opgevraagd nadat de Status-API heeft aangegeven dat de verwerking succesvol is afgerond met de status `OK`.
+
+De Resultaat-API retourneert uitsluitend het inhoudelijke resultaat van de interactie. De actuele verwerkingsstatus wordt via de Status-API opgevraagd.
+
+De vorm van het resultaat is afhankelijk van de betreffende samenwerkfunctie. Een resultaat kan bijvoorbeeld een CloudEvent zijn waarin de inhoudelijke gegevens in het attribuut `data` zijn opgenomen.
+
 ## Query API
 
 ### Doel
@@ -304,6 +342,8 @@ context relevant zijn.
 ### Opvragen van informatie
 
 Een informatievraag wordt aangeboden via een HTTP POST-aanroep.
+
+De informatievraag wordt asynchroon verwerkt. Na acceptatie wordt een `interactieId` uitgegeven waarmee de initiator de verwerking via de Status-API kan volgen.
 
 Voorbeeld:
 
@@ -328,16 +368,15 @@ specificatie.
 
 ### Resultaat van een informatievraag
 
-Het resultaat van een informatievraag wordt teruggegeven als een
-CloudEvent.
+Het resultaat van een informatievraag wordt na succesvolle verwerking via de Resultaat-API opgevraagd en teruggegeven als een CloudEvent.
 
 Het CloudEvent vormt de generieke envelop voor het resultaat. De
 inhoudelijke representatie van het resultaat bevindt zich in het
 attribuut `data`.
 
-De `data` bevat een graph die het resultaat van de informatievraag
-representeert. Deze graph is gemodelleerd volgens het Knowledge
-graph-model en gebruikt PROV-concepten en, waar relevant,
+De `data` bevat altijd een PROV-JSON-LD-graaf die het resultaat van de
+informatievraag representeert. Deze graaf is gemodelleerd volgens het
+Knowledge graph-model en gebruikt PROV-concepten en, waar relevant,
 domeinspecifieke typen, eigenschappen en relaties.
 
 Het resultaat is daarmee geen vaste JSON-resource of een lijst van
@@ -394,7 +433,7 @@ bevatten.
 
 ### CloudEvent als resultaatenvelop
 
-Een Query API-resultaat wordt via HTTP teruggegeven als een CloudEvent.
+Een queryresultaat wordt via de Resultaat-API teruggegeven als een CloudEvent.
 De HTTP-response heeft daarbij het mediatype
 `application/cloudevents+json`: de volledige HTTP-body is het CloudEvent.
 
@@ -425,7 +464,7 @@ CloudEvent-attributen:
 | `source` | Identificeert de partij of voorziening die het queryresultaat als CloudEvent produceert. |
 | `type` | Identificeert dat het CloudEvent een queryresultaat bevat. De concrete waarde wordt vastgesteld door de betreffende samenwerkfunctie. |
 | `time` | Tijdstip waarop het CloudEvent is geproduceerd. |
-| `subject` | Alleen opnemen wanneer het queryresultaat een eenduidig onderwerp heeft. Bij een resultaat dat een bredere subgraaf bevat, hoeft `subject` niet te worden gebruikt. |
+| `subject` | Bevat het `interactieId` van de asynchrone informatievraag waarop het queryresultaat betrekking heeft. |
 | `datacontenttype` | Geeft het mediatype van de `data` aan, bijvoorbeeld `application/ld+json`. |
 | `dataschema` | Identificeert het schema dat de structuur van `data` beschrijft, wanneer daarvoor een schema wordt gebruikt. |
 | `data` | De PROV-JSON-LD-graaf die het queryresultaat representeert. |
@@ -447,6 +486,7 @@ Content-Type: application/cloudevents+json
   "source": "<producer-van-het-queryresultaat>",
   "type": "<query-resultaat-eventtype>",
   "time": "2026-01-15T10:35:00Z",
+  "subject": "<interactie-id>",
   "datacontenttype": "application/ld+json",
   "data": {
     "@context": {},
@@ -478,7 +518,8 @@ staat het `interactieId` los van het `id` van het CloudEvent. Het
 CloudEvent `id` identificeert het CloudEvent zelf.
 
 Hetzelfde `interactieId` wordt gebruikt bij het opvragen van de status
-via de Status-API.
+via de Status-API en wordt opgenomen in het `subject`-attribuut van het
+CloudEvent dat het resultaat van een informatievraag bevat.
 
 ### Overzicht van identifiers
 
@@ -510,6 +551,9 @@ De samenwerkfunctie bepaalt onder andere:
 -   welke gegevens in de `data` van een CloudEvent worden opgenomen;
 -   welke domeinspecifieke validaties gelden;
 -   welke informatievragen beschikbaar zijn;
+-   of een asynchrone interactie een inhoudelijk resultaat oplevert;
+-   welke Resultaat-API daarvoor beschikbaar is;
+-   welke representatie het resultaat heeft;
 -   welke betekenis een queryresultaat heeft.
 
 Het generieke patroon bepaalt:
@@ -518,7 +562,7 @@ Het generieke patroon bepaalt:
 -   hoe een interactie wordt geïdentificeerd;
 -   hoe de verwerking asynchroon plaatsvindt;
 -   hoe de status van een interactie kan worden opgevraagd;
--   hoe een queryresultaat als CloudEvent wordt teruggegeven.
+-   hoe een inhoudelijk resultaat via een Resultaat-API kan worden opgevraagd.
 
 ## Herhaald opvragen van de status
 
@@ -551,19 +595,6 @@ de betreffende toepassing.
 Het doel van een retry-strategie is om onnodige belasting van de
 Status-API te voorkomen, terwijl de aanbieder de status van de
 interactie kan blijven volgen.
-
-## Nog vast te stellen
-
-De volgende onderwerpen worden verder uitgewerkt:
-
--   definitieve API-URL's;
--   exacte HTTP-contracten;
--   foutcodes;
--   autorisatie en authenticatie;
--   bewaartermijnen van interactiegegevens;
--   afspraken rondom het opnieuw aanbieden van een CloudEvent;
--   de concrete structuur van informatievragen per samenwerkfunctie;
--   de concrete structuur van queryresultaten.
 
 ## Validatie van payloads
 
