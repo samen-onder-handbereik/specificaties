@@ -29,6 +29,12 @@
 		content: "\a";
 		white-space: pre;
 	}
+
+	/* Verberg de standaard versieblokken van de Logius-ReSpec-template. Misschien niet de meeste elegante oplossing, maar het moest maar even zo. */
+	.head dl dt:nth-of-type(-n+2),
+	.head dl dt:nth-of-type(-n+2) + dd {
+		display: none;
+	}
   </style>
 </head>
 
