@@ -3,7 +3,8 @@
 # Deze OpenAPI-specificatie beschrijft het generieke mechanisme voor:
 # - het aanbieden van CloudEvents;
 # - het asynchroon verwerken van interacties;
-# - het opvragen van de status van een interactie.
+# - het opvragen van de status van een interactie;
+# - het ophalen van het resultaat van een interactie.
 #
 # De inhoudelijke betekenis van specifieke gebeurtenissen wordt bepaald door
 # de betreffende samenwerkfunctie. Deze specificatie beschrijft uitsluitend
@@ -13,11 +14,12 @@ openapi: 3.1.0
 
 info:
   title: Generieke Asynchrone Interactie API
-  version: 1.1.0
+  version: 1.2.0
   description: |
     Generieke API voor:
     - het aanbieden van CloudEvents;
-    - het volgen van de status van asynchrone interacties.
+    - het volgen van de status van asynchrone interacties;
+    - het ophalen van het resultaat van een asynchrone interactie.
 
     Een samenwerkfunctie bepaalt welke CloudEvent-profielen worden gebruikt
     en welke gegevens in de payload worden opgenomen.
@@ -40,6 +42,12 @@ info:
     statuswaarde onderdeel van het concrete schemacontract en blijft het
     model bruikbaar voor codegeneratie.
 
+    Resultaatmodel:
+
+    Het resultaat van een asynchrone interactie wordt opgehaald via de
+    Resultaat API. De concrete structuur van het resultaat wordt bepaald door
+    de betreffende samenwerkfunctie en wordt als CloudEvent aangeboden.
+
     Voorbeelden:
 
     Voorbeelden zijn opgenomen op mediatype-niveau bij de betreffende
@@ -51,6 +59,8 @@ tags:
     description: Endpoint voor het aanbieden van CloudEvents.
   - name: Status API
     description: Endpoint voor het volgen van de status van asynchrone interacties.
+  - name: Resultaat API
+    description: Endpoint voor het ophalen van het resultaat van een asynchrone interactie.
 
 paths:
 
@@ -162,6 +172,38 @@ paths:
                         veld: "identifier"
                         reden: "Waarde ontbreekt"
 
+  /resultaten/{interactieId}:
+    get:
+      tags:
+        - Resultaat API
+      summary: Vraag resultaat van interactie op
+      description: |
+        Geeft het resultaat van een eerder aangeboden asynchrone interactie.
+
+        De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
+        Het resultaat wordt als CloudEvent aangeboden.
+
+        De concrete structuur en betekenis van het CloudEvent worden bepaald door het
+        CloudEvent-profiel van de betreffende samenwerkfunctie.
+      operationId: vraagResultaatOp
+
+      parameters:
+        - name: interactieId
+          in: path
+          required: true
+          description: Identifier van de asynchrone interactie.
+          schema:
+            type: string
+          example: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
+
+      responses:
+        '200':
+          description: Resultaat van de interactie als CloudEvent.
+          content:
+            application/cloudevents+json:
+              schema:
+                $ref: '#/components/schemas/CloudEvent'
+
 components:
 
   schemas:
@@ -254,12 +296,6 @@ components:
           description: Identificatie van de asynchrone interactie.
         status:
           const: OK
-        resultaat:
-          type: object
-          description: |
-            Optioneel resultaat. De structuur wordt vastgesteld door de
-            samenwerkfunctie.
-          additionalProperties: true
 
     StatusInProgress:
       type: object

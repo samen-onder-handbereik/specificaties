@@ -13,6 +13,14 @@ Zij bevatten informatie die nodig is voor notificatie, provenance, auditing
 en het opbouwen van een Knowledge graph.
 De volledige inhoud van een Uitkomst Overleg kan via de Inzage-API worden geraadpleegd.
 
+### Inzage-API
+
+De Inzage-API biedt toegang tot de volledige inhoud van een Uitkomst Overleg. De Inzage-API wordt gebruikt wanneer een deelnemer de inhoudelijke Uitkomst Overleg daadwerkelijk wil raadplegen.
+
+De Inzage-API maakt onderdeel uit van de specificatie van de samenwerkfunctie. Een implementatie van de Inzage-API moet voldoen aan de door Samen Onder Handbereik gedefinieerde [OpenAPI-specificatie UitkomstOverleg.yaml](yaml/UitkomstOverleg.yaml).
+
+Een `inzageUrl` die in een queryresultaat kan worden opgenomen, verwijst naar een resource die via deze Inzage-API kan worden geraadpleegd.
+
 De generieke wijze waarop asynchrone interacties, CloudEvents, status en
 resultaten technisch worden uitgewisseld, is beschreven in het generieke
 patroon voor asynchrone interacties. Deze specificatie beschrijft de
@@ -62,10 +70,6 @@ Voor dit CloudEvent geldt:
 Het event reconstrueert niet de oorspronkelijke gebeurtenis waarmee de
 gevonden informatie beschikbaar is gesteld.
 
-Vast uitgangspunt:
-
-De organisatie die een Uitkomst Overleg inziet wordt altijd vastgelegd.
-
 ## CloudEvent payload en PROV-JSONLD
 
 Het attribuut `data` van het CloudEvent bevat een PROV-JSONLD-graaf.
@@ -114,9 +118,16 @@ als `prov:Agent` opgenomen.
           "prov:Entity",
           "soh:UitkomstOverleg"
         ],
+        "soh:heeftBetrokkene": {
+          "@id": "urn:betrokkene:67890"
+        },
         "prov:wasGeneratedBy": {
           "@id": "urn:activity:beschikbaarstellen:12345"
         }
+      },
+      {
+        "@id": "urn:betrokkene:67890",
+        "@type": "soh:Betrokkene"
       },
       {
         "@id": "urn:activity:beschikbaarstellen:12345",
@@ -224,7 +235,7 @@ Type:
 - `soh:UitkomstOverleg`;
 - `prov:Entity`.
 
-Het domeinobject dat via de inzage-API beschikbaar wordt gesteld.
+Het domeinobject dat via de Inzage-API beschikbaar wordt gesteld.
 
 Eigenschappen:
 
@@ -303,6 +314,12 @@ Eigenschappen:
 
 Domeinrelatie waarmee een UitkomstOverleg aan een Betrokkene wordt
 gerelateerd.
+
+Deze relatie is nodig om informatievragen op Betrokkene te kunnen
+beantwoorden. Binnen deze samenwerkfunctie kan de Query-API worden gebruikt
+om Uitkomsten Overleg te zoeken waarbij een bepaalde Betrokkene betrokken is.
+De relatie tussen `UitkomstOverleg` en `Betrokkene` moet daarom in de
+Knowledge graph beschikbaar zijn.
 
 #### `prov:wasAssociatedWith`
 
@@ -419,10 +436,25 @@ Content-Type: application/cloudevents+json
 De response-body bevat vervolgens het CloudEvent met de PROV-JSON-LD-
 resultaatgraaf.
 
+Een informatievraag kan geen, één of meerdere Uitkomsten Overleg als
+resultaat opleveren. Wanneer meerdere Uitkomsten Overleg aan de
+informatievraag voldoen, worden deze als afzonderlijke
+`soh:UitkomstOverleg`-nodes in dezelfde resultaatgraaf opgenomen. Wanneer
+geen Uitkomsten Overleg aan de informatievraag voldoen, bevat de
+resultaatgraaf geen `soh:UitkomstOverleg`-nodes. De resultaatgraaf kan
+daarnaast andere relevante domeinobjecten, activiteiten, actoren en relaties
+bevatten.
+
 Een resultaatgraaf kan identificerende gegevens en, waar relevant, een
-`inzageUrl` bevatten waarmee de inhoudelijke resource via de inzage-API kan
+`inzageUrl` bevatten waarmee de inhoudelijke resource via de Inzage-API kan
 worden geraadpleegd. De precieze omvang en structuur van de resultaatgraaf
 worden bepaald door de informatievraag.
+
+Het uitvoeren van een informatievraag geldt niet als inzage in een Uitkomst
+Overleg. Een queryresultaat geeft aan welke informatie beschikbaar is en kan
+een verwijzing bevatten naar de inhoudelijke resource. Wanneer een deelnemer
+vervolgens de inhoudelijke Uitkomst Overleg via de Inzage-API raadpleegt,
+wordt deze inzage als afzonderlijke activiteit vastgelegd.
 
 Voorbeeld van een queryresultaat:
 
@@ -495,7 +527,7 @@ inzage-API kan worden geraadpleegd.
 
 De opbouw bestaat uit:
 
--   het basisadres van de inzage-API;
+-   het basisadres van de Inzage-API;
 -   het pad naar het resource-type;
 -   de identifier van de UitkomstOverleg-resource.
 

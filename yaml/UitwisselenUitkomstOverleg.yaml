@@ -15,18 +15,23 @@ openapi: 3.1.0
 
 info:
   title: Uitwisselen Uitkomst Overleg API
-  version: 1.1.0
+  version: 1.2.0
   description: |
     Samenwerkfunctie-specifieke contracten voor CloudEvents en Query API.
 
     Deze specificatie bevat:
     - de CloudEvent-profielen die binnen deze samenwerkfunctie worden gebruikt;
     - de structuur van de CloudEvent-payload;
-    - de Query API voor het bevragen van de beschikbare informatie.
+    - de Query API voor het asynchroon bevragen van de beschikbare informatie.
 
     De CloudEvent-profielen zijn opgenomen onder Components → Schemas.
     Het aanbieden van CloudEvents zelf gebeurt via de generieke
     Asynchrone Interactie API.
+
+    Een Query wordt asynchroon verwerkt. De Query API retourneert bij
+    acceptatie een interactieId. De status van de verwerking kan worden
+    opgevraagd via de Status API. Het resultaat wordt opgehaald via de
+    Resultaat API en wordt als CloudEvent aangeboden.
 
 externalDocs:
   description: Generieke Asynchrone Interactie API
@@ -47,19 +52,20 @@ paths:
         Zoekt beschikbare Uitkomsten Overleg in de Knowledge Graph.
 
         De Query API bevraagt de informatie die beschikbaar is gesteld
-        binnen de Knowledge Graph. Het antwoord wordt als CloudEvent
-        geretourneerd. De data van dit CloudEvent bevat de gevonden
-        informatie in PROV/JSON-LD-vorm.
+        binnen de Knowledge Graph.
+
+        Bij acceptatie wordt een interactieId geretourneerd. De status van
+        de verwerking kan worden opgevraagd via de Status API. Zodra de
+        verwerking is afgerond, kan het resultaat worden opgehaald via de
+        Resultaat API.
+
+        Het resultaat van de Query API is een CloudEvent. De data van dit
+        CloudEvent bevat de gevonden informatie in PROV/JSON-LD-vorm.
 
         De Query API reconstrueert daarmee geen oorspronkelijke
         beschikbaarstellings- of inzagegebeurtenis. Het CloudEvent is het
         antwoordformaat van de Query API; de PROV/JSON-LD-data beschrijft
         de gevonden informatie en de bijbehorende provenance.
-
-        Het HTTP-mediatype van de response is application/cloudevents+json.
-        De volledige HTTP-body is daarmee het CloudEvent. Het CloudEvent-
-        attribuut datacontenttype beschrijft het mediatype van data; voor de
-        PROV/JSON-LD-graaf is dat application/ld+json.
 
         Een POST wordt gebruikt zodat zoekcriteria, waaronder mogelijk
         gevoelige gegevens zoals een BSN, geen onderdeel vormen van de URL.
@@ -73,15 +79,17 @@ paths:
               $ref: '#/components/schemas/QueryRequest'
 
       responses:
-        '200':
-          description: Queryresultaat als CloudEvent met PROV/JSON-LD-data.
+        '202':
+          description: Query geaccepteerd voor asynchrone verwerking.
           content:
-            application/cloudevents+json:
+            application/json:
               schema:
-                $ref: '#/components/schemas/UitkomstOverlegQueryResultEvent'
+                $ref: './AsynchroneInteracties.yaml#/components/schemas/AcceptatieResponse'
               examples:
-                voorbeeld:
-                  $ref: '#/components/examples/UitkomstOverlegQueryResultEventVoorbeeld'
+                geaccepteerd:
+                  summary: Query geaccepteerd
+                  value:
+                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
 
 components:
 
@@ -316,9 +324,9 @@ components:
 
     UitkomstOverlegQueryResultEvent:
       description: |
-        CloudEvent-profiel voor het antwoord van de Query API.
+        CloudEvent-profiel voor het resultaat van de Query API.
 
-        De HTTP-response van de Query API is zelf een CloudEvent. De data
+        De Resultaat API retourneert het resultaat als CloudEvent. De data
         van dit CloudEvent bevat de gevonden Uitkomsten Overleg in
         PROV/JSON-LD-vorm, inclusief de provenance die bij de gevonden
         informatie beschikbaar is.
