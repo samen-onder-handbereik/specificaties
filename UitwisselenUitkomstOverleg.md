@@ -436,19 +436,18 @@ Content-Type: application/cloudevents+json
 De response-body bevat vervolgens het CloudEvent met de PROV-JSON-LD-
 resultaatgraaf.
 
-Een informatievraag kan geen, één of meerdere Uitkomsten Overleg als
-resultaat opleveren. Wanneer meerdere Uitkomsten Overleg aan de
-informatievraag voldoen, worden deze als afzonderlijke
-`soh:UitkomstOverleg`-nodes in dezelfde resultaatgraaf opgenomen. Wanneer
-geen Uitkomsten Overleg aan de informatievraag voldoen, bevat de
-resultaatgraaf geen `soh:UitkomstOverleg`-nodes. De resultaatgraaf kan
-daarnaast andere relevante domeinobjecten, activiteiten, actoren en relaties
-bevatten.
+Binnen deze samenwerkfunctie kan een informatievraag geen, één of
+meerdere Uitkomsten Overleg opleveren. Elke gevonden Uitkomst Overleg
+wordt als afzonderlijke `soh:UitkomstOverleg`-node in dezelfde
+resultaatgraaf opgenomen. Als geen Uitkomsten Overleg aan de
+informatieaanvraag voldoen, bevat de resultaatgraaf geen
+`soh:UitkomstOverleg`-nodes.
 
 Een resultaatgraaf kan identificerende gegevens en, waar relevant, een
 `inzageUrl` bevatten waarmee de inhoudelijke resource via de Inzage-API kan
-worden geraadpleegd. De precieze omvang en structuur van de resultaatgraaf
-worden bepaald door de informatievraag.
+worden geraadpleegd. De resultaatgraaf kan ook andere relevante
+objecten en relaties bevatten. De precieze omvang en structuur zijn
+afhankelijk van de informatievraag.
 
 Het uitvoeren van een informatievraag geldt niet als inzage in een Uitkomst
 Overleg. Een queryresultaat geeft aan welke informatie beschikbaar is en kan

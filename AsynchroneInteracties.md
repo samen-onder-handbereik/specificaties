@@ -170,14 +170,19 @@ Status-API te volgen.
 Na ontvangst controleert de CloudEvent-API het aangeboden CloudEvent.
 
 Wanneer het CloudEvent technisch kan worden geaccepteerd, retourneert de
-API een HTTP-response met status `202 Accepted`.
+API een HTTP-response met status `202 Accepted`. De response bevat het
+`interactieId` dat de geaccepteerde interactie identificeert.
+
+**Nader te bepalen: de wijze waarop het `interactieId` aan de aanbieder
+wordt teruggegeven. Vooralsnog wordt ervan uitgegaan dat dit gebeurt in
+de response-body.**
 
 De status `202 Accepted` betekent dat de interactie is geaccepteerd voor
 verdere asynchrone verwerking. De verwerking zelf hoeft op dat moment
 nog niet te zijn afgerond.
 
-De aanbieder kan vervolgens de Status-API gebruiken om de voortgang van
-de verwerking te volgen.
+De aanbieder kan vervolgens het `interactieId` gebruiken om via de
+Status-API de voortgang van de verwerking te volgen.
 
 Wanneer het CloudEvent niet kan worden geaccepteerd, retourneert de API
 een foutmelding volgens de geldende HTTP- en foutafhandelingsafspraken.
@@ -347,16 +352,20 @@ De Query-API biedt een generiek mechanisme voor het stellen van
 informatievragen aan de Knowledge graph.
 
 Een deelnemer gebruikt de Query-API om informatie op te vragen die
-binnen de Knowledge graph beschikbaar is.
+binnen de Knowledge graph beschikbaar is. Een informatievraag kan
+betrekking hebben op gegevens binnen één samenwerkfunctie, maar kan ook
+gegevens en relaties combineren die betrekking hebben op meerdere
+samenwerkfuncties.
 
-De concrete betekenis van een informatievraag en de wijze waarop deze
-wordt gespecificeerd, worden bepaald door de betreffende
-samenwerkfunctie.
+De Query-API is daarmee niet gebonden aan één specifiek type
+informatieobject of aan één samenwerkfunctie. De API biedt een generiek
+mechanisme voor het stellen van informatievragen aan de samenhangende
+Knowledge graph.
 
-De Query-API is daarmee geen API voor één specifiek type
-informatieobject. De API biedt een generiek mechanisme waarmee een
-samenwerkfunctie de informatievragen kan definiëren die binnen haar
-context relevant zijn.
+De inhoudelijke betekenis van een informatievraag en de wijze waarop
+deze technisch wordt gespecificeerd, worden vastgelegd in de daarvoor
+geldende afspraken. Daarbij kunnen zowel samenwerkfunctie-specifieke als
+generieke, functie-overstijgende informatievragen worden onderscheiden.
 
 ### Opvragen van informatie
 
@@ -389,24 +398,23 @@ specificatie.
 
 Het resultaat van een informatievraag wordt na succesvolle verwerking via de Resultaat-API opgevraagd en teruggegeven als een CloudEvent.
 
-Het CloudEvent vormt de generieke envelop voor het resultaat. De
-inhoudelijke representatie van het resultaat bevindt zich in het
-attribuut `data`.
+#### Representatie van het resultaat
 
-De `data` bevat altijd een PROV-JSON-LD-graaf die het resultaat van de
-informatievraag representeert. Deze graaf is gemodelleerd volgens het
-Knowledge graph-model en gebruikt PROV-concepten en, waar relevant,
-domeinspecifieke typen, eigenschappen en relaties.
+Het CloudEvent vormt de generieke envelop voor het resultaat. De inhoudelijke representatie van het resultaat bevindt zich in het attribuut `data`.
 
-Het resultaat is daarmee geen vaste JSON-resource of een lijst van
-resources. Het resultaat kan een relevante subgraaf van de Knowledge
-graph zijn. De resultaatgraaf is een representatie van het
-queryresultaat en hoeft niet alle eigenschappen of relaties van de
-corresponderende objecten in de Knowledge graph te bevatten.
+De `data` bevat altijd een PROV-JSON-LD-graaf die het resultaat van de informatievraag representeert. Deze graaf is gemodelleerd volgens het Knowledge graph-model en gebruikt PROV-concepten en, waar relevant, domeinspecifieke typen, eigenschappen en relaties.
 
-Welke nodes, eigenschappen en relaties in deze subgraaf worden
-opgenomen, is afhankelijk van de informatievraag en de afspraken van de
-betreffende samenwerkfunctie.
+De keuze voor een PROV-JSON-LD-graaf als generieke resultaatrepresentatie sluit aan bij het Knowledge graph-model van SOH, waarin zowel domeinobjecten als hun onderlinge relaties en de herkomst en totstandkoming van informatie kunnen worden weergegeven. Hierdoor kan één generieke resultaatrepresentatie worden gebruikt voor informatievragen die verschillende typen objecten, activiteiten, actoren en relaties opleveren. De concrete betekenis van de gevonden informatie wordt daarbij mede bepaald door de domeinspecifieke typen, eigenschappen en relaties.
+
+Een resultaat in de vorm van een PROV-JSON-LD-graaf kan complexer ogen dan een gebruikelijke JSON-representatie met een vaste verzameling gegevensvelden. Die structuur vloeit voort uit de keuze om binnen SOH niet alleen gegevens over domeinobjecten weer te geven, maar ook de relevante samenhang daartussen en de provenance van informatie. De resultaatgraaf kan daardoor meer informatie bevatten dan voor een specifieke toepassing nodig is. Een API-gebruiker hoeft die informatie niet noodzakelijk allemaal te verwerken, maar kan zich richten op de objecten, eigenschappen en relaties die voor zijn toepassing relevant zijn.
+
+#### Opbouw van de resultaatgraaf
+
+Het resultaat is geen vaste JSON-resource of een lijst van resources. Het kan een relevante subgraaf van de Knowledge graph zijn. De resultaatgraaf is een representatie van het queryresultaat en hoeft niet alle eigenschappen of relaties van de corresponderende objecten in de Knowledge graph te bevatten.
+
+Een informatievraag kan geen, één of meerdere domeinobjecten opleveren. Wanneer meerdere objecten aan de informatievraag voldoen, kunnen deze als afzonderlijke nodes in dezelfde resultaatgraaf worden opgenomen. De graaf kan daarnaast andere relevante objecten, activiteiten, actoren en relaties bevatten die nodig zijn om de resultaten en hun onderlinge samenhang te beschrijven.
+
+Welke nodes, eigenschappen en relaties in deze subgraaf worden opgenomen, is afhankelijk van de informatievraag en de afspraken die daarvoor gelden.
 
 Een resultaat kan bijvoorbeeld bestaan uit:
 
@@ -426,55 +434,33 @@ Een resultaat kan bijvoorbeeld bestaan uit:
 (:Entity:...)
 ```
 
-De niet nader gespecificeerde relaties (`...`) kunnen zowel
-PROV-relaties als domeinspecifieke relaties zijn. Welke relaties in een
-queryresultaat worden opgenomen, is afhankelijk van de informatievraag
-en de relevante samenhang binnen de Knowledge graph.
+De niet nader gespecificeerde relaties (`...`) kunnen zowel PROV-relaties als domeinspecifieke relaties zijn. Welke relaties in een queryresultaat worden opgenomen, is afhankelijk van de informatievraag en de relevante samenhang binnen de Knowledge graph.
 
-De precieze omvang en structuur van de resultaatgraaf worden niet door
-de generieke Query-API voorgeschreven.
+De precieze omvang en structuur van de resultaatgraaf worden niet door de generieke Query-API voorgeschreven.
 
-### PROV als semantisch model
+#### PROV als semantisch model
 
-Het gebruik van PROV voor queryresultaten betekent dat het resultaat
-niet alleen wordt beschouwd als een technische gegevensrepresentatie.
+Het gebruik van PROV voor queryresultaten betekent dat het resultaat niet alleen wordt beschouwd als een technische gegevensrepresentatie.
 
-De graph beschrijft de betekenis en samenhang van de gevonden
-informatie. Daarbij kunnen `prov:Entity`, `prov:Activity` en
-`prov:Agent` voorkomen, aangevuld met domeinspecifieke typen.
+De graaf beschrijft de betekenis en samenhang van de gevonden informatie. Daarbij kunnen `prov:Entity`, `prov:Activity` en `prov:Agent` voorkomen, aangevuld met domeinspecifieke typen.
 
-De relaties tussen de elementen kunnen zowel PROV-relaties als
-domeinspecifieke relaties zijn.
+De relaties tussen de elementen kunnen zowel PROV-relaties als domeinspecifieke relaties zijn.
 
-Het resultaat kan daardoor zowel informatie over domeinobjecten als
-informatie over de herkomst, totstandkoming of het gebruik daarvan
-bevatten.
+Het resultaat kan daardoor zowel informatie over domeinobjecten als informatie over de herkomst, totstandkoming of het gebruik daarvan bevatten.
 
-### CloudEvent als resultaatenvelop
+#### CloudEvent als resultaatenvelop
 
-Een queryresultaat wordt via de Resultaat-API teruggegeven als een CloudEvent.
-De HTTP-response heeft daarbij het mediatype
-`application/cloudevents+json`: de volledige HTTP-body is het CloudEvent.
+Een queryresultaat wordt via de Resultaat-API teruggegeven als een CloudEvent. De HTTP-response heeft daarbij het mediatype `application/cloudevents+json`: de volledige HTTP-body is het CloudEvent.
 
-Binnen dat CloudEvent geeft `datacontenttype` het mediatype van de `data`
-aan. Voor een resultaatgraaf in JSON-LD is dat bijvoorbeeld
-`application/ld+json`. `application/cloudevents+json` en
-`application/ld+json` beschrijven dus verschillende niveaus van de
-uitwisseling.
+Binnen dat CloudEvent geeft `datacontenttype` het mediatype van de `data` aan. Voor een resultaatgraaf in JSON-LD is dat bijvoorbeeld `application/ld+json`. `application/cloudevents+json` en `application/ld+json` beschrijven dus verschillende niveaus van de uitwisseling.
 
-Een Query-API-resultaat heeft dezelfde generieke CloudEvent-structuur
-als andere informatie die binnen SOH wordt uitgewisseld.
+Een Query-API-resultaat heeft dezelfde generieke CloudEvent-structuur als andere informatie die binnen SOH wordt uitgewisseld.
 
-Het CloudEvent identificeert het resultaat als event. De graph in `data`
-bevat de inhoudelijke representatie van het resultaat.
+Het CloudEvent identificeert het resultaat als event. De graaf in `data` bevat de inhoudelijke representatie van het resultaat.
 
-Het `CloudEvent.id` identificeert het CloudEvent zelf. Het is niet de
-identifier van een node in de resultaatgraaf en heeft geen andere
-betekenis binnen het domeinmodel. De identifiers van de resources in de
-resultaatgraaf worden binnen de PROV-JSON-LD-graaf zelf vastgelegd.
+Het `CloudEvent.id` identificeert het CloudEvent zelf. Het is niet de identifier van een node in de resultaatgraaf en heeft geen andere betekenis binnen het domeinmodel. De identifiers van de resources in de resultaatgraaf worden binnen de PROV-JSON-LD-graaf zelf vastgelegd.
 
-Voor een queryresultaat gelden de volgende uitgangspunten voor de
-CloudEvent-attributen:
+Voor een queryresultaat gelden de volgende uitgangspunten voor de CloudEvent-attributen:
 
 | Attribuut | Betekenis bij een queryresultaat |
 |---|---|
@@ -488,10 +474,7 @@ CloudEvent-attributen:
 | `dataschema` | Identificeert het schema dat de structuur van `data` beschrijft, wanneer daarvoor een schema wordt gebruikt. |
 | `data` | De PROV-JSON-LD-graaf die het queryresultaat representeert. |
 
-De concrete waarde van `source` en de naamgeving van `type` worden
-vastgesteld in de samenwerkfunctie-specifieke specificatie. Het
-generieke patroon schrijft daarvoor geen specifieke URI of eventtype
-voor.
+De concrete waarde van `source` en de naamgeving van `type` worden vastgesteld in de samenwerkfunctie-specifieke specificatie. Het generieke patroon schrijft daarvoor geen specifieke URI of eventtype voor.
 
 Een queryresultaat kan er bijvoorbeeld op hoofdlijnen als volgt uitzien:
 
@@ -514,9 +497,7 @@ Content-Type: application/cloudevents+json
 }
 ```
 
-Dit voorbeeld beschrijft uitsluitend de generieke structuur. De concrete
-waarden voor `source` en `type` en de inhoud van `data` worden
-vastgesteld in de samenwerkfunctie-specifieke specificatie.
+Dit voorbeeld beschrijft uitsluitend de generieke structuur. De concrete waarden voor `source` en `type` en de inhoud van `data` worden vastgesteld in de samenwerkfunctie-specifieke specificatie.
 
 ## Identificatie
 
@@ -562,18 +543,22 @@ Het generieke interactiepatroon beschrijft de technische wijze waarop
 asynchrone interacties worden afgehandeld.
 
 Een samenwerkfunctie bepaalt de inhoudelijke invulling van een
-interactie.
+interactie en de informatievragen die specifiek zijn voor die
+samenwerkfunctie.
 
 De samenwerkfunctie bepaalt onder andere:
 
 -   welke typen CloudEvents kunnen worden aangeboden;
 -   welke gegevens in de `data` van een CloudEvent worden opgenomen;
 -   welke domeinspecifieke validaties gelden;
--   welke informatievragen beschikbaar zijn;
+-   welke samenwerkfunctie-specifieke informatievragen beschikbaar zijn;
 -   of een asynchrone interactie een inhoudelijk resultaat oplevert;
 -   welke inhoud en representatie het resultaat heeft;
--   welke representatie het resultaat heeft;
 -   welke betekenis een queryresultaat heeft.
+
+Informatievragen die gegevens of relaties uit meerdere samenwerkfuncties
+combineren, vragen om generieke afspraken over de betekenis en samenhang
+van die gegevens. Deze afspraken worden op het niveau van SOH vastgelegd.
 
 Het generieke patroon bepaalt:
 
