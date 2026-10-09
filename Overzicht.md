@@ -1,25 +1,11 @@
-## Overzicht en verwijzingen
+## Overzicht van de specificaties
 
-Deze site bevat de technische specificaties van Samen onder Handbereik. De specificaties zijn onderverdeeld in stelselvoorzieningen, generieke technische specificaties en specificaties van afzonderlijke samenwerkfuncties.
+De technische specificaties zijn in drie groepen ondergebracht:
 
-### Stelselvoorzieningen
+- **Stelselvoorzieningen** ondersteunen de samenwerking en de technische infrastructuur van SOH. Zie [Stelselvoorzieningen](#secsv).
+- **Generieke technische specificaties** beschrijven afspraken en bouwstenen die voor meerdere samenwerkfuncties gelden, zoals CloudEvents, asynchrone interacties en het modelleren en opbouwen van de knowledge graph.
+- **Samenwerkfunctie-specificaties** beschrijven de concrete technische uitwerking per samenwerkfunctie, waaronder [Uitwisselen Melding](#mld) en [Uitwisselen Uitkomst Overleg](#uuo).
 
-Stelselvoorzieningen ondersteunen de samenwerking en de technische infrastructuur van Samen onder Handbereik.
+De generieke specificaties en de samenwerkfunctie-specificaties vullen elkaar aan. Voor een implementatie moeten daarom de generieke afspraken én de specificatie van de betreffende samenwerkfunctie worden geraadpleegd. De [Leeswijzer](#leeswijzer) helpt bepalen waar je voor een concrete vraag het beste kunt beginnen.
 
-### Generieke technische specificaties
-
-Deze specificaties beschrijven technische uitgangspunten en bouwstenen die voor meerdere samenwerkfuncties kunnen worden toegepast.
-
-- Toepassing van de CloudEvents-standaard
-- Asynchrone Interacties
-- Knowledge Graph Model
-- Graph Build Specifications
-
-### Samenwerkfuncties
-
-Deze specificaties beschrijven de technische uitwerking van afzonderlijke samenwerkfuncties.
-
-- Uitwisselen Melding
-- Uitwisselen Uitkomst Overleg
-
-Aanvullende specificaties worden opgenomen zodra deze beschikbaar zijn.
+Aanvullende samenwerkfunctie-specificaties worden opgenomen zodra deze beschikbaar zijn.
