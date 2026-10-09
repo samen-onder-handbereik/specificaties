@@ -44,19 +44,38 @@ synchrone verwerking niet passend of niet mogelijk is.
 | CloudEvent | Een gebeurtenis die conform de CloudEvents-specificatie wordt beschreven en aangeboden. |
 | interactieId | De unieke identificatie van een asynchrone interactie. Het interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking van de interactie. |
 | Status-API | De generieke API waarmee de actuele status van een asynchrone interactie kan worden opgevraagd. |
-| Query API | De API waarmee een informatievraag aan de Knowledge graph kan worden gesteld. |
+| Query-API | De API waarmee een informatievraag aan de Knowledge graph kan worden gesteld. |
 | Resultaat-API | De API waarmee het inhoudelijke resultaat van een succesvol verwerkte asynchrone interactie kan worden opgevraagd. |
+
+De bovenstaande tabel bevat de begrippen die relevant zijn voor het generieke patroon voor asynchrone interacties. Binnen een samenwerkfunctie kan daarnaast een Inzage-API beschikbaar zijn, waarmee de inhoud van een informatieobject daadwerkelijk wordt geraadpleegd.
 
 ## Generiek interactiepatroon
 
-Een asynchrone interactie verloopt volgens een vast patroon:
+### Rollen van de verschillende API’s
 
+Binnen SOH worden verschillende API’s onderscheiden, elk met een eigen rol bij het uitwisselen van gegevens en het afhandelen van interacties. Voor het initiëren van interacties zijn er twee mogelijkheden:
+
+- de CloudEvent-API, waarmee een deelnemer een CloudEvent aanbiedt;
+- de Query-API, waarmee een deelnemer een informatievraag stelt.
+
+Beide API’s kunnen gebruikmaken van het generieke patroon voor asynchrone interacties. Na acceptatie kan de afnemer de voortgang volgen via de Status-API. Wanneer de interactie een inhoudelijk resultaat oplevert, kan de afnemer dit na succesvolle verwerking ophalen via de Resultaat-API.
+
+Deze benamingen duiden de verschillende functies aan die de API’s binnen het interactiepatroon vervullen. Ze impliceren niet noodzakelijk dat voor elke functie een afzonderlijke OpenAPI-specificatie wordt opgesteld. De concrete indeling van de API-contracten wordt vastgelegd in de bijbehorende specificaties.
+
+De Query-API wordt altijd volgens het generieke patroon voor asynchrone interacties uitgevoerd. De afnemer kan na acceptatie de voortgang volgen via de Status-API en het inhoudelijke resultaat na succesvolle verwerking ophalen via de Resultaat-API.
+
+Voor de duidelijkheid: de Inzage-API valt buiten het bereik van dit generieke interactiepatroon. Deze API wordt in beginsel synchroon uitgevoerd: de afnemer ontvangt het gevraagde resultaat in het antwoord op de raadpleging. Alleen wanneer de eisen van een specifieke raadpleging daartoe aanleiding geven, kan hiervan worden afgeweken.
+
+
+### Verloop van een asynchrone interactie
+
+Een asynchrone interactie verloopt volgens een vast patroon.
 1.  Een deelnemer biedt een interactie aan via een API.
 2.  De API accepteert de interactie voor verdere verwerking.
 3.  De verwerking van de interactie vindt asynchroon plaats.
 4.  De deelnemer kan de voortgang van de verwerking volgen via de Status-API.
 5.  Na succesvolle afronding kan een inhoudelijk resultaat beschikbaar zijn.
-6.  Wanneer een inhoudelijk resultaat beschikbaar is, kan dit via een daarvoor aangewezen Resultaat-API worden opgevraagd.
+6.  Wanneer een inhoudelijk resultaat beschikbaar is, kan dit via de Resultaat-API worden opgevraagd.
 
 ``` text
 Initiator
@@ -83,19 +102,19 @@ Asynchrone verwerking
         inhoudelijk resultaat
 ```
 
-Niet iedere asynchrone interactie hoeft een inhoudelijk resultaat op te leveren. De betreffende samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en via welke Resultaat-API dit kan worden opgevraagd.
+Niet iedere asynchrone interactie hoeft een inhoudelijk resultaat op te leveren. De betreffende samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en wat de inhoud en representatie van dat resultaat zijn. Wanneer een resultaat beschikbaar is, kan dit via de Resultaat-API worden opgevraagd.
 
-## CloudEvent API
+## CloudEvent-API
 
 ### Doel
 
-De CloudEvent API biedt de mogelijkheid om een CloudEvent aan te bieden
+De CloudEvent-API biedt de mogelijkheid om een CloudEvent aan te bieden
 binnen het generieke interactiepatroon.
 
 Een deelnemer gebruikt deze API om een interactie te initiëren. Na
 acceptatie wordt de verdere verwerking asynchroon uitgevoerd.
 
-De CloudEvent API is verantwoordelijk voor:
+De CloudEvent-API is verantwoordelijk voor:
 
 -   het ontvangen van het CloudEvent;
 -   het uitvoeren van technische controles;
@@ -148,7 +167,7 @@ Status-API te volgen.
 
 ### Acceptatie van een interactie
 
-Na ontvangst controleert de CloudEvent API het aangeboden CloudEvent.
+Na ontvangst controleert de CloudEvent-API het aangeboden CloudEvent.
 
 Wanneer het CloudEvent technisch kan worden geaccepteerd, retourneert de
 API een HTTP-response met status `202 Accepted`.
@@ -312,7 +331,7 @@ Voorbeeld:
 GET https://<host>/api/resultaat/{interactieId}
 ```
 
-De exacte URL, HTTP-methode en structuur van de response worden vastgesteld in de technische API-specificatie van de betreffende samenwerkfunctie.
+De generieke werking en het technische contract van de Resultaat-API worden vastgelegd in de generieke API-specificatie. De samenwerkfunctie-specifieke afspraken bepalen of een resultaat beschikbaar wordt gesteld en beschrijven de inhoud en representatie van dat resultaat.
 
 Het resultaat kan pas worden opgevraagd nadat de Status-API heeft aangegeven dat de verwerking succesvol is afgerond met de status `OK`.
 
@@ -320,21 +339,21 @@ De Resultaat-API retourneert uitsluitend het inhoudelijke resultaat van de inter
 
 De vorm van het resultaat is afhankelijk van de betreffende samenwerkfunctie. Een resultaat kan bijvoorbeeld een CloudEvent zijn waarin de inhoudelijke gegevens in het attribuut `data` zijn opgenomen.
 
-## Query API
+## Query-API
 
 ### Doel
 
-De Query API biedt een generiek mechanisme voor het stellen van
+De Query-API biedt een generiek mechanisme voor het stellen van
 informatievragen aan de Knowledge graph.
 
-Een deelnemer gebruikt de Query API om informatie op te vragen die
+Een deelnemer gebruikt de Query-API om informatie op te vragen die
 binnen de Knowledge graph beschikbaar is.
 
 De concrete betekenis van een informatievraag en de wijze waarop deze
 wordt gespecificeerd, worden bepaald door de betreffende
 samenwerkfunctie.
 
-De Query API is daarmee geen API voor één specifiek type
+De Query-API is daarmee geen API voor één specifiek type
 informatieobject. De API biedt een generiek mechanisme waarmee een
 samenwerkfunctie de informatievragen kan definiëren die binnen haar
 context relevant zijn.
@@ -413,7 +432,7 @@ queryresultaat worden opgenomen, is afhankelijk van de informatievraag
 en de relevante samenhang binnen de Knowledge graph.
 
 De precieze omvang en structuur van de resultaatgraaf worden niet door
-de generieke Query API voorgeschreven.
+de generieke Query-API voorgeschreven.
 
 ### PROV als semantisch model
 
@@ -443,7 +462,7 @@ aan. Voor een resultaatgraaf in JSON-LD is dat bijvoorbeeld
 `application/ld+json` beschrijven dus verschillende niveaus van de
 uitwisseling.
 
-Een Query API-resultaat heeft dezelfde generieke CloudEvent-structuur
+Een Query-API-resultaat heeft dezelfde generieke CloudEvent-structuur
 als andere informatie die binnen SOH wordt uitgewisseld.
 
 Het CloudEvent identificeert het resultaat als event. De graph in `data`
@@ -552,7 +571,7 @@ De samenwerkfunctie bepaalt onder andere:
 -   welke domeinspecifieke validaties gelden;
 -   welke informatievragen beschikbaar zijn;
 -   of een asynchrone interactie een inhoudelijk resultaat oplevert;
--   welke Resultaat-API daarvoor beschikbaar is;
+-   welke inhoud en representatie het resultaat heeft;
 -   welke representatie het resultaat heeft;
 -   welke betekenis een queryresultaat heeft.
 
@@ -562,7 +581,7 @@ Het generieke patroon bepaalt:
 -   hoe een interactie wordt geïdentificeerd;
 -   hoe de verwerking asynchroon plaatsvindt;
 -   hoe de status van een interactie kan worden opgevraagd;
--   hoe een inhoudelijk resultaat via een Resultaat-API kan worden opgevraagd.
+-   hoe een inhoudelijk resultaat via de Resultaat-API kan worden opgevraagd.
 
 ## Herhaald opvragen van de status
 
