@@ -448,6 +448,12 @@ De relaties tussen de elementen kunnen zowel PROV-relaties als domeinspecifieke 
 
 Het resultaat kan daardoor zowel informatie over domeinobjecten als informatie over de herkomst, totstandkoming of het gebruik daarvan bevatten.
 
+##### Gebruik van PROV-JSON-LD
+
+De combinatie van PROV en JSON-LD sluit aan bij bestaande ontwikkelingen op het gebied van gegevensuitwisseling en Linked Data. PROV is onderdeel van een door het W3C ontwikkelde familie van specificaties voor het beschrijven van de herkomst en totstandkoming van gegevens. Daarnaast is er een afzonderlijke specificatie voor de representatie van PROV in JSON-LD, gepubliceerd als W3C Member Submission. Deze beschrijft hoe PROV-informatie in JSON kan worden uitgewisseld en tegelijkertijd als Linked Data kan worden geïnterpreteerd.
+
+Ook is tooling beschikbaar voor het verwerken van JSON-LD en voor het inlezen en schrijven van PROV-JSON-LD. De keuze voor deze representatie bouwt daarmee voort op bestaande standaarden, specificaties en software-ondersteuning.
+
 #### CloudEvent als resultaatenvelop
 
 Een queryresultaat wordt via de Resultaat-API teruggegeven als een CloudEvent. De HTTP-response heeft daarbij het mediatype `application/cloudevents+json`: de volledige HTTP-body is het CloudEvent.
@@ -460,21 +466,14 @@ Het CloudEvent identificeert het resultaat als event. De graaf in `data` bevat d
 
 Het `CloudEvent.id` identificeert het CloudEvent zelf. Het is niet de identifier van een node in de resultaatgraaf en heeft geen andere betekenis binnen het domeinmodel. De identifiers van de resources in de resultaatgraaf worden binnen de PROV-JSON-LD-graaf zelf vastgelegd.
 
-Voor een queryresultaat gelden de volgende uitgangspunten voor de CloudEvent-attributen:
+Voor queryresultaten gelden, naast de algemene afspraken voor CloudEvents, de volgende specifieke afspraken:
 
-| Attribuut | Betekenis bij een queryresultaat |
-|---|---|
-| `specversion` | De versie van de CloudEvents-specificatie, bijvoorbeeld `1.0`. |
-| `id` | Unieke identifier van het CloudEvent. Deze wordt door de producer van het CloudEvent uitgegeven. |
-| `source` | Identificeert de partij of voorziening die het queryresultaat als CloudEvent produceert. |
-| `type` | Identificeert dat het CloudEvent een queryresultaat bevat. De concrete waarde wordt vastgesteld door de betreffende samenwerkfunctie. |
-| `time` | Tijdstip waarop het CloudEvent is geproduceerd. |
-| `subject` | Bevat het `interactieId` van de asynchrone informatievraag waarop het queryresultaat betrekking heeft. |
-| `datacontenttype` | Geeft het mediatype van de `data` aan, bijvoorbeeld `application/ld+json`. |
-| `dataschema` | Identificeert het schema dat de structuur van `data` beschrijft, wanneer daarvoor een schema wordt gebruikt. |
-| `data` | De PROV-JSON-LD-graaf die het queryresultaat representeert. |
+- Het attribuut `type` identificeert het CloudEvent als een queryresultaat. De concrete waarde wordt vastgesteld in de samenwerkfunctie-specifieke specificatie.
+- Het attribuut `subject` bevat het `interactieId` van de asynchrone informatievraag waarop het queryresultaat betrekking heeft.
+- Het attribuut `data` bevat de PROV-JSON-LD-graaf die het resultaat van de informatievraag representeert.
+- Het attribuut `datacontenttype` heeft voor deze resultaatgraaf de waarde `application/ld+json`.
 
-De concrete waarde van `source` en de naamgeving van `type` worden vastgesteld in de samenwerkfunctie-specifieke specificatie. Het generieke patroon schrijft daarvoor geen specifieke URI of eventtype voor.
+De concrete waarde van `source` wordt eveneens vastgesteld in de samenwerkfunctie-specifieke specificatie.
 
 Een queryresultaat kan er bijvoorbeeld op hoofdlijnen als volgt uitzien:
 
