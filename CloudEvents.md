@@ -47,7 +47,7 @@ Een CloudEvent heeft in hoofdlijnen de volgende structuur:
 ``` json
 {
   "specversion": "1.0",
-  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "id": "018f0f2a-7b3c-7def-8c4a-2f9d6b1e5a70",
   "source": "urn:nld:oin:<oin>:systeem:<systeemnaam>",
   "type": "nl.jzv.<samenwerkfunctie>.<gebeurtenis>",
   "time": "2026-03-03T10:15:30Z",
@@ -93,7 +93,7 @@ Identificeert het CloudEvent.
 -   De waarde is uniek binnen de context waarin de producer CloudEvents
     uitgeeft.
 -   Als standaard wordt gebruikgemaakt van een UUID, bij voorkeur
-    UUIDv4.
+    UUIDv7.
 -   Een eenmaal gebruikt `id` wordt niet opnieuw gebruikt, ook niet
     wanneer een CloudEvent opnieuw wordt aangeboden.
 
@@ -122,6 +122,41 @@ Voorbeeldstructuur voor een niet-overheidsorganisatie:
 
 De `source` verandert niet per gebeurtenis, maar is gekoppeld aan de
 producerende bron.
+
+## Herlevering en idempotente verwerking
+
+Bij het aanbieden en verwerken van CloudEvents kan het voorkomen dat
+hetzelfde CloudEvent meer dan één keer wordt aangeboden. Een herlevering
+kan bijvoorbeeld plaatsvinden wanneer de verzender geen bevestiging
+ontvangt en daardoor niet kan vaststellen of de eerdere aanbieding de
+ontvanger heeft bereikt of is verwerkt. Ook een tijdelijke storing of
+onbereikbaarheid van de ontvangende voorziening kan aanleiding zijn om
+de aanbieding later opnieuw te proberen. De eerste aanbieding kan in
+zo'n geval al zijn verwerkt, ook als de verzender daarvan geen bevestiging
+heeft ontvangen.
+
+Om te voorkomen dat een dergelijke herlevering leidt tot herhaalde
+bedrijfsacties, kan de ontvanger reeds verwerkte CloudEvents herkennen.
+
+Binnen SOH wordt hiervoor uitgegaan van de combinatie van de attributen
+`source` en `id`.
+
+### Afspraken
+
+- De ontvanger controleert bij ontvangst of de combinatie van `source`
+  en `id` al eerder is verwerkt.
+- Als deze combinatie al is verwerkt, wordt de aanbieding als duplicaat
+  behandeld en wordt dezelfde bedrijfsactie niet opnieuw uitgevoerd.
+- Bij een herlevering gebruikt de verzender dezelfde waarden voor
+  `source` en `id` als bij de oorspronkelijke aanbieding.
+- Voor een nieuwe gebeurtenis wordt een nieuw `id` gebruikt.
+- Voor deze controle is geen vergelijking van de overige CloudEvent-
+  attributen of van `data` vereist. Er wordt evenmin een hash van het
+  CloudEvent of van `data` gebruikt om duplicaten te herkennen.
+
+Deze afspraken leggen alleen vast hoe duplicaten op basis van de
+gebeurtenisidentificatie worden herkend. Ze doen geen uitspraak over het
+detecteren van afwijkende inhoud bij een herhaald aangeboden CloudEvent.
 
 ## `type`
 
