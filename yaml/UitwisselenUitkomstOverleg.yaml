@@ -2,7 +2,7 @@
 #
 # Dit document beschrijft:
 # - de CloudEvent-profielen voor Uitwisselen Uitkomst Overleg;
-# - de Query API.
+# - het endpoint voor het indienen van informatievragen (Query-API).
 #
 # Het aanbieden van CloudEvents zelf gebeurt via de generieke
 # Asynchrone Interactie API.
@@ -89,7 +89,56 @@ paths:
                 geaccepteerd:
                   summary: Query geaccepteerd
                   value:
-                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
+        '400':
+          description: De informatievraag bevat ongeldige invoer.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestProblemDetails'
+              example:
+                type: about:blank
+                title: Ongeldige informatievraag
+                status: 400
+                detail: Een of meer zoekcriteria zijn ongeldig.
+                errors:
+                  - in: body
+                    location: /beschikbaarVanaf
+                    detail: Moet een geldige datum-tijdwaarde zijn.
+                    code: date-time.format
+        '406':
+          description: De gevraagde response-indeling wordt niet ondersteund.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              example:
+                type: about:blank
+                title: Niet acceptabel
+                status: 406
+                detail: De gevraagde response-indeling wordt niet ondersteund.
+        '415':
+          description: Het request bevat geen ondersteund mediatype.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              example:
+                type: about:blank
+                title: Niet-ondersteund mediatype
+                status: 415
+                detail: Gebruik application/json voor de request-body.
+        '500':
+          description: Er is een onverwachte fout opgetreden bij het verwerken van de aanvraag.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              example:
+                type: about:blank
+                title: Interne serverfout
+                status: 500
+                detail: De aanvraag kon door een onverwachte fout niet worden verwerkt.
 
 components:
 
@@ -99,7 +148,7 @@ components:
       summary: CloudEvent waarmee een Uitkomst Overleg beschikbaar wordt gesteld
       value:
         specversion: "1.0"
-        id: "event-12345"
+        id: "123e4567-e89b-42d3-a456-426614174003"
         source: "urn:organisatie:voorbeeld"
         type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
         time: "2026-01-15T10:30:00Z"
@@ -120,10 +169,11 @@ components:
       summary: CloudEvent als antwoord van de Query API
       value:
         specversion: "1.0"
-        id: "event-query-12345"
+        id: "123e4567-e89b-42d3-a456-426614174004"
         source: "urn:organisatie:queryvoorziening"
         type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat"
         time: "2026-01-15T12:00:00Z"
+        subject: "987e6543-e21b-45d6-b789-426614174111"
         datacontenttype: "application/ld+json"
         dataschema: "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json"
         data:
@@ -150,6 +200,74 @@ components:
 
   schemas:
 
+    ProblemDetails:
+      description: |
+        Foutrepresentatie voor HTTP-foutresponses conform RFC 9457 en
+        de NLGov REST API Design Rules.
+      type: object
+      required:
+        - status
+        - title
+        - detail
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          default: about:blank
+          description: URI die het type probleem identificeert.
+        title:
+          type: string
+          description: Korte, menselijk leesbare samenvatting van het probleem.
+        status:
+          type: integer
+          description: HTTP-statuscode van deze foutresponse.
+        detail:
+          type: string
+          description: Menselijk leesbare uitleg van dit specifieke probleem.
+        instance:
+          type: string
+          format: uri-reference
+          description: URI-referentie naar deze specifieke probleeminstantie.
+      additionalProperties: true
+
+    BadRequestProblemDetails:
+      description: |
+        Problem Details voor een ongeldige aanvraag. De errors-lijst bevat
+        validatiefouten conform de NLGov REST API Design Rules.
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+        - type: object
+          required:
+            - errors
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                required:
+                  - in
+                  - detail
+                properties:
+                  in:
+                    type: string
+                    enum:
+                      - body
+                      - query
+                    description: Waar de fout optreedt.
+                  detail:
+                    type: string
+                    description: Menselijk leesbare beschrijving van de validatiefout.
+                  location:
+                    type: string
+                    description: JSON Pointer naar de ongeldige waarde in de request-body, of de naam van een queryparameter.
+                  index:
+                    type: integer
+                    minimum: 0
+                    description: Nulgebaseerde index bij herhaalde queryparameters.
+                  code:
+                    type: string
+                    description: Optionele machineleesbare foutcode.
+
     QueryRequest:
       description: |
         Zoekcriteria voor beschikbare Uitkomsten Overleg.
@@ -160,6 +278,11 @@ components:
           description: |
             BSN van de Betrokkene waarvoor beschikbare Uitkomsten Overleg
             worden gezocht.
+
+            Het BSN is een zoekcriterium en is niet hetzelfde als de identifier
+            waarmee het domeinobject Betrokkene in de Knowledge Graph wordt
+            geïdentificeerd. De waarde van die identifier hoeft dus niet gelijk
+            te zijn aan het BSN.
         beschikbaarVanaf:
           type: string
           format: date-time
@@ -187,7 +310,7 @@ components:
         gebeurt via de generieke Asynchrone Interactie API.
       examples:
         - specversion: "1.0"
-          id: "event-12345"
+          id: "123e4567-e89b-42d3-a456-426614174003"
           source: "urn:organisatie:voorbeeld"
           type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
           time: "2026-01-15T10:30:00Z"
@@ -238,7 +361,7 @@ components:
         provenance-informatie.
       examples:
         - specversion: "1.0"
-          id: "event-67890"
+          id: "123e4567-e89b-42d3-a456-426614174005"
           source: "urn:organisatie:inzage"
           type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien"
           time: "2026-01-15T11:00:00Z"
@@ -336,8 +459,14 @@ components:
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
         - type: object
+          required:
+            - subject
           properties:
             type:
               const: nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat
+            subject:
+              type: string
+              format: uuid
+              description: Het interactieId van de asynchrone informatievraag waarop het resultaat betrekking heeft.
             data:
               $ref: '#/components/schemas/ProvenancePayload'

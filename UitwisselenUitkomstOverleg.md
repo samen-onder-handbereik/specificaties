@@ -100,7 +100,7 @@ als `prov:Agent` opgenomen.
 ``` json
 {
   "specversion": "1.0",
-  "id": "urn:uuid:123e4567-e89b-12d3-a456-426614174000",
+  "id": "123e4567-e89b-42d3-a456-426614174000",
   "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
   "time": "2026-01-10T12:00:00Z",
@@ -157,7 +157,7 @@ als `prov:Agent` opgenomen.
 ``` json
 {
   "specversion": "1.0",
-  "id": "urn:uuid:987e6543-e21b-12d3-a456-426614174999",
+  "id": "987e6543-e21b-42d3-a456-426614174999",
   "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien",
   "time": "2026-01-11T09:30:00Z",
@@ -262,6 +262,8 @@ Eigenschappen:
 
 - `identifier`;
 - `type`.
+
+De `identifier` identificeert het domeinobject `Betrokkene` in de Knowledge graph en is niet hetzelfde als het burgerservicenummer (BSN). De Query-API gebruikt het BSN als zoekcriterium; het BSN hoeft daarom niet de waarde van `identifier` te zijn.
 
 #### Organisatie
 
@@ -383,6 +385,19 @@ De Query-API ondersteunt in ieder geval de volgende informatievragen:
 De concrete structuur van de informatievraag wordt vastgelegd in de
 technische API-specificatie van de samenwerkfunctie.
 
+#### Foutafhandeling
+
+HTTP-foutresponses volgen de NLGov REST API Design Rules en gebruiken
+`application/problem+json` met de verplichte velden `status`, `title` en
+`detail`. Een ongeldige informatievraag resulteert in `400 Bad Request`.
+Deze response bevat daarnaast een `errors`-lijst met de toepasselijke
+validatiefouten, conform de ADR.
+
+Een fout tijdens de asynchrone verwerking nadat de informatievraag is
+geaccepteerd, is geen HTTP-fout van de oorspronkelijke aanvraag. De initiator
+raadpleegt daarvoor de Status-API; de representatie van deze verwerkingsfout
+is beschreven in de generieke specificatie voor asynchrone interacties.
+
 ### Zoeken op beschikbaarheidsdatum
 
 Een deelnemer kan bijvoorbeeld vragen:
@@ -408,7 +423,7 @@ Voorbeeld request:
 
 ``` json
 {
-  "betrokkeneIdentifier": "urn:betrokkene:67890"
+  "burgerservicenummer": "123456789"
 }
 ```
 
@@ -460,7 +475,7 @@ Voorbeeld van een queryresultaat:
 ``` json
 {
   "specversion": "1.0",
-  "id": "urn:uuid:query-resultaat-12345",
+  "id": "123e4567-e89b-42d3-a456-426614174006",
   "source": "urn:organisatie:voorbeeld:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat",
   "time": "2026-01-10T12:05:00Z",

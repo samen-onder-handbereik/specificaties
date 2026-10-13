@@ -85,7 +85,13 @@ paths:
         wanneer data een PROV/JSON-LD-graaf bevat.
 
         Bij succesvolle acceptatie wordt de interactie geregistreerd en
-        wordt HTTP-status 202 Accepted geretourneerd.
+        wordt HTTP-status 202 Accepted geretourneerd. De response-body bevat
+        het uitgegeven interactieId.
+
+        HTTP-foutresponses met statuscode 4xx of 5xx gebruiken
+        application/problem+json en volgen RFC 9457 (Problem Details).
+        Bij 400 Bad Request bevat de response daarnaast een errors-lijst
+        met validatiefouten, overeenkomstig de NLGov REST API Design Rules.
       operationId: aanbiedCloudEvent
 
       requestBody:
@@ -99,7 +105,7 @@ paths:
                 summary: CloudEvent met samenwerkfunctie-specifieke payload
                 value:
                   specversion: "1.0"
-                  id: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+                  id: "123e4567-e89b-42d3-a456-426614174000"
                   source: "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg"
                   type: "nl.jzv.voorbeeld-samenwerkfunctie.voorbeeld-gebeurtenis"
                   time: "2026-01-15T09:30:00Z"
@@ -118,7 +124,11 @@ paths:
                 geaccepteerd:
                   summary: Interactie geregistreerd
                   value:
-                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /status/{interactieId}:
     get:
@@ -129,6 +139,16 @@ paths:
         Geeft de actuele status van een eerder aangeboden interactie.
 
         De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
+
+        Een ongeldige interactieId resulteert in HTTP 400 Bad Request.
+        Als de interactie niet bestaat, wordt HTTP 404 Not Found geretourneerd.
+        Deze HTTP-foutresponses gebruiken application/problem+json volgens RFC 9457.
+        Bij 400 Bad Request bevat de response een errors-lijst. De ADR specificeert
+        voor die lijst de waarden body en query voor het attribuut in; de concrete
+        API moet de foutlocatie daarom op die manier kunnen representeren.
+        Een status ERROR is daarentegen een verwerkingsstatus: het opvragen van
+        de status is geslaagd en wordt daarom als HTTP 200 met status ERROR
+        teruggegeven, niet als Problem Details-response.
       operationId: vraagStatusOp
 
       parameters:
@@ -138,11 +158,12 @@ paths:
           description: Identifier van de asynchrone interactie.
           schema:
             type: string
-          example: "urn:uuid:123e4567-e89b-12d3-a456-426614174000"
+            format: uuid
+          example: "123e4567-e89b-42d3-a456-426614174000"
 
       responses:
         '200':
-          description: Status van de interactie.
+          description: Status van de interactie, inclusief eventuele verwerkingsfout.
           content:
             application/json:
               schema:
@@ -151,26 +172,30 @@ paths:
                 ok:
                   summary: Verwerking succesvol afgerond
                   value:
-                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
                     status: OK
-                    resultaat:
-                      voorbeeld: "resultaat"
                 inProgress:
                   summary: Verwerking loopt nog
                   value:
-                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
                     status: IN_PROGRESS
                 fout:
                   summary: Verwerking beëindigd met een fout
                   value:
-                    interactieId: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
                     status: ERROR
                     resultaat:
-                      fout: "Validatie mislukt"
+                      fout: "Het verzoek voldoet niet aan de afspraken van de samenwerkfunctie."
                       typeFout: FUNCTIONEEL
                       info:
                         veld: "identifier"
                         reden: "Waarde ontbreekt"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /resultaten/{interactieId}:
     get:
@@ -183,6 +208,15 @@ paths:
         De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
         Het resultaat wordt als CloudEvent aangeboden.
 
+        Een ongeldige interactieId resulteert in HTTP 400 Bad Request.
+        Als de interactie niet bestaat, wordt HTTP 404 Not Found geretourneerd.
+        Deze HTTP-foutresponses gebruiken application/problem+json volgens RFC 9457.
+        Bij 400 Bad Request bevat de response een errors-lijst. De ADR specificeert
+        voor die lijst de waarden body en query voor het attribuut in; de concrete
+        API moet de foutlocatie daarom op die manier kunnen representeren.
+        De concrete API-specificatie bepaalt welke foutstatus wordt gebruikt als
+        er nog geen resultaat beschikbaar is.
+
         De concrete structuur en betekenis van het CloudEvent worden bepaald door het
         CloudEvent-profiel van de betreffende samenwerkfunctie.
       operationId: vraagResultaatOp
@@ -194,7 +228,8 @@ paths:
           description: Identifier van de asynchrone interactie.
           schema:
             type: string
-          example: "urn:uuid:987e6543-e21b-45d6-b789-426614174111"
+            format: uuid
+          example: "987e6543-e21b-45d6-b789-426614174111"
 
       responses:
         '200':
@@ -203,10 +238,106 @@ paths:
             application/cloudevents+json:
               schema:
                 $ref: '#/components/schemas/CloudEvent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
+  responses:
+    BadRequest:
+      description: Het request bevat ongeldige invoer.
+      content:
+        application/problem+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ProblemDetails'
+              - type: object
+                required: [errors]
+                properties:
+                  errors:
+                    type: array
+                    description: Geordende lijst van validatiefouten.
+                    items:
+                      $ref: '#/components/schemas/ValidationError'
+          example:
+            status: 400
+            title: Ongeldige invoer
+            detail: Een of meer velden in het request zijn ongeldig.
+            errors:
+              - in: body
+                location: "#/data/identifier"
+                code: required
+                detail: Dit veld is verplicht.
+    NotFound:
+      description: De gevraagde interactie of het resultaat bestaat niet.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            status: 404
+            title: Niet gevonden
+            detail: Er bestaat geen interactie met de opgegeven interactieId.
+    InternalServerError:
+      description: Er is een onverwachte fout opgetreden bij het verwerken van het request.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            status: 500
+            title: Interne serverfout
+            detail: Er is een onverwachte fout opgetreden.
 
   schemas:
+    ProblemDetails:
+      type: object
+      description: Foutrepresentatie volgens RFC 9457 en de NLGov REST API Design Rules.
+      required: [status, title, detail]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: URI die het type probleem identificeert.
+        title:
+          type: string
+          description: Korte, voor mensen leesbare samenvatting van het probleem.
+        status:
+          type: integer
+          description: HTTP-statuscode van deze foutresponse.
+        detail:
+          type: string
+          description: Uitleg van het probleem voor deze specifieke situatie.
+        instance:
+          type: string
+          format: uri-reference
+          description: URI die deze specifieke probleeminstantie identificeert.
+      additionalProperties: true
+
+    ValidationError:
+      type: object
+      required: [in, detail]
+      properties:
+        in:
+          type: string
+          enum: [body, query]
+          description: Waar de fout is aangetroffen.
+        detail:
+          type: string
+          description: Menselijk leesbare beschrijving van de validatiefout.
+        location:
+          type: string
+          description: JSON Pointer naar de ongeldige waarde of de naam van een queryparameter.
+        index:
+          type: integer
+          minimum: 0
+          description: Nulgebaseerde index bij meerdere queryparameters met dezelfde naam.
+        code:
+          type: string
+          description: Stabiele machineleesbare code voor de validatiefout.
 
     StatusValue:
       type: string
@@ -229,6 +360,7 @@ components:
             - "1.0"
         id:
           type: string
+          format: uuid
           description: |
             Unieke identifier van het CloudEvent.
             Het CloudEvent.id identificeert het CloudEvent zelf. De interactieId wordt
@@ -264,6 +396,7 @@ components:
       properties:
         interactieId:
           type: string
+          format: uuid
           description: |
             Identificatie van de asynchrone interactie.
             Deze waarde wordt uitgegeven door de voorziening die verantwoordelijk is
@@ -293,6 +426,7 @@ components:
       properties:
         interactieId:
           type: string
+          format: uuid
           description: Identificatie van de asynchrone interactie.
         status:
           const: OK
@@ -305,6 +439,7 @@ components:
       properties:
         interactieId:
           type: string
+          format: uuid
           description: Identificatie van de asynchrone interactie.
         status:
           const: IN_PROGRESS
@@ -318,6 +453,7 @@ components:
       properties:
         interactieId:
           type: string
+          format: uuid
           description: Identificatie van de asynchrone interactie.
         status:
           const: ERROR
