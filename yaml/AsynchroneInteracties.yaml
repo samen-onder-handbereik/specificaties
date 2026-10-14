@@ -14,7 +14,7 @@ openapi: 3.1.0
 
 info:
   title: Generieke Asynchrone Interactie API
-  version: 1.2.0
+  version: 2.0.0
   description: |
     Generieke API voor:
     - het aanbieden van CloudEvents;
@@ -44,9 +44,12 @@ info:
 
     Resultaatmodel:
 
-    Het resultaat van een asynchrone interactie wordt opgehaald via de
-    Resultaat API. De concrete structuur van het resultaat wordt bepaald door
-    de betreffende samenwerkfunctie en wordt als CloudEvent aangeboden.
+    De interactie wordt opgevraagd via GET /interacties/{interactieId}; deze
+    resource bevat onder meer de actuele verwerkingsstatus. Een eventueel
+    resultaat is een gerelateerde resource via
+    GET /interacties/{interactieId}/resultaat. De concrete structuur van het
+    resultaat wordt bepaald door de betreffende samenwerkfunctie en wordt als
+    CloudEvent aangeboden.
 
     Voorbeelden:
 
@@ -57,10 +60,8 @@ info:
 tags:
   - name: CloudEvent API
     description: Endpoint voor het aanbieden van CloudEvents.
-  - name: Status API
-    description: Endpoint voor het volgen van de status van asynchrone interacties.
-  - name: Resultaat API
-    description: Endpoint voor het ophalen van het resultaat van een asynchrone interactie.
+  - name: Interacties
+    description: Endpoints voor het opvragen van een interactie, de status en een eventueel resultaat.
 
 paths:
 
@@ -130,15 +131,13 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /status/{interactieId}:
+  /interacties/{interactieId}:
     get:
       tags:
-        - Status API
-      summary: Vraag status van interactie op
+        - Interacties
+      summary: Vraag interactie en status op
       description: |
-        Geeft de actuele status van een eerder aangeboden interactie.
-
-        De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
+        Geeft een eerder aangeboden interactie weer, met de actuele status van de verwerking. De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking. Het resultaat wordt via de gerelateerde resource /interacties/{interactieId}/resultaat opgevraagd.
 
         Een ongeldige interactieId resulteert in HTTP 400 Bad Request.
         Als de interactie niet bestaat, wordt HTTP 404 Not Found geretourneerd.
@@ -149,7 +148,7 @@ paths:
         Een status ERROR is daarentegen een verwerkingsstatus: het opvragen van
         de status is geslaagd en wordt daarom als HTTP 200 met status ERROR
         teruggegeven, niet als Problem Details-response.
-      operationId: vraagStatusOp
+      operationId: vraagInteractieOp
 
       parameters:
         - name: interactieId
@@ -197,16 +196,15 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /resultaten/{interactieId}:
+  /interacties/{interactieId}/resultaat:
     get:
       tags:
-        - Resultaat API
-      summary: Vraag resultaat van interactie op
+        - Interacties
+      summary: Vraag interactieresultaat op
       description: |
-        Geeft het resultaat van een eerder aangeboden asynchrone interactie.
+        Geeft het resultaat van een eerder aangeboden asynchrone interactie. Dit resultaat is een gerelateerde resource van /interacties/{interactieId}.
 
-        De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
-        Het resultaat wordt als CloudEvent aangeboden.
+        De interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking. Het resultaat wordt als CloudEvent aangeboden.
 
         Een ongeldige interactieId resulteert in HTTP 400 Bad Request.
         Als de interactie niet bestaat, wordt HTTP 404 Not Found geretourneerd.
@@ -215,7 +213,7 @@ paths:
         voor die lijst de waarden body en query voor het attribuut in; de concrete
         API moet de foutlocatie daarom op die manier kunnen representeren.
         De concrete API-specificatie bepaalt welke foutstatus wordt gebruikt als
-        er nog geen resultaat beschikbaar is.
+        er nog geen resultaat beschikbaar is. Dit is onderscheiden van een niet-bestaande interactie.
 
         De concrete structuur en betekenis van het CloudEvent worden bepaald door het
         CloudEvent-profiel van de betreffende samenwerkfunctie.

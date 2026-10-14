@@ -43,9 +43,9 @@ synchrone verwerking niet passend of niet mogelijk is.
 | Asynchrone interactie | Een interactie waarvan de verwerking na acceptatie buiten de oorspronkelijke HTTP-aanroep plaatsvindt. |
 | CloudEvent | Een gebeurtenis die conform de CloudEvents-specificatie wordt beschreven en aangeboden. |
 | interactieId | De unieke identificatie van een asynchrone interactie. Het interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking van de interactie. |
-| Status-API | De generieke API waarmee de actuele status van een asynchrone interactie kan worden opgevraagd. |
+| Interactieresource | De resource die via `GET /interacties/{interactieId}` wordt opgevraagd en onder meer de actuele verwerkingsstatus bevat. |
 | Query-API | Verzamelnaam voor de API-functionaliteit waarmee informatievragen aan de Knowledge graph kunnen worden gesteld. De concrete endpoints en querycontracten worden per samenwerkfunctie of voor generieke, functie-overstijgende bevragingen gespecificeerd. |
-| Resultaat-API | De API waarmee het inhoudelijke resultaat van een succesvol verwerkte asynchrone interactie kan worden opgevraagd. |
+| Resultaatresource | De gerelateerde resource die via `GET /interacties/{interactieId}/resultaat` het inhoudelijke resultaat van een asynchrone interactie beschikbaar stelt, indien de interactie een resultaat oplevert. |
 
 De bovenstaande tabel bevat de begrippen die relevant zijn voor het generieke patroon voor asynchrone interacties. Binnen een samenwerkfunctie kan daarnaast een Inzage-API beschikbaar zijn, waarmee de inhoud van een informatieobject daadwerkelijk wordt geraadpleegd.
 
@@ -60,9 +60,9 @@ Binnen SOH worden verschillende API-functies onderscheiden, elk met een eigen ro
 
 De term *Query-API* wordt in deze specificaties gebruikt als verzamelnaam voor die queryfunctionaliteit. De term duidt dus niet noodzakelijk één afzonderlijke, generieke API met één vast endpoint aan. De concrete endpoints en het technische contract voor het stellen van informatievragen worden vastgelegd in de specificatie van de betreffende samenwerkfunctie of, waar van toepassing, in een generieke specificatie voor functie-overstijgende bevragingen.
 
-Zowel het aanbieden van een CloudEvent als het stellen van een query kan gebruikmaken van het generieke patroon voor asynchrone interacties. Na acceptatie kan de afnemer de voortgang volgen via de Status-API. Wanneer de interactie een inhoudelijk resultaat oplevert, kan de afnemer dit na succesvolle verwerking ophalen via de Resultaat-API.
+Zowel het aanbieden van een CloudEvent als het stellen van een query kan gebruikmaken van het generieke patroon voor asynchrone interacties. Na acceptatie kan de afnemer de interactie opvragen via `GET /interacties/{interactieId}`; deze resource bevat onder meer de actuele status. Wanneer de interactie een inhoudelijk resultaat oplevert, kan de afnemer dit na succesvolle verwerking ophalen via de gerelateerde resource `GET /interacties/{interactieId}/resultaat`. De status- en resultaatfuncties zijn daarmee endpoints binnen de generieke Asynchrone Interactie API en geen afzonderlijke resourcecollecties.
 
-De Query-API-functie wordt in het hier beschreven patroon asynchroon uitgevoerd. De afnemer kan na acceptatie de voortgang volgen via de Status-API en het inhoudelijke resultaat na succesvolle verwerking ophalen via de Resultaat-API. De generieke OpenAPI-specificatie voor asynchrone interacties definieert daarvoor de generieke afhandeling, maar hoeft geen query-endpoint te bevatten.
+De Query-API-functie wordt in het hier beschreven patroon asynchroon uitgevoerd. De afnemer kan na acceptatie de voortgang volgen via de interactieresource en het inhoudelijke resultaat na succesvolle verwerking ophalen via de resultaatresource. De generieke OpenAPI-specificatie voor asynchrone interacties definieert daarvoor de generieke afhandeling, maar hoeft geen query-endpoint te bevatten.
 
 Voor de duidelijkheid: de Inzage-API valt buiten het bereik van dit generieke interactiepatroon. Deze API wordt in beginsel synchroon uitgevoerd: de afnemer ontvangt het gevraagde resultaat in het antwoord op de raadpleging. Alleen wanneer de eisen van een specifieke raadpleging daartoe aanleiding geven, kan hiervan worden afgeweken.
 
@@ -73,9 +73,9 @@ Een asynchrone interactie verloopt volgens een vast patroon.
 1.  Een deelnemer biedt een interactie aan via een API.
 2.  De API accepteert de interactie voor verdere verwerking.
 3.  De verwerking van de interactie vindt asynchroon plaats.
-4.  De deelnemer kan de voortgang van de verwerking volgen via de Status-API.
+4.  De deelnemer kan de voortgang van de verwerking volgen via de interactieresource.
 5.  Na succesvolle afronding kan een inhoudelijk resultaat beschikbaar zijn.
-6.  Wanneer een inhoudelijk resultaat beschikbaar is, kan dit via de Resultaat-API worden opgevraagd.
+6.  Wanneer een inhoudelijk resultaat beschikbaar is, kan dit via de resultaatresource worden opgevraagd.
 
 ``` text
 Initiator
@@ -88,7 +88,7 @@ API
     v
 Asynchrone verwerking
     |
-    +--> Status-API
+    +--> interactieresource
     |       |
     |       +--> IN_PROGRESS
     |       |
@@ -96,13 +96,13 @@ Asynchrone verwerking
     |       |
     |       +--> ERROR
     |
-    +--> Resultaat-API
+    +--> resultaatresource
             |
             v
         inhoudelijk resultaat
 ```
 
-Niet iedere asynchrone interactie hoeft een inhoudelijk resultaat op te leveren. De betreffende samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en wat de inhoud en representatie van dat resultaat zijn. Wanneer een resultaat beschikbaar is, kan dit via de Resultaat-API worden opgevraagd.
+Niet iedere asynchrone interactie hoeft een inhoudelijk resultaat op te leveren. De betreffende samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en wat de inhoud en representatie van dat resultaat zijn. Wanneer een resultaat beschikbaar is, kan dit via de resultaatresource worden opgevraagd.
 
 ## HTTP-foutafhandeling
 
@@ -117,7 +117,7 @@ Ongeldige invoer leidt tot HTTP `400 Bad Request`. De response bevat dan ook een
 
 Een element kan daarnaast `location`, `index` en `code` bevatten, volgens de ADR. Waar mogelijk worden alle vastgestelde validatiefouten in één response teruggegeven.
 
-Een fout die tijdens de **asynchrone verwerking** ontstaat, is iets anders dan een HTTP-fout bij het uitvoeren van een API-aanroep. Wanneer het opvragen van de status slaagt, retourneert de Status-API HTTP `200 OK` met `status: ERROR` en de bijbehorende foutinformatie. Deze foutinformatie is geen Problem Details-response; de Problem Details-afspraken gelden voor de HTTP-responses met statuscode `4xx` of `5xx`.
+Een fout die tijdens de **asynchrone verwerking** ontstaat, is iets anders dan een HTTP-fout bij het uitvoeren van een API-aanroep. Wanneer het opvragen van de status slaagt, retourneert de interactieresource HTTP `200 OK` met `status: ERROR` en de bijbehorende foutinformatie. Deze foutinformatie is geen Problem Details-response; de Problem Details-afspraken gelden voor de HTTP-responses met statuscode `4xx` of `5xx`.
 
 ## CloudEvent-API
 
@@ -178,7 +178,7 @@ identificatie van de asynchrone interactie.
 Bij acceptatie van de interactie wordt door de voorziening die
 verantwoordelijk is voor de verwerking een `interactieId` uitgegeven.
 Deze identificatie wordt gebruikt om de interactie later via de
-Status-API te volgen.
+interactieresource te volgen.
 
 ### Acceptatie van een interactie
 
@@ -193,7 +193,7 @@ verdere asynchrone verwerking. De verwerking zelf hoeft op dat moment
 nog niet te zijn afgerond.
 
 De aanbieder kan vervolgens het `interactieId` gebruiken om via de
-Status-API de voortgang van de verwerking te volgen.
+interactieresource de voortgang van de verwerking te volgen.
 
 Wanneer het CloudEvent niet kan worden geaccepteerd, retourneert de API
 een HTTP-foutresponse. HTTP-foutresponses met statuscode `4xx` of `5xx`
@@ -203,26 +203,23 @@ worden geretourneerd als `application/problem+json` en volgen RFC 9457
 `errors`-lijst met de vastgestelde validatiefouten. Als een client een
 ongeldig request aanbiedt, wordt `400 Bad Request` gebruikt.
 
-## Status-API
+## Interactieresource en status
 
 ### Doel
 
-De Status-API ondersteunt het volgen van een asynchrone interactie.
-
-Met deze API kan een deelnemer de actuele status van een eerder
-aangeboden interactie opvragen.
+De status wordt opgevraagd via de interactieresource. Met deze functie kan een deelnemer de actuele status van een eerder aangeboden interactie opvragen. Het endpoint is onderdeel van de generieke Asynchrone Interactie API; er is geen afzonderlijk statuspad.
 
 ### Opvragen van de status
 
-De status van een interactie wordt opgevraagd met het `interactieId`.
+De interactie wordt opgevraagd met het `interactieId`. De response bevat onder meer de actuele status van de verwerking.
 
 Voorbeeld:
 
 ``` http
-GET https://<host>/api/status/{interactieId}
+GET https://<host>/api/interacties/{interactieId}
 ```
 
-De Status-API retourneert de actuele status van de interactie. Als de
+Het interactie-endpoint retourneert de actuele status van de interactie. Als de
 `interactieId` syntactisch ongeldig is, retourneert de API `400 Bad Request`.
 Als geen interactie met de opgegeven identifier bestaat, retourneert de API
 `404 Not Found`. Deze HTTP-foutresponses gebruiken `application/problem+json`
@@ -236,13 +233,13 @@ Een statusresponse bevat de volgende gegevens:
 | `interactieId` | Identificeert de asynchrone interactie. |
 | `status` | Geeft de actuele toestand van de verwerking aan. |
 
-De Status-API retourneert geen inhoudelijk resultaat van de verwerking.
+De response van het interactie-endpoint bevat geen inhoudelijk resultaat van de verwerking.
 Een inhoudelijk resultaat wordt, wanneer daarvoor een API beschikbaar
 is, via die API opgevraagd.
 
 ### Verwerkingsstatussen
 
-De Status-API kent de volgende statussen:
+De interactieresource kent de volgende verwerkingsstatussen:
 
 | Status | Betekenis |
 |---|---|
@@ -282,10 +279,10 @@ Voorbeeld:
 De status `ERROR` geeft aan dat tijdens de verwerking een fout is
 opgetreden.
 
-Een fout kan een functionele of technische oorzaak hebben. De Status-API
+Een fout kan een functionele of technische oorzaak hebben. De interactieresource
 geeft in dat geval de foutclassificatie en, waar passend, aanvullende
 foutinformatie terug. Het inhoudelijke resultaat van de verwerking wordt
-niet via de Status-API teruggegeven.
+niet via de interactieresource teruggegeven.
 
 ### Functionele fout
 
@@ -314,7 +311,7 @@ Een mogelijke representatie van een functionele verwerkingsfout is:
 De structuur van `resultaat` is onderdeel van het technische API-contract.
 De optionele `info` bevat aanvullende informatie die bij het fouttype past.
 Dit is een fout tijdens de asynchrone verwerking, geen HTTP-foutresponse:
-het opvragen van de status is geslaagd en de Status-API retourneert daarom
+het opvragen van de status is geslaagd en de interactieresource retourneert daarom
 HTTP `200 OK`. De Problem Details-afspraken gelden voor HTTP-responses met
 statuscode `4xx` of `5xx`.
 
@@ -344,13 +341,13 @@ De structuur van `resultaat` is onderdeel van het technische API-contract.
 Ook deze fout wordt als verwerkingsstatus teruggegeven met HTTP `200 OK`;
 het is geen HTTP-foutresponse.
 
-## Resultaat-API
+## Resultaatresource
 
 ### Doel
 
-De Resultaat-API biedt de mogelijkheid om het inhoudelijke resultaat van een succesvol verwerkte asynchrone interactie op te vragen.
+Het resultaat van een asynchrone interactie wordt als gerelateerde resource aangeboden via het interactie-endpoint `/interacties/{interactieId}/resultaat`.
 
-De Resultaat-API wordt alleen gebruikt wanneer de betreffende asynchrone interactie een inhoudelijk resultaat oplevert. De samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en welke representatie dit resultaat heeft.
+De resultaatresource wordt alleen gebruikt wanneer de betreffende asynchrone interactie een inhoudelijk resultaat oplevert. De samenwerkfunctie bepaalt of een resultaat beschikbaar wordt gesteld en welke representatie dit resultaat heeft.
 
 ### Opvragen van het resultaat
 
@@ -359,14 +356,14 @@ Het resultaat wordt opgevraagd met het `interactieId` van de asynchrone interact
 Voorbeeld:
 
 ``` http
-GET https://<host>/api/resultaten/{interactieId}
+GET https://<host>/api/interacties/{interactieId}/resultaat
 ```
 
-De generieke werking en het technische contract van de Resultaat-API worden vastgelegd in de generieke API-specificatie. De samenwerkfunctie-specifieke afspraken bepalen of een resultaat beschikbaar wordt gesteld en beschrijven de inhoud en representatie van dat resultaat.
+De generieke werking en het technische contract van de resultaatresource worden vastgelegd in de generieke API-specificatie. De samenwerkfunctie-specifieke afspraken bepalen of een resultaat beschikbaar wordt gesteld en beschrijven de inhoud en representatie van dat resultaat.
 
-Het resultaat kan pas worden opgevraagd nadat de Status-API heeft aangegeven dat de verwerking succesvol is afgerond met de status `OK`. Als de `interactieId` syntactisch ongeldig is, retourneert de API `400 Bad Request`. Als de interactie niet bestaat, retourneert de API `404 Not Found`. Als de verwerking nog niet succesvol is afgerond of geen resultaat beschikbaar stelt, moet de concrete API-specificatie de toepasselijke foutstatus vastleggen. HTTP-foutresponses gebruiken `application/problem+json` en volgen RFC 9457 (Problem Details); bij `400 Bad Request` bevat de response ook de volgens de ADR vereiste `errors`-lijst.
+Het resultaat kan pas worden opgevraagd nadat de interactieresource aangeeft dat de verwerking succesvol is afgerond met de status `OK`. Als de `interactieId` syntactisch ongeldig is, retourneert de API `400 Bad Request`. Als de interactie niet bestaat, retourneert de API `404 Not Found`. Als de verwerking nog niet succesvol is afgerond of geen resultaat beschikbaar stelt, moet de concrete API-specificatie de toepasselijke foutstatus vastleggen. HTTP-foutresponses gebruiken `application/problem+json` en volgen RFC 9457 (Problem Details); bij `400 Bad Request` bevat de response ook de volgens de ADR vereiste `errors`-lijst.
 
-De Resultaat-API retourneert uitsluitend het inhoudelijke resultaat van de interactie. De actuele verwerkingsstatus wordt via de Status-API opgevraagd.
+De resultaatresource retourneert uitsluitend het inhoudelijke resultaat van de interactie. De actuele verwerkingsstatus wordt opgevraagd via `GET /interacties/{interactieId}`.
 
 De vorm van het resultaat is afhankelijk van de betreffende samenwerkfunctie. Een resultaat kan bijvoorbeeld een CloudEvent zijn waarin de inhoudelijke gegevens in het attribuut `data` zijn opgenomen.
 
@@ -407,7 +404,7 @@ van één generiek endpoint zoals `/api/query`.
 
 De informatievraag wordt volgens het hier beschreven patroon asynchroon
 verwerkt. Na acceptatie wordt een `interactieId` uitgegeven waarmee de
-initiator de verwerking via de Status-API kan volgen.
+initiator de verwerking via de interactieresource kan volgen.
 
 Een informatievraag kan bijvoorbeeld betrekking hebben op een persoon,
 een informatieobject, een activiteit of een combinatie daarvan.
@@ -423,7 +420,7 @@ specificatie.
 
 ### Resultaat van een informatievraag
 
-Het resultaat van een informatievraag wordt na succesvolle verwerking via de Resultaat-API opgevraagd en teruggegeven als een CloudEvent.
+Het resultaat van een informatievraag wordt na succesvolle verwerking via de resultaatresource opgevraagd en teruggegeven als een CloudEvent.
 
 #### Representatie van het resultaat
 
@@ -483,7 +480,7 @@ Ook is tooling beschikbaar voor het verwerken van JSON-LD en voor het inlezen en
 
 #### CloudEvent als resultaatenvelop
 
-Een queryresultaat wordt via de Resultaat-API teruggegeven als een CloudEvent. De HTTP-response heeft daarbij het mediatype `application/cloudevents+json`: de volledige HTTP-body is het CloudEvent.
+Een queryresultaat wordt via de resultaatresource teruggegeven als een CloudEvent. De HTTP-response heeft daarbij het mediatype `application/cloudevents+json`: de volledige HTTP-body is het CloudEvent.
 
 Binnen dat CloudEvent geeft `datacontenttype` het mediatype van de `data` aan. Voor een resultaatgraaf in JSON-LD is dat bijvoorbeeld `application/ld+json`. `application/cloudevents+json` en `application/ld+json` beschrijven dus verschillende niveaus van de uitwisseling.
 
@@ -544,7 +541,7 @@ staat het `interactieId` los van het `id` van het CloudEvent. Het
 CloudEvent `id` identificeert het CloudEvent zelf.
 
 Hetzelfde `interactieId` wordt gebruikt bij het opvragen van de status
-via de Status-API en wordt opgenomen in het `subject`-attribuut van het
+via de interactieresource en wordt opgenomen in het `subject`-attribuut van het
 CloudEvent dat het resultaat van een informatievraag bevat.
 
 ### Overzicht van identifiers
@@ -592,16 +589,16 @@ Het generieke patroon bepaalt:
 -   hoe een interactie wordt geïdentificeerd;
 -   hoe de verwerking asynchroon plaatsvindt;
 -   hoe de status van een interactie kan worden opgevraagd;
--   hoe een inhoudelijk resultaat via de Resultaat-API kan worden opgevraagd.
+-   hoe een inhoudelijk resultaat via de resultaatresource kan worden opgevraagd.
 
 ## Herhaald opvragen van de status
 
 ### Retry-strategie
 
-Wanneer de Status-API de status `IN_PROGRESS` retourneert, is de
+Wanneer de interactieresource de status `IN_PROGRESS` retourneert, is de
 verwerking van de interactie nog niet afgerond.
 
-De aanbieder kan de Status-API op een later moment opnieuw aanroepen met
+De aanbieder kan de interactieresource op een later moment opnieuw aanroepen met
 hetzelfde `interactieId`.
 
 Het opnieuw opvragen van de status wordt uitgevoerd volgens een
@@ -623,7 +620,7 @@ De gekozen retry-strategie kan afhankelijk zijn van de eigenschappen van
 de betreffende toepassing.
 
 Het doel van een retry-strategie is om onnodige belasting van de
-Status-API te voorkomen, terwijl de aanbieder de status van de
+interactieresource te voorkomen, terwijl de aanbieder de status van de
 interactie kan blijven volgen.
 
 ## Validatie van payloads

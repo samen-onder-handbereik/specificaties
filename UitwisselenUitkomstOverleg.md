@@ -55,7 +55,7 @@ Eventtype:
 `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`
 
 Dit event bevat het resultaat van een informatievraag. Het resultaat wordt
-na succesvolle asynchrone verwerking via de Resultaat-API opgevraagd. Het
+na succesvolle asynchrone verwerking via `GET /interacties/{interactieId}/resultaat` opgevraagd. Het
 CloudEvent bevat in `data` de PROV-JSON-LD-graaf met het queryresultaat en
 de beschikbare provenance.
 
@@ -395,7 +395,7 @@ validatiefouten, conform de ADR.
 
 Een fout tijdens de asynchrone verwerking nadat de informatievraag is
 geaccepteerd, is geen HTTP-fout van de oorspronkelijke aanvraag. De initiator
-raadpleegt daarvoor de Status-API; de representatie van deze verwerkingsfout
+raadpleegt daarvoor de interactieresource; de representatie van deze verwerkingsfout
 is beschreven in de generieke specificatie voor asynchrone interacties.
 
 ### Zoeken op beschikbaarheidsdatum
@@ -431,16 +431,16 @@ Voorbeeld request:
 
 Een informatievraag wordt asynchroon verwerkt. Na acceptatie ontvangt de
 initiator een `interactieId`. Met dit `interactieId` kan de initiator via de
-Status-API de verwerking volgen.
+interactieresource de verwerking volgen.
 
-Wanneer de status `OK` is, wordt het queryresultaat via de Resultaat-API
-opgevraagd. De Resultaat-API retourneert het queryresultaat als een
+Wanneer de status `OK` is, wordt het queryresultaat via `GET /interacties/{interactieId}/resultaat`
+opgevraagd. De resultaatresource retourneert het queryresultaat als een
 CloudEvent.
 
 Bijvoorbeeld:
 
 ``` http
-GET https://<host>/api/resultaat/<interactie-id>
+GET https://<host>/api/interacties/<interactie-id>/resultaat
 ```
 
 ``` http

@@ -30,8 +30,8 @@ info:
 
     Een Query wordt asynchroon verwerkt. De Query API retourneert bij
     acceptatie een interactieId. De status van de verwerking kan worden
-    opgevraagd via de Status API. Het resultaat wordt opgehaald via de
-    Resultaat API en wordt als CloudEvent aangeboden.
+    opgevraagd via GET /interacties/{interactieId}. Het resultaat wordt opgehaald via
+    GET /interacties/{interactieId}/resultaat en wordt als CloudEvent aangeboden.
 
 externalDocs:
   description: Generieke Asynchrone Interactie API
@@ -55,9 +55,9 @@ paths:
         binnen de Knowledge Graph.
 
         Bij acceptatie wordt een interactieId geretourneerd. De status van
-        de verwerking kan worden opgevraagd via de Status API. Zodra de
-        verwerking is afgerond, kan het resultaat worden opgehaald via de
-        Resultaat API.
+        de verwerking kan worden opgevraagd via GET /interacties/{interactieId}. Zodra de
+        verwerking succesvol is afgerond, kan het resultaat worden opgehaald via
+        GET /interacties/{interactieId}/resultaat.
 
         Het resultaat van de Query API is een CloudEvent. De data van dit
         CloudEvent bevat de gevonden informatie in PROV/JSON-LD-vorm.
@@ -449,7 +449,7 @@ components:
       description: |
         CloudEvent-profiel voor het resultaat van de Query API.
 
-        De Resultaat API retourneert het resultaat als CloudEvent. De data
+        De resultaatresource retourneert het resultaat als CloudEvent. De data
         van dit CloudEvent bevat de gevonden Uitkomsten Overleg in
         PROV/JSON-LD-vorm, inclusief de provenance die bij de gevonden
         informatie beschikbaar is.

@@ -318,32 +318,39 @@ De samenwerkfunctie bepaalt:
 
 # Relatie met asynchrone verwerking
 
-Het aanbieden en verwerken van CloudEvents verloopt volgens een generiek
-patroon.
+Het aanbieden en verwerken van CloudEvents verloopt volgens het generieke
+patroon voor asynchrone interacties.
 
-Een aanbieder levert een CloudEvent aan via de CloudEvent API. De
-verwerking vindt vervolgens asynchroon plaats.
-
-Het attribuut `id` van het CloudEvent identificeert het CloudEvent zelf
-en niet de asynchrone interactie die door het aanbieden van dit CloudEvent
-ontstaat.
+Een aanbieder levert een CloudEvent aan via de CloudEvent API. Na acceptatie
+vindt de verwerking asynchroon plaats. Het attribuut `id` van het CloudEvent
+identificeert het CloudEvent zelf en niet de asynchrone interactie die door
+het aanbieden van dit CloudEvent ontstaat.
 
 De voorziening die verantwoordelijk is voor de verwerking kent aan de
-asynchrone interactie een afzonderlijk `interactieId` toe. De status van
-de verwerking kan met dit `interactieId` via de Status-API worden gevolgd.
+asynchrone interactie een afzonderlijk `interactieId` toe. Met dit
+`interactieId` kan de aanbieder de interactieresource opvragen via
+`GET /interacties/{interactieId}`. Deze resource bevat onder meer de actuele
+verwerkingsstatus.
 
 # Samenhang met API's
 
-CloudEvents maken onderdeel uit van een breder patroon waarin
-verschillende API's worden onderscheiden.
+CloudEvents maken onderdeel uit van een breder patroon waarin verschillende
+API-functies worden onderscheiden.
 
-De generieke API's zijn:
+De generieke API-functies zijn:
 
--   CloudEvent API voor het aanbieden van CloudEvents;
--   Status-API voor het volgen van de verwerking.
+-   de CloudEvent API voor het aanbieden van CloudEvents;
+-   de interactieresource voor het opvragen van een interactie en de actuele
+    verwerkingsstatus;
+-   de resultaatresource voor het opvragen van een inhoudelijk resultaat,
+    wanneer de interactie een resultaat oplevert.
 
-Daarnaast kunnen samenwerkfuncties specifieke API's definiëren, zoals
-een Inzage-API of Query-API.
+De interactie- en resultaatfuncties zijn endpoints binnen de generieke
+Asynchrone Interactie API; ze vormen geen afzonderlijke status- of
+resultaat-API's.
+
+Daarnaast kunnen samenwerkfuncties specifieke API's definiëren, zoals een
+Inzage-API of Query-API.
 
 ## Relatie met samenwerkfunctie-specificaties
 
