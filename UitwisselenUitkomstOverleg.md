@@ -29,8 +29,21 @@ domeinspecifieke invulling voor Uitkomst Overleg.
 
 ## CloudEvents
 
-Binnen deze samenwerkfunctie zijn onder andere de volgende
-gebeurtenissen relevant.
+Deze samenwerkfunctie gebruikt verschillende CloudEvent-typen. Voor ieder
+CloudEvent-type is hieronder dezelfde opbouw gebruikt:
+
+- doel en betekenis;
+- CloudEvent-envelope;
+- opbouw van `data`;
+- beschrijving van de graph-objecten en relaties;
+- volledig voorbeeld;
+- eventuele aandachtspunten.
+
+De algemene betekenis en syntaxis van CloudEvents-attributen worden bepaald
+door CloudEvents 1.0. De tabellen hieronder beschrijven de aanvullende
+invulling voor deze samenwerkfunctie. De payloads bevatten geen volledige
+inhoud van een Uitkomst Overleg; die inhoud is via de Inzage-API te
+raadplegen.
 
 ### Uitkomst beschikbaar gesteld
 
@@ -38,72 +51,133 @@ Eventtype:
 
 `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`
 
-Dit event geeft aan dat een Uitkomst Overleg beschikbaar is gesteld.
+#### Doel en betekenis
 
-### Uitkomst ingezien
+Dit event meldt dat een bestaande Uitkomst Overleg beschikbaar is gesteld.
+De graph legt de beschikbaarstellingsactiviteit vast. De interne activiteit
+waarmee de Uitkomst Overleg oorspronkelijk is gegenereerd, valt buiten de
+scope van deze graph.
 
-Eventtype:
+#### CloudEvent-envelope
 
-`nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`
+De CloudEvent wordt als JSON-object geserialiseerd volgens CloudEvents 1.0.
 
-Dit event geeft aan dat een Uitkomst Overleg is geraadpleegd.
+| Attribuut | Verplichtheid in dit profiel | Invulling |
+|---|---|---|
+| `specversion` | Verplicht | De vaste waarde `1.0`. |
+| `id` | Verplicht | Unieke identificatie van dit CloudEvent binnen de context van `source`. Dit profiel schrijft UUIDv7 voor; dit is een aanvullende profielafspraak en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
+| `source` | Verplicht | URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
+| `type` | Verplicht | Exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`. |
+| `time` | Optioneel volgens CloudEvents; binnen dit profiel aanbevolen | Registratietijdstip als RFC 3339-datumtijd. Dit hoeft niet gelijk te zijn aan het tijdstip van de activiteit. |
+| `subject` | Niet voorgeschreven | Laat weg tenzij hiervoor een afzonderlijke afspraak wordt vastgesteld. |
+| `datacontenttype` | Verplicht door dit profiel (CloudEvents zelf vereist dit attribuut niet in alle gevallen) | `application/ld+json`. |
+| `dataschema` | Verplicht door dit profiel; dit is een aanvullende profielafspraak | `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. |
+| `data` | Verplicht | JSON-LD-document met de PROV-JSON-LD-graaf zoals hieronder beschreven. |
 
-### Uitkomst Overleg queryresultaat
+#### Opbouw van `data`
 
-Eventtype:
+`data` bevat één JSON-LD-document met `@context` en `@graph`. De context
+bevat minimaal deze prefixdefinities:
 
-`nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`
-
-Dit event bevat het resultaat van een informatievraag. Het resultaat wordt
-na succesvolle asynchrone verwerking via `GET /interacties/{interactieId}/resultaat` opgevraagd. Het
-CloudEvent bevat in `data` de PROV-JSON-LD-graaf met het queryresultaat en
-de beschikbare provenance.
-
-Voor dit CloudEvent geldt:
-
-| Attribuut | Betekenis |
+| Prefix | URI |
 |---|---|
-| `type` | `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat` |
-| `subject` | Het `interactieId` van de asynchrone informatievraag waarop het resultaat betrekking heeft. |
-| `data` | De PROV-JSON-LD-graaf die het queryresultaat representeert. |
+| `prov` | `http://www.w3.org/ns/prov#` |
+| `soh` | `https://samen-onder-handbereik.github.io/specificaties/schema/` |
 
-Het event reconstrueert niet de oorspronkelijke gebeurtenis waarmee de
-gevonden informatie beschikbaar is gesteld.
+Domeinspecifieke typen, eigenschappen en relaties worden met `soh:`
+geschreven; PROV-typen en -relaties met `prov:`. Gebruik geen onverklaarde
+ongeprefixte eigenschapsnamen.
 
-## CloudEvent payload en PROV-JSONLD
+De graph bevat precies één node voor elk van deze objecten:
 
-Het attribuut `data` van het CloudEvent bevat een PROV-JSONLD-graaf.
+- `UitkomstOverleg`;
+- `BeschikbaarStellenUitkomstOverleg`;
+- `Organisatie` die de activiteit uitvoert;
+- `Betrokkene` waarop de Uitkomst Overleg betrekking heeft.
 
-De payload bevat minimaal:
+Elk object heeft een eigen `@id`. Verwijzingen tussen nodes gebruiken
+`{"@id": "<identifier>"}` en moeten overeenkomen met de `@id` van het
+bedoelde object in de graph.
 
--   een Entity;
--   een Activity;
--   een Agent.
+#### Graph-objecten en relaties
 
-De inhoudelijke gegevens van de Uitkomst Overleg maken geen onderdeel
-uit van de CloudEvent payload.
+##### UitkomstOverleg
 
-Het attribuut `time` van het CloudEvent geeft het tijdstip aan waarop de
-gebeurtenis is geregistreerd. Het `tijdstip` van de bijbehorende
-provenance- Activity geeft, indien beschikbaar, het tijdstip aan waarop
-de activiteit daadwerkelijk heeft plaatsgevonden. Deze tijdstippen
-kunnen van elkaar verschillen.
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die de Uitkomst Overleg in de Knowledge graph identificeert. |
+| `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
+| `soh:heeftBetrokkene` | Verplicht. Verwijst naar de opgenomen Betrokkene-node. |
+| `soh:beschikbaarGesteldOp` | Optioneel. Het tijdstip/de datum waarop deze Uitkomst Overleg beschikbaar is gesteld, als RFC 3339-datumtijd. Als ook `soh:tijdstip` is opgenomen bij de activiteit, beschrijven beide eigenschappen hetzelfde beschikbaarstellingsmoment. |
+| `prov:wasGeneratedBy` | Niet gebruiken voor de beschikbaarstellingsactiviteit: die activiteit heeft de Uitkomst Overleg niet gegenereerd. |
 
-In de voorbeelden hieronder identificeert het CloudEvent-attribuut
-`source` het systeem dat de gebeurtenis registreert en het CloudEvent
-publiceert. Dit hoeft niet dezelfde partij te zijn als de organisatie die
-de activiteit heeft uitgevoerd. Die partij wordt in de provenance-graaf
-als `prov:Agent` opgenomen.
+De volledige inhoud en `inzageUrl` zijn niet vereist in dit event. Een
+`inzageUrl` kan deel uitmaken van een queryresultaat.
 
-### Voorbeeld: Uitkomst beschikbaar gesteld
+##### BeschikbaarStellenUitkomstOverleg
 
-``` json
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. Eigen URI die de provenance-activiteit identificeert. |
+| `@type` | Verplicht: zowel `prov:Activity` als `soh:BeschikbaarStellenUitkomstOverleg`. |
+| `soh:tijdstip` | Optioneel wanneer het daadwerkelijke tijdstip niet bekend of beschikbaar is. Indien aanwezig: RFC 3339-datumtijd en het tijdstip waarop de beschikbaarstellingsactiviteit plaatsvond. |
+| `prov:wasAssociatedWith` | Verplicht. Verwijst naar de Organisatie-node die de activiteit heeft uitgevoerd. |
+| `soh:steltBeschikbaar` | Voorgestelde domeinrelatie naar de UitkomstOverleg-node. Zolang deze relatie niet definitief is vastgesteld, is dit een conceptafspraak en geen definitief vocabulairecontract. |
+
+De activiteit stelt een reeds bestaande Uitkomst Overleg beschikbaar. De
+relatie `prov:wasGeneratedBy` wordt daarom niet gebruikt om deze activiteit
+aan de Entity te koppelen.
+
+##### Organisatie
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die de uitvoerende organisatie identificeert, bijvoorbeeld een afgesproken OIN-gebaseerde URN. |
+| `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
+
+De `@id` waarnaar `prov:wasAssociatedWith` verwijst, moet overeenkomen met
+de `@id` van deze node. De organisatie hoeft niet dezelfde te zijn als het
+systeem in het CloudEvent-attribuut `source`.
+
+##### Betrokkene
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die het Betrokkene-object in de Knowledge graph identificeert. Gebruik niet zonder afzonderlijke afspraak het BSN of een ander persoonsidentificatienummer als `@id`. |
+| `@type` | Verplicht: `soh:Betrokkene`. Dit type maakt het object niet automatisch tot `prov:Agent`. |
+| `soh:identificatieType` | Optioneel. Opnemen wanneer identificatiegegevens noodzakelijk en toegestaan zijn. Stabiele code voor het type identificatienummer, bijvoorbeeld `BSN` of `V-NUMMER`. |
+| `soh:identificatieWaarde` | Optioneel. Alleen opnemen samen met `soh:identificatieType`, wanneer identificatiegegevens noodzakelijk en toegestaan zijn. De waarde is een string. |
+| `soh:woonplaats` | Optioneel. Indien aanwezig, een tekstuele waarde. |
+
+De `@id` identificeert het Betrokkene-object en staat los van de combinatie
+van identificatietype en identificatiewaarde. Het opnemen van de Betrokkene-node
+vereist niet automatisch dat ook persoonsidentificatie wordt verstrekt. Neem
+persoonsgegevens alleen op voor zover dat noodzakelijk en toegestaan is. Als één
+van de identificatie-eigenschappen wordt opgenomen, moeten beide aanwezig zijn.
+
+#### Identifiers
+
+De volgende identifiers hebben verschillende betekenissen en mogen niet
+door elkaar worden gebruikt:
+
+- CloudEvent `id`: identificeert het event;
+- Activity `@id`: identificeert de beschikbaarstellingsactiviteit;
+- Entity `@id`: identificeert de Uitkomst Overleg;
+- Agent `@id`: identificeert de Organisatie;
+- Betrokkene `@id`: identificeert het Betrokkene-object.
+
+#### Volledig voorbeeld
+
+De URN's en waarden zijn fictief. `soh:steltBeschikbaar` is nog een voorstel
+en moet vóór vaststelling van dit profiel worden bevestigd.
+
+```json
 {
   "specversion": "1.0",
-  "id": "123e4567-e89b-42d3-a456-426614174000",
+  "id": "019b7a10-6c2d-7abc-8def-1234567890ab",
   "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
-  "time": "2026-01-10T12:00:00Z",
+  "time": "2026-10-15T10:30:00Z",
   "datacontenttype": "application/ld+json",
   "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
@@ -113,17 +187,16 @@ als `prov:Agent` opgenomen.
     },
     "@graph": [
       {
+        "@id": "urn:activity:beschikbaarstellen:12345",
+        "@type": ["prov:Activity", "soh:BeschikbaarStellenUitkomstOverleg"],
+        "soh:tijdstip": "2026-10-15T10:30:00Z",
+        "prov:wasAssociatedWith": {"@id": "urn:nld:oin:00000001823288444000"},
+        "soh:steltBeschikbaar": {"@id": "urn:uitkomst-overleg:12345"}
+      },
+      {
         "@id": "urn:uitkomst-overleg:12345",
-        "@type": [
-          "prov:Entity",
-          "soh:UitkomstOverleg"
-        ],
-        "soh:heeftBetrokkene": {
-          "@id": "urn:betrokkene:67890"
-        },
-        "prov:wasGeneratedBy": {
-          "@id": "urn:activity:beschikbaarstellen:12345"
-        }
+        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
+        "soh:heeftBetrokkene": {"@id": "urn:betrokkene:67890"}
       },
       {
         "@id": "urn:betrokkene:67890",
@@ -133,37 +206,103 @@ als `prov:Agent` opgenomen.
         "soh:woonplaats": "Deventer"
       },
       {
-        "@id": "urn:activity:beschikbaarstellen:12345",
-        "@type": [
-          "prov:Activity",
-          "soh:BeschikbaarStellenUitkomstOverleg"
-        ],
-        "tijdstip": "2026-01-10T12:00:00Z",
-        "prov:wasAssociatedWith": {
-          "@id": "urn:organisatie:voorbeeld"
-        }
-      },
-      {
         "@id": "urn:nld:oin:00000001823288444000",
-        "@type": [
-          "prov:Agent",
-          "soh:Organisatie"
-        ]
+        "@type": ["prov:Agent", "soh:Organisatie"]
       }
     ]
   }
 }
 ```
 
-### Voorbeeld: Uitkomst ingezien
+#### Nog te bevestigen ontwerpkeuzes
 
-``` json
+- **Domeinrelatie voor beschikbaarstelling:** bevestig de naam en betekenis van `soh:steltBeschikbaar`.
+- **Betrokkenegegevens:** het concept schrijft identificatietype en -waarde niet standaard verplicht voor. Bevestig per gebruikssituatie welke gegevens noodzakelijk en toegestaan zijn en of woonplaats mag worden opgenomen; beoordeel gegevensminimalisatie en autorisatie.
+- **Tijdstip:** bevestig of `soh:tijdstip` optioneel blijft wanneer het werkelijke tijdstip niet bekend is.
+- **Beschikbaarheidsdatum:** `soh:beschikbaarGesteldOp` is als optionele eigenschap bij de Entity opgenomen. Als deze én `soh:tijdstip` bij de Activity aanwezig zijn, moeten ze hetzelfde beschikbaarstellingsmoment beschrijven. Bevestig of deze dubbele representatie wenselijk is.
+
+### Uitkomst ingezien
+
+Eventtype:
+
+`nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`
+
+#### Doel en betekenis
+
+Dit event meldt dat een Uitkomst Overleg daadwerkelijk is geraadpleegd via
+de Inzage-API. Het uitvoeren van een informatievraag geldt niet als inzage;
+raadpleging van de inhoud wordt als afzonderlijke activiteit vastgelegd.
+
+#### CloudEvent-envelope
+
+| Attribuut | Verplichtheid in dit profiel | Invulling |
+|---|---|---|
+| `specversion` | Verplicht | De vaste waarde `1.0`. |
+| `id` | Verplicht | Unieke identificatie van dit CloudEvent binnen de context van `source`. Dit profiel schrijft UUIDv7 voor; dit is een aanvullende profielafspraak. |
+| `source` | Verplicht | URI-reference die het systeem identificeert dat het event registreert en publiceert. |
+| `type` | Verplicht | Exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`. |
+| `time` | Optioneel volgens CloudEvents; binnen dit profiel aanbevolen | Registratietijdstip als RFC 3339-datumtijd. |
+| `subject` | Niet voorgeschreven | Laat weg tenzij hiervoor een afzonderlijke afspraak wordt vastgesteld. |
+| `datacontenttype` | Verplicht door dit profiel (CloudEvents zelf vereist dit attribuut niet in alle gevallen) | `application/ld+json`. |
+| `dataschema` | Verplicht door dit profiel; dit is een aanvullende profielafspraak | `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. |
+| `data` | Verplicht | JSON-LD-document met de graph van de inzageactiviteit. |
+
+#### Opbouw van `data`
+
+`data` bevat `@context` met de prefixen `prov` en `soh` zoals hierboven
+beschreven, en een `@graph`. De graph bevat minimaal:
+
+- één `InzienUitkomstOverleg`-node;
+- één `UitkomstOverleg`-node waarnaar de activiteit verwijst;
+- één `Organisatie`-node die de inzage heeft uitgevoerd.
+
+Elk object heeft een eigen `@id`. Verwijzingen moeten overeenkomen met de
+`@id` van het bedoelde object in de graph.
+
+#### Graph-objecten en relaties
+
+##### InzienUitkomstOverleg
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. Eigen URI die de inzageactiviteit identificeert. |
+| `@type` | Verplicht: zowel `prov:Activity` als `soh:InzienUitkomstOverleg`. |
+| `soh:tijdstip` | Het daadwerkelijke tijdstip van inzage, als RFC 3339-datumtijd wanneer opgenomen. |
+| `prov:used` | Verwijst naar de `UitkomstOverleg` die is ingezien. |
+| `prov:wasAssociatedWith` | Verwijst naar de Organisatie die de inzage heeft uitgevoerd. |
+
+##### UitkomstOverleg
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die de geraadpleegde Uitkomst Overleg identificeert. |
+| `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
+
+##### Organisatie
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die de organisatie identificeert die de inzage heeft uitgevoerd. |
+| `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
+
+#### Identifiers
+
+Het CloudEvent-id, de Activity-id, de Entity-id en de Agent-id hebben elk
+een eigen functie. Het CloudEvent-id wordt niet hergebruikt als identifier
+van een graph-object.
+
+#### Volledig voorbeeld
+
+De waarden zijn fictief. De `@id` waarnaar `prov:wasAssociatedWith` verwijst,
+komt overeen met de opgenomen Organisatie-node.
+
+```json
 {
   "specversion": "1.0",
-  "id": "987e6543-e21b-42d3-a456-426614174999",
+  "id": "019b7a11-6c2d-7abc-8def-1234567890ab",
   "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien",
-  "time": "2026-01-11T09:30:00Z",
+  "time": "2026-10-15T11:00:00Z",
   "datacontenttype": "application/ld+json",
   "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
@@ -174,42 +313,162 @@ als `prov:Agent` opgenomen.
     "@graph": [
       {
         "@id": "urn:activity:inzien:67890",
-        "@type": [
-          "prov:Activity",
-          "soh:InzienUitkomstOverleg"
-        ],
-        "tijdstip": "2026-01-11T09:30:00Z",
-        "prov:used": {
-          "@id": "urn:uitkomst-overleg:12345"
-        },
-        "prov:wasAssociatedWith": {
-          "@id": "urn:organisatie:raadpleger"
-        }
+        "@type": ["prov:Activity", "soh:InzienUitkomstOverleg"],
+        "soh:tijdstip": "2026-10-15T11:00:00Z",
+        "prov:used": {"@id": "urn:uitkomst-overleg:12345"},
+        "prov:wasAssociatedWith": {"@id": "urn:nld:kvknr:09220932"}
       },
       {
         "@id": "urn:uitkomst-overleg:12345",
-        "@type": [
-          "prov:Entity",
-          "soh:UitkomstOverleg"
-        ]
+        "@type": ["prov:Entity", "soh:UitkomstOverleg"]
       },
       {
         "@id": "urn:nld:kvknr:09220932",
-        "@type": [
-          "prov:Agent",
-          "soh:Organisatie"
-        ]
+        "@type": ["prov:Agent", "soh:Organisatie"]
       }
     ]
   }
 }
 ```
 
-In dit voorbeeld meldt het systeem `urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg`
-dat de UitkomstOverleg is ingezien. De organisatie die de inzage
-daadwerkelijk heeft uitgevoerd, wordt in de provenance-graaf
-geïdentificeerd als `urn:nld:kvknr:09220932` en is daar getypeerd als
-`prov:Agent`.
+#### Aandachtspunten
+
+- Het CloudEvent `time` beschrijft de registratie van het event; `soh:tijdstip` beschrijft het daadwerkelijke tijdstip van inzage. Deze waarden kunnen verschillen.
+- De organisatie die de inzage uitvoert, hoeft niet dezelfde te zijn als het systeem dat het event publiceert.
+- De inhoud van de Uitkomst Overleg wordt niet in dit event opgenomen.
+
+### Uitkomst Overleg queryresultaat
+
+Eventtype:
+
+`nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`
+
+#### Doel en betekenis
+
+Dit event bevat het resultaat van een informatievraag. Na succesvolle
+asynchrone verwerking wordt het resultaat via
+`GET /interacties/{interactieId}/resultaat` opgevraagd. De response-resource
+retourneert het CloudEvent met de PROV-JSON-LD-resultaatgraaf. Het event
+reconstrueert niet de oorspronkelijke gebeurtenis waarmee gevonden informatie
+beschikbaar is gesteld.
+
+#### CloudEvent-envelope
+
+| Attribuut | Verplichtheid in dit profiel | Invulling |
+|---|---|---|
+| `specversion` | Verplicht | De vaste waarde `1.0`. |
+| `id` | Verplicht | Unieke identificatie van dit CloudEvent binnen de context van `source`. Dit profiel schrijft UUIDv7 voor; dit is een aanvullende profielafspraak. |
+| `source` | Verplicht | URI-reference die het systeem identificeert dat het event registreert en publiceert. |
+| `type` | Verplicht | Exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`. |
+| `time` | Optioneel volgens CloudEvents; binnen dit profiel aanbevolen | Registratietijdstip als RFC 3339-datumtijd. |
+| `subject` | Verplicht in dit profiel | Het `interactieId` van de asynchrone informatievraag waarop het resultaat betrekking heeft. |
+| `datacontenttype` | Verplicht door dit profiel (CloudEvents zelf vereist dit attribuut niet in alle gevallen) | `application/ld+json`. |
+| `dataschema` | Verplicht door dit profiel; dit is een aanvullende profielafspraak | `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. |
+| `data` | Verplicht | JSON-LD-document met de resultaatgraaf. |
+
+#### Opbouw van `data`
+
+`data` bevat een JSON-LD-document met `@context` en `@graph`. De context
+bevat minimaal de prefixen `prov` en `soh` zoals hierboven beschreven.
+De resultaatgraaf hangt af van de informatievraag en kan nul, één of meer
+`UitkomstOverleg`-nodes bevatten. Als een Betrokkene wordt opgenomen, wordt
+deze als afzonderlijke node beschreven en vanuit de betreffende
+`UitkomstOverleg` met `soh:heeftBetrokkene` verbonden.
+
+De graph bevat alleen de gegevens die nodig zijn om het resultaat van de
+informatieaanvraag te representeren en de beschikbare provenance te
+beschrijven. De volledige inhoud van de Uitkomst Overleg wordt niet in het
+event opgenomen.
+
+#### Graph-objecten en relaties
+
+##### UitkomstOverleg
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht voor elke opgenomen Uitkomst Overleg; URI die het object in de Knowledge graph identificeert. |
+| `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
+| `soh:heeftBetrokkene` | Opnemen wanneer de graaf de Betrokkene waarop de Uitkomst Overleg betrekking heeft bevat. Verwijst naar de Betrokkene-node. |
+| `soh:beschikbaarGesteldOp` | Optioneel. RFC 3339-datumtijd van het beschikbaarstellingsmoment. Als ook `soh:tijdstip` van de beschikbaarstellingsactiviteit is opgenomen, beschrijven beide eigenschappen hetzelfde moment. |
+| `soh:inzageUrl` | Optioneel. Verwijst naar de resource die via de Inzage-API kan worden geraadpleegd. |
+
+##### Betrokkene
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht voor elke opgenomen Betrokkene; identificeert het object in de Knowledge graph en is niet automatisch het persoonsidentificatienummer. |
+| `@type` | Verplicht: `soh:Betrokkene`. |
+| `soh:identificatieType` | Opnemen wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
+| `soh:identificatieWaarde` | Opnemen samen met `soh:identificatieType` wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
+| `soh:woonplaats` | Optioneel wanneer relevant voor de informatievraag en toegestaan om terug te geven. |
+
+##### Provenance-objecten
+
+De resultaatgraaf kan naast de domeinobjecten Activity- en Agent-nodes en
+relevante relaties bevatten wanneer deze provenance-informatie deel uitmaakt
+van het resultaat. Welke provenance-objecten worden opgenomen, hangt af van
+de informatievraag en de beschikbare gegevens. Dit event construeert niet
+opnieuw de oorspronkelijke beschikbaarstellingsgebeurtenis.
+
+#### Identifiers en relaties
+
+- Het CloudEvent `id` identificeert het event; `subject` identificeert de asynchrone informatievraag waarop het resultaat betrekking heeft.
+- De `@id` van iedere graph-node identificeert het betreffende domeinobject of provenance-object.
+- Verwijzingen tussen nodes moeten overeenkomen met de `@id` van de bedoelde node in dezelfde graaf, tenzij een verwijzing naar een extern geïdentificeerd object expliciet is toegestaan.
+- Een resultaat kan nul, één of meer `UitkomstOverleg`-nodes bevatten.
+
+#### Volledig voorbeeld
+
+Dit voorbeeld bevat één gevonden Uitkomst Overleg. De voorbeeldwaarden zijn
+fictief. De `soh:`-prefix wordt ook gebruikt voor de eigenschappen
+`beschikbaarGesteldOp` en `inzageUrl` zodat deze als termen in de JSON-LD-context
+zijn vastgelegd.
+
+```json
+{
+  "specversion": "1.0",
+  "id": "019b7a12-6c2d-7abc-8def-1234567890ab",
+  "source": "urn:organisatie:voorbeeld:systeem:uitkomstoverleg",
+  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat",
+  "time": "2026-10-15T11:05:00Z",
+  "subject": "<interactie-id>",
+  "datacontenttype": "application/ld+json",
+  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
+  "data": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#",
+      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
+    },
+    "@graph": [
+      {
+        "@id": "urn:uitkomst-overleg:12345",
+        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
+        "soh:heeftBetrokkene": {"@id": "urn:betrokkene:67890"},
+        "soh:beschikbaarGesteldOp": "2026-01-10",
+        "soh:inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
+      },
+      {
+        "@id": "urn:betrokkene:67890",
+        "@type": "soh:Betrokkene",
+        "soh:identificatieType": "BSN",
+        "soh:identificatieWaarde": "123456789",
+        "soh:woonplaats": "Deventer"
+      }
+    ]
+  }
+}
+```
+
+#### Aandachtspunten
+
+- De concrete inhoud van de resultaatgraaf wordt bepaald door de informatievraag.
+- Een resultaat kan geen `UitkomstOverleg`-nodes bevatten wanneer geen objecten aan de informatievraag voldoen.
+- Het uitvoeren van een informatievraag geldt niet als inzage. Een daadwerkelijke raadpleging via de Inzage-API wordt als afzonderlijke activiteit vastgelegd.
+- De eigenschappen `soh:beschikbaarGesteldOp` en `soh:inzageUrl` moeten worden afgestemd op de definitieve naamgeving in het informatiemodel. In dit concept zijn beide expliciet als `soh:`-termen geschreven zodat hun JSON-LD-betekenis vastligt.
+
+## Relatie met generieke CloudEvents-afspraken
+
+CloudEvents 1.0 bepaalt de generieke envelope. Deze specificatie legt daarbovenop profielafspraken vast, zoals UUIDv7 voor `id` en het verplicht opnemen van `datacontenttype` en `dataschema`. Die verplichtingen gelden binnen dit SOH-profiel; ze mogen niet worden gelezen als algemene eisen die CloudEvents aan ieder event stelt. Het attribuut `time` is volgens CloudEvents optioneel en wordt binnen dit profiel aanbevolen.
 
 ## Informatiemodel
 
@@ -360,7 +619,16 @@ UitkomstOverleg
 
 PROV-relatie tussen een Entity en de activiteit waardoor deze is ontstaan.
 
-De exacte toepassing op beschikbaarstelling wordt nog vastgesteld.
+Voor het eventtype `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`
+wordt deze relatie niet gebruikt om de beschikbaarstellingsactiviteit te
+verbinden met de Uitkomst Overleg. De activiteit die de Uitkomst Overleg
+oorspronkelijk heeft gegenereerd valt buiten de scope van deze graph.
+De voorgestelde relatie `soh:steltBeschikbaar` legt het verband vast tussen
+de beschikbaarstellingsactiviteit en de reeds bestaande Uitkomst Overleg;
+zie [de normatieve beschrijving van het event](#uitkomst-beschikbaar-gesteld).
+Deze relatie blijft een voorstel totdat zij in het vocabulaire en de Graph Build
+Specification is bevestigd. De graphmapping mag de beschikbaarstellingsactiviteit
+niet als de ontstaansactiviteit van de Entity modelleren.
 
 ### Overzicht informatiemodel
 
