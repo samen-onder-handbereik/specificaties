@@ -323,7 +323,7 @@ Domeinrelatie waarmee een UitkomstOverleg aan een Betrokkene wordt
 gerelateerd.
 
 Deze relatie is nodig om informatievragen op Betrokkene te kunnen
-beantwoorden. Binnen deze samenwerkfunctie kan de Query-API worden gebruikt
+beantwoorden. Binnen deze samenwerkfunctie kan de queryfunctionaliteit worden gebruikt
 om Uitkomsten Overleg te zoeken waarbij een bepaalde Betrokkene betrokken is.
 De relatie tussen `UitkomstOverleg` en `Betrokkene` moet daarom in de
 Knowledge graph beschikbaar zijn.
@@ -381,7 +381,7 @@ het betreffende domeinobject ook de typering `prov:Agent`.
 ### Vooraf gedefinieerde informatievragen
 
 Binnen deze samenwerkfunctie worden informatievragen vooraf gedefinieerd.
-De Query-API ondersteunt in ieder geval de volgende informatievragen:
+De queryfunctionaliteit ondersteunt in ieder geval de volgende informatievragen:
 
 - zoeken naar beschikbare Uitkomsten Overleg;
 - zoeken op Betrokkene;
@@ -573,7 +573,7 @@ https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.sc
 
 ### InzageUrl
 
-Een resultaat van de Query-API kan een `inzageUrl` bevatten.
+Een resultaat van een informatievraag kan een `inzageUrl` bevatten.
 
 De `inzageUrl` verwijst naar de resource Uitkomst Overleg die via de
 inzage-API kan worden geraadpleegd.

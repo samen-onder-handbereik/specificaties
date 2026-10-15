@@ -350,7 +350,8 @@ Asynchrone Interactie API; ze vormen geen afzonderlijke status- of
 resultaat-API's.
 
 Daarnaast kunnen samenwerkfuncties specifieke API's definiëren, zoals een
-Inzage-API of Query-API.
+Inzage-API. Ook kunnen zij queryfunctionaliteit bieden voor het stellen van
+informatievragen.
 
 ## Relatie met samenwerkfunctie-specificaties
 

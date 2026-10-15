@@ -2,7 +2,7 @@
 #
 # Dit document beschrijft:
 # - de CloudEvent-profielen voor Uitwisselen Uitkomst Overleg;
-# - het endpoint voor het indienen van informatievragen (Query-API).
+# - het endpoint voor het indienen van informatievragen.
 #
 # Het aanbieden van CloudEvents zelf gebeurt via de generieke
 # Asynchrone Interactie API.
@@ -17,19 +17,19 @@ info:
   title: Uitwisselen Uitkomst Overleg API
   version: 2.0.0
   description: |
-    Samenwerkfunctie-specifieke contracten voor CloudEvents en Query API.
+    Samenwerkfunctie-specifieke contracten voor CloudEvents en informatievragen.
 
     Deze specificatie bevat:
     - de CloudEvent-profielen die binnen deze samenwerkfunctie worden gebruikt;
     - de structuur van de CloudEvent-payload;
-    - de Query API voor het asynchroon bevragen van de beschikbare informatie.
+    - het endpoint voor het asynchroon stellen van informatievragen over de beschikbare informatie.
 
     De CloudEvent-profielen zijn opgenomen onder Components → Schemas.
     Het aanbieden van CloudEvents zelf gebeurt via de generieke
     Asynchrone Interactie API.
 
-    Een Query wordt asynchroon verwerkt. De Query API retourneert bij
-    acceptatie een interactieId. De status van de verwerking kan worden
+    Een informatievraag wordt asynchroon verwerkt. Bij acceptatie wordt
+    een interactieId geretourneerd. De status van de verwerking kan worden
     opgevraagd via GET /interacties/{interactieId}. Het resultaat wordt opgehaald via
     GET /interacties/{interactieId}/resultaat en wordt als CloudEvent aangeboden.
 
@@ -38,7 +38,7 @@ externalDocs:
   url: ./AsynchroneInteracties.yaml
 
 tags:
-  - name: Query API
+  - name: Queryfunctionaliteit
     description: Informatievragen op de Knowledge Graph.
 
 paths:
@@ -46,12 +46,12 @@ paths:
   /uitkomsten-overleg/query:
     post:
       tags:
-        - Query API
+        - Queryfunctionaliteit
       summary: Zoek beschikbare Uitkomsten Overleg
       description: |
         Zoekt beschikbare Uitkomsten Overleg in de Knowledge Graph.
 
-        De Query API bevraagt de informatie die beschikbaar is gesteld
+        De queryfunctionaliteit bevraagt de informatie die beschikbaar is gesteld
         binnen de Knowledge Graph.
 
         Bij acceptatie wordt een interactieId geretourneerd. De status van
@@ -59,12 +59,12 @@ paths:
         verwerking succesvol is afgerond, kan het resultaat worden opgehaald via
         GET /interacties/{interactieId}/resultaat.
 
-        Het resultaat van de Query API is een CloudEvent. De data van dit
+        Het resultaat van een informatievraag is een CloudEvent. De data van dit
         CloudEvent bevat de gevonden informatie in PROV/JSON-LD-vorm.
 
-        De Query API reconstrueert daarmee geen oorspronkelijke
+        De verwerking van een informatievraag reconstrueert daarmee geen oorspronkelijke
         beschikbaarstellings- of inzagegebeurtenis. Het CloudEvent is het
-        antwoordformaat van de Query API; de PROV/JSON-LD-data beschrijft
+        antwoordformaat voor de informatievraag; de PROV/JSON-LD-data beschrijft
         de gevonden informatie en de bijbehorende provenance.
 
         Een POST wordt gebruikt zodat zoekcriteria, waaronder mogelijk
@@ -190,7 +190,7 @@ components:
               "soh:woonplaats": "Deventer"
 
     UitkomstOverlegQueryResultEventVoorbeeld:
-      summary: CloudEvent als antwoord van de Query API
+      summary: CloudEvent als antwoord op een informatievraag
       value:
         specversion: "1.0"
         id: "123e4567-e89b-42d3-a456-426614174004"
@@ -553,7 +553,7 @@ components:
 
     UitkomstOverlegQueryResultEvent:
       description: |
-        CloudEvent-profiel voor het resultaat van de Query API.
+        CloudEvent-profiel voor het resultaat van een informatievraag.
 
         De resultaatresource retourneert het resultaat als CloudEvent. De data
         van dit CloudEvent bevat de gevonden Uitkomsten Overleg in

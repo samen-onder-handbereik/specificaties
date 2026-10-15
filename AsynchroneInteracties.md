@@ -44,7 +44,6 @@ synchrone verwerking niet passend of niet mogelijk is.
 | CloudEvent | Een gebeurtenis die conform de CloudEvents-specificatie wordt beschreven en aangeboden. |
 | interactieId | De unieke identificatie van een asynchrone interactie. Het interactieId wordt uitgegeven door de voorziening die verantwoordelijk is voor de verwerking van de interactie. |
 | Interactieresource | De resource die via `GET /interacties/{interactieId}` wordt opgevraagd en onder meer de actuele verwerkingsstatus bevat. |
-| Query-API | Verzamelnaam voor de API-functionaliteit waarmee informatievragen aan de Knowledge graph kunnen worden gesteld. De concrete endpoints en querycontracten worden per samenwerkfunctie of voor generieke, functie-overstijgende bevragingen gespecificeerd. |
 | Resultaatresource | De gerelateerde resource die via `GET /interacties/{interactieId}/resultaat` het inhoudelijke resultaat van een asynchrone interactie beschikbaar stelt, indien de interactie een resultaat oplevert. |
 
 De bovenstaande tabel bevat de begrippen die relevant zijn voor het generieke patroon voor asynchrone interacties. Binnen een samenwerkfunctie kan daarnaast een Inzage-API beschikbaar zijn, waarmee de inhoud van een informatieobject daadwerkelijk wordt geraadpleegd.
@@ -58,11 +57,11 @@ Binnen SOH worden verschillende API-functies onderscheiden, elk met een eigen ro
 - de CloudEvent-API, waarmee een deelnemer een CloudEvent aanbiedt;
 - queryfunctionaliteit, waarmee een deelnemer een informatievraag stelt.
 
-De term *Query-API* wordt in deze specificaties gebruikt als verzamelnaam voor die queryfunctionaliteit. De term duidt dus niet noodzakelijk één afzonderlijke, generieke API met één vast endpoint aan. De concrete endpoints en het technische contract voor het stellen van informatievragen worden vastgelegd in de specificatie van de betreffende samenwerkfunctie of, waar van toepassing, in een generieke specificatie voor functie-overstijgende bevragingen.
+De concrete endpoints en het technische contract voor het stellen van informatievragen worden vastgelegd in de specificatie van de betreffende samenwerkfunctie of, waar van toepassing, in een generieke specificatie voor functie-overstijgende bevragingen.
 
 Zowel het aanbieden van een CloudEvent als het stellen van een query kan gebruikmaken van het generieke patroon voor asynchrone interacties. Na acceptatie kan de afnemer de interactie opvragen via `GET /interacties/{interactieId}`; deze resource bevat onder meer de actuele status. Wanneer de interactie een inhoudelijk resultaat oplevert, kan de afnemer dit na succesvolle verwerking ophalen via de gerelateerde resource `GET /interacties/{interactieId}/resultaat`. De status- en resultaatfuncties zijn daarmee endpoints binnen de generieke Asynchrone Interactie API en geen afzonderlijke resourcecollecties.
 
-De Query-API-functie wordt in het hier beschreven patroon asynchroon uitgevoerd. De afnemer kan na acceptatie de voortgang volgen via de interactieresource en het inhoudelijke resultaat na succesvolle verwerking ophalen via de resultaatresource. De generieke OpenAPI-specificatie voor asynchrone interacties definieert daarvoor de generieke afhandeling, maar hoeft geen query-endpoint te bevatten.
+De queryfunctionaliteit wordt in het hier beschreven patroon asynchroon uitgevoerd. De afnemer kan na acceptatie de voortgang volgen via de interactieresource en het inhoudelijke resultaat na succesvolle verwerking ophalen via de resultaatresource. De generieke OpenAPI-specificatie voor asynchrone interacties definieert daarvoor de generieke afhandeling, maar hoeft geen query-endpoint te bevatten.
 
 Voor de duidelijkheid: de Inzage-API valt buiten het bereik van dit generieke interactiepatroon. Deze API wordt in beginsel synchroon uitgevoerd: de afnemer ontvangt het gevraagde resultaat in het antwoord op de raadpleging. Alleen wanneer de eisen van een specifieke raadpleging daartoe aanleiding geven, kan hiervan worden afgeweken.
 
@@ -367,15 +366,9 @@ De resultaatresource retourneert uitsluitend het inhoudelijke resultaat van de i
 
 De vorm van het resultaat is afhankelijk van de betreffende samenwerkfunctie. Een resultaat kan bijvoorbeeld een CloudEvent zijn waarin de inhoudelijke gegevens in het attribuut `data` zijn opgenomen.
 
-## Queryfunctionaliteit (Query-API)
+## Queryfunctionaliteit
 
 ### Doel en afbakening
-
-De term *Query-API* wordt in deze documentatie gebruikt als verzamelnaam
-voor de API-functionaliteit waarmee informatievragen aan de Knowledge
-graph kunnen worden gesteld. Het is niet per definitie één afzonderlijke
-API die voor alle samenwerkfuncties hetzelfde endpoint en hetzelfde
-requestmodel heeft.
 
 Een concrete samenwerkfunctie kan eigen query-endpoints en afspraken
 definiëren voor de informatievragen die zij ondersteunt. Ook kunnen
@@ -397,10 +390,6 @@ in de requestbody op te nemen, worden ze niet als URL-parameters
 doorgegeven. Dit voorkomt dat ze op die manier in URL's en URL-logs
 terechtkomen; het blijft uiteraard nodig om ook de requestbody zorgvuldig
 te beveiligen en niet onnodig te loggen.
-
-De in deze documentatie gebruikte term *Query-API* beschrijft de functie
-van het bevragen van de Knowledge graph en is op zichzelf geen definitie
-van één generiek endpoint zoals `/api/query`.
 
 De informatievraag wordt volgens het hier beschreven patroon asynchroon
 verwerkt. Na acceptatie wordt een `interactieId` uitgegeven waarmee de
@@ -460,7 +449,7 @@ Een resultaat kan bijvoorbeeld bestaan uit:
 
 De niet nader gespecificeerde relaties (`...`) kunnen zowel PROV-relaties als domeinspecifieke relaties zijn. Welke relaties in een queryresultaat worden opgenomen, is afhankelijk van de informatievraag en de relevante samenhang binnen de Knowledge graph.
 
-De precieze omvang en structuur van de resultaatgraaf worden niet door de generieke Query-API voorgeschreven.
+De precieze omvang en structuur van de resultaatgraaf worden bepaald door de informatievraag en de afspraken van de betreffende samenwerkfunctie.
 
 #### PROV als semantisch model
 
@@ -484,7 +473,7 @@ Een queryresultaat wordt via de resultaatresource teruggegeven als een CloudEven
 
 Binnen dat CloudEvent geeft `datacontenttype` het mediatype van de `data` aan. Voor een resultaatgraaf in JSON-LD is dat bijvoorbeeld `application/ld+json`. `application/cloudevents+json` en `application/ld+json` beschrijven dus verschillende niveaus van de uitwisseling.
 
-Een Query-API-resultaat heeft dezelfde generieke CloudEvent-structuur als andere informatie die binnen SOH wordt uitgewisseld.
+Een queryresultaat heeft dezelfde generieke CloudEvent-structuur als andere informatie die binnen SOH wordt uitgewisseld.
 
 Het CloudEvent identificeert het resultaat als event. De graaf in `data` bevat de inhoudelijke representatie van het resultaat.
 
