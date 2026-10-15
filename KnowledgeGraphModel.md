@@ -226,6 +226,30 @@ garandeert niet dat de volledige provenance-graaf semantisch correct is.
 Semantische validatie, bijvoorbeeld met SHACL, kan in een toekomstige
 uitbreiding worden toegevoegd.
 
+## Identificatie van personen
+
+Voor de identificatie van personen kunnen verschillende soorten
+identificatienummers worden gebruikt. Een persoonsidentificatie bestaat uit
+een typering en een identificatiewaarde. De typering geeft aan om welk soort
+identificatienummer het gaat, bijvoorbeeld een BSN of een V-nummer, en wordt
+uitgedrukt met een stabiele code uit een beheerde waardelijst.
+
+Dit uitgangspunt geldt voor de hele gegevensketen: de aanlevering van gegevens
+via CloudEvents, de opslag en modellering in de Knowledge graph, de bevraging
+van de Knowledge graph en de representatie van personen in queryresultaten.
+
+De identifier waarmee een persoon als object in de Knowledge graph wordt
+geïdentificeerd, staat los van de persoonsidentificatie. Een identificatienummer
+wordt dus niet automatisch gebruikt als `@id` van een `prov:Agent`,
+`prov:Entity` of ander domeinobject.
+
+Identificatiegegevens worden, waar ze onderdeel zijn van de aangeleverde of
+teruggegeven domeingegevens, bij de persoon gerepresenteerd als één combinatie
+van typering en waarde. Daarvoor wordt geen afzonderlijk benoemd domeinobject
+of PROV-element voor de identificatie geïntroduceerd. De
+samenwerkfunctie-specificatie bepaalt hoe deze combinatie wordt aangeleverd,
+opgeslagen, teruggegeven en gebruikt bij bevraging.
+
 ## Identificatie
 
 Binnen de Knowledge graph bestaan verschillende soorten identifiers:

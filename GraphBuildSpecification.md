@@ -104,6 +104,24 @@ domeinobject.
 
 De Entity krijgt een eigen identifier.
 
+### Identificatie van personen
+
+Voor de identificatie van een persoon wordt één combinatie van een typering
+en een identificatiewaarde gebruikt. De typering is een stabiele code uit een
+beheerde waardelijst, bijvoorbeeld `BSN` of `V-NUMMER`.
+
+De persoonsidentificatie staat los van de identifier van het domeinobject dat
+de persoon in de Knowledge graph representeert. De persoonsidentificatie wordt
+niet gebruikt als identifier van de graph-node en leidt niet op zichzelf tot
+een `prov:Activity`, `prov:Entity` of `prov:Agent`.
+
+Wanneer de identificatie deel uitmaakt van de aangeleverde domeingegevens,
+wordt de combinatie van typering en waarde als eigenschap van het
+domeinobject `Betrokkene` vastgelegd. Hiervoor wordt geen afzonderlijk
+benoemd domeinobject of PROV-element aangemaakt. De identifier van
+`Betrokkene` blijft onafhankelijk van de persoonsidentificatie.
+
+
 ## Eventtype naar graphmapping
 
 Een CloudEvent-type bepaalt welke provenance-activiteit en welke

@@ -127,7 +127,9 @@ als `prov:Agent` opgenomen.
       },
       {
         "@id": "urn:betrokkene:67890",
-        "@type": "soh:Betrokkene"
+        "@type": "soh:Betrokkene",
+        "soh:identificatieType": "BSN",
+        "soh:identificatieWaarde": "123456789"
       },
       {
         "@id": "urn:activity:beschikbaarstellen:12345",
@@ -261,9 +263,10 @@ provenance-graaf vervult.
 Eigenschappen:
 
 - `identifier`;
-- `type`.
+- `identificatieType`;
+- `identificatieWaarde`.
 
-De `identifier` identificeert het domeinobject `Betrokkene` in de Knowledge graph en is niet hetzelfde als het burgerservicenummer (BSN). De Query-API gebruikt het BSN als zoekcriterium; het BSN hoeft daarom niet de waarde van `identifier` te zijn.
+De `identifier` identificeert het domeinobject `Betrokkene` in de Knowledge graph. Deze identifier staat los van de persoonsidentificatie, die bestaat uit een typering en een identificatiewaarde. De typering is een stabiele code, bijvoorbeeld `BSN` of `V-NUMMER`.
 
 #### Organisatie
 
@@ -362,7 +365,7 @@ De exacte toepassing op beschikbaarstelling wordt nog vastgesteld.
 | Concept | Type | PROV-typering | Belangrijkste eigenschappen |
 |---|---|---|---|
 | UitkomstOverleg | `soh:UitkomstOverleg` | `prov:Entity` | identifier, beschikbaarGesteldOp, inzageUrl |
-| Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identifier, type |
+| Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identifier, identificatieType, identificatieWaarde |
 | Organisatie | `soh:Organisatie` | `prov:Agent` | identifier, naam |
 | BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
 | InzienUitkomstOverleg | `soh:InzienUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
@@ -423,7 +426,10 @@ Voorbeeld request:
 
 ``` json
 {
-  "burgerservicenummer": "123456789"
+  "betrokkeneIdentificatie": {
+    "identificatieType": "BSN",
+    "identificatie": "123456789"
+  }
 }
 ```
 
@@ -458,11 +464,13 @@ resultaatgraaf opgenomen. Als geen Uitkomsten Overleg aan de
 informatieaanvraag voldoen, bevat de resultaatgraaf geen
 `soh:UitkomstOverleg`-nodes.
 
-Een resultaatgraaf kan identificerende gegevens en, waar relevant, een
-`inzageUrl` bevatten waarmee de inhoudelijke resource via de Inzage-API kan
-worden geraadpleegd. De resultaatgraaf kan ook andere relevante
-objecten en relaties bevatten. De precieze omvang en structuur zijn
-afhankelijk van de informatievraag.
+Een resultaatgraaf bevat bij een opgenomen `Betrokkene` de persoonsidentificatie
+als combinatie van typering en identificatiewaarde. Daarmee is de identificatie
+interpreteerbaar, terwijl de `@id` van de Betrokkene de identifier van het object
+in de Knowledge graph blijft. De resultaatgraaf kan daarnaast, waar relevant,
+een `inzageUrl` bevatten waarmee de inhoudelijke resource via de Inzage-API kan
+worden geraadpleegd. De precieze omvang en structuur zijn afhankelijk van de
+informatievraag.
 
 Het uitvoeren van een informatievraag geldt niet als inzage in een Uitkomst
 Overleg. Een queryresultaat geeft aan welke informatie beschikbaar is en kan
@@ -494,8 +502,17 @@ Voorbeeld van een queryresultaat:
           "prov:Entity",
           "soh:UitkomstOverleg"
         ],
+        "soh:heeftBetrokkene": {
+          "@id": "urn:betrokkene:67890"
+        },
         "beschikbaarGesteldOp": "2026-01-10",
         "inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
+      },
+      {
+        "@id": "urn:betrokkene:67890",
+        "@type": "soh:Betrokkene",
+        "soh:identificatieType": "BSN",
+        "soh:identificatieWaarde": "123456789"
       }
     ]
   }

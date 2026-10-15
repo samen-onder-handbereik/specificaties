@@ -15,7 +15,7 @@ openapi: 3.1.0
 
 info:
   title: Uitwisselen Uitkomst Overleg API
-  version: 1.2.0
+  version: 2.0.0
   description: |
     Samenwerkfunctie-specifieke contracten voor CloudEvents en Query API.
 
@@ -68,7 +68,17 @@ paths:
         de gevonden informatie en de bijbehorende provenance.
 
         Een POST wordt gebruikt zodat zoekcriteria, waaronder mogelijk
-        gevoelige gegevens zoals een BSN, geen onderdeel vormen van de URL.
+        gevoelige gegevens zoals een BSN of een ander identificatienummer,
+        geen onderdeel vormen van de URL.
+
+        De identificatie van de Betrokkene bestaat uit een typering en een
+        identificatiewaarde. De typering maakt duidelijk om welk soort nummer
+        het gaat. De identifier van de Betrokkene in de Knowledge Graph is
+        hiervan onderscheiden.
+
+        Een queryresultaat identificeert de Betrokkene met de eigen identifier
+        van het domeinobject. Identificatiegegevens worden als getypeerde
+        combinaties weergegeven wanneer ze deel uitmaken van het resultaat.
       operationId: zoekUitkomstenOverleg
 
       requestBody:
@@ -77,6 +87,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/QueryRequest'
+            example:
+              betrokkeneIdentificatie:
+                identificatieType: "BSN"
+                identificatie: "123456789"
 
       responses:
         '202':
@@ -164,6 +178,14 @@ components:
                 - "prov:Entity"
                 - "soh:UitkomstOverleg"
               "soh:beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
+              "soh:heeftBetrokkene":
+                "@id": "urn:betrokkene:12345"
+            - "@id": "urn:betrokkene:12345"
+              "@type":
+                - "prov:Entity"
+                - "soh:Betrokkene"
+              "soh:identificatieType": "BSN"
+              "soh:identificatieWaarde": "123456789"
 
     UitkomstOverlegQueryResultEventVoorbeeld:
       summary: CloudEvent als antwoord van de Query API
@@ -187,6 +209,8 @@ components:
                 - "soh:UitkomstOverleg"
               "soh:beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
               "soh:inzageUrl": "https://inzage.voorbeeld.nl/uitkomst/98765"
+              "soh:heeftBetrokkene":
+                "@id": "urn:betrokkene:12345"
               "prov:wasGeneratedBy":
                 "@id": "urn:activity:beschikbaarstellen:12345"
             - "@id": "urn:activity:beschikbaarstellen:12345"
@@ -197,6 +221,12 @@ components:
             - "@id": "urn:organisatie:voorbeeld"
               "@type":
                 - "prov:Agent"
+            - "@id": "urn:betrokkene:12345"
+              "@type":
+                - "prov:Entity"
+                - "soh:Betrokkene"
+              "soh:identificatieType": "BSN"
+              "soh:identificatieWaarde": "123456789"
 
   schemas:
 
@@ -268,21 +298,68 @@ components:
                     type: string
                     description: Optionele machineleesbare foutcode.
 
+    Identificatie:
+      description: |
+        Identificatie van een Betrokkene. De identificatie bestaat uit een
+        typering en de bijbehorende waarde. De typering is een stabiele code
+        uit een beheerde waardelijst, bijvoorbeeld "BSN" of "V-NUMMER".
+      type: object
+      required:
+        - identificatieType
+        - identificatie
+      properties:
+        identificatieType:
+          type: string
+          description: Code die aangeeft om welk soort identificatienummer het gaat.
+          examples:
+            - "BSN"
+            - "V-NUMMER"
+        identificatie:
+          type: string
+          description: Waarde van het identificatienummer; als string om opmaak en voorloopnullen te behouden.
+          example: "123456789"
+      additionalProperties: false
+
+    BetrokkeneGraphNode:
+      description: |
+        Voorbeeldschema voor een Betrokkene in de PROV/JSON-LD-graaf. De @id
+        identificeert het domeinobject. De persoonsidentificatie wordt daarnaast weergegeven met een typering en
+        een waarde; deze vervangen de @id niet.
+      type: object
+      required:
+        - "@id"
+        - "@type"
+        - "soh:identificatieType"
+        - "soh:identificatieWaarde"
+      properties:
+        "@id":
+          type: string
+          description: Eigen identifier van het Betrokkene-domeinobject in de Knowledge Graph.
+        "@type":
+          type: array
+          items:
+            type: string
+          description: PROV- en domeintypen van de Betrokkene-node.
+        "soh:identificatieType":
+          type: string
+          description: Code die het soort identificatienummer van de Betrokkene aanduidt.
+          examples:
+            - "BSN"
+            - "V-NUMMER"
+        "soh:identificatieWaarde":
+          type: string
+          description: Waarde van het identificatienummer, weergegeven als string.
+          example: "123456789"
+
     QueryRequest:
       description: |
-        Zoekcriteria voor beschikbare Uitkomsten Overleg.
+        Zoekcriteria voor beschikbare Uitkomsten Overleg. De persoonsidentificatie
+        bestaat uit een typering en een waarde en is niet de identifier van de
+        Betrokkene in de Knowledge Graph.
       type: object
       properties:
-        burgerservicenummer:
-          type: string
-          description: |
-            BSN van de Betrokkene waarvoor beschikbare Uitkomsten Overleg
-            worden gezocht.
-
-            Het BSN is een zoekcriterium en is niet hetzelfde als de identifier
-            waarmee het domeinobject Betrokkene in de Knowledge Graph wordt
-            geïdentificeerd. De waarde van die identifier hoeft dus niet gelijk
-            te zijn aan het BSN.
+        betrokkeneIdentificatie:
+          $ref: '#/components/schemas/Identificatie'
         beschikbaarVanaf:
           type: string
           format: date-time
@@ -326,6 +403,8 @@ components:
                 "@type":
                   - "prov:Entity"
                   - "soh:UitkomstOverleg"
+                "soh:heeftBetrokkene":
+                  "@id": "urn:betrokkene:12345"
                 "prov:wasGeneratedBy":
                   "@id": "urn:activity:beschikbaarstellen:12345"
 
@@ -338,6 +417,12 @@ components:
               - "@id": "urn:organisatie:voorbeeld"
                 "@type":
                   - "prov:Agent"
+              - "@id": "urn:betrokkene:12345"
+                "@type":
+                  - "prov:Entity"
+                  - "soh:Betrokkene"
+                "soh:identificatieType": "BSN"
+                "soh:identificatieWaarde": "123456789"
 
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
@@ -428,7 +513,10 @@ components:
       description: |
         PROV/JSON-LD payload van een CloudEvent.
         De payload bevat een JSON-LD context en een graaf met de
-        inhoudelijke informatie en de bijbehorende provenance.
+        inhoudelijke informatie en de bijbehorende provenance. Een Betrokkene
+        heeft een eigen domeinidentifier. Wanneer de Betrokkene in de payload
+        is opgenomen, wordt de persoonsidentificatie daarnaast weergegeven met
+        soh:identificatieType en soh:identificatieWaarde.
       type: object
       required:
         - "@context"
@@ -456,6 +544,13 @@ components:
 
         Dit CloudEvent representeert het queryresultaat en is geen
         reconstructie van de oorspronkelijke beschikbaarstellingsgebeurtenis.
+
+        Wanneer een Betrokkene onderdeel is van het queryresultaat, bevat de
+        graaf zowel de eigen identifier van de Betrokkene als de getypeerde
+        persoonsidentificatie, bestaande uit soh:identificatieType en
+        soh:identificatieWaarde. Daardoor is de identificatie voor afnemers
+        interpreteerbaar zonder de identifier van de graph-node als
+        persoonsidentificatienummer te gebruiken.
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
         - type: object
