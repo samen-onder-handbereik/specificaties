@@ -91,6 +91,7 @@ paths:
               betrokkeneIdentificatie:
                 identificatieType: "BSN"
                 identificatie: "123456789"
+              betrokkeneWoonplaats: "Deventer"
 
       responses:
         '202':
@@ -186,6 +187,7 @@ components:
                 - "soh:Betrokkene"
               "soh:identificatieType": "BSN"
               "soh:identificatieWaarde": "123456789"
+              "soh:woonplaats": "Deventer"
 
     UitkomstOverlegQueryResultEventVoorbeeld:
       summary: CloudEvent als antwoord van de Query API
@@ -227,6 +229,7 @@ components:
                 - "soh:Betrokkene"
               "soh:identificatieType": "BSN"
               "soh:identificatieWaarde": "123456789"
+              "soh:woonplaats": "Deventer"
 
   schemas:
 
@@ -350,16 +353,29 @@ components:
           type: string
           description: Waarde van het identificatienummer, weergegeven als string.
           example: "123456789"
+        "soh:woonplaats":
+          type: string
+          description: Woonplaats van de Betrokkene.
+          example: "Deventer"
 
     QueryRequest:
       description: |
         Zoekcriteria voor beschikbare Uitkomsten Overleg. De persoonsidentificatie
         bestaat uit een typering en een waarde en is niet de identifier van de
-        Betrokkene in de Knowledge Graph.
+        Betrokkene in de Knowledge Graph. Bij zoeken op betrokkeneWoonplaats worden
+        hoofdletterverschillen genegeerd.
       type: object
       properties:
         betrokkeneIdentificatie:
           $ref: '#/components/schemas/Identificatie'
+        betrokkeneWoonplaats:
+          type: string
+          description: |
+            Zoek naar Uitkomsten Overleg waarbij een Betrokkene woont in de
+            opgegeven woonplaats. De vergelijking is hoofdletterongevoelig.
+            Andere verschillen, zoals spaties of afwijkende schrijfwijzen,
+            worden niet automatisch genegeerd.
+          example: "Deventer"
         beschikbaarVanaf:
           type: string
           format: date-time
@@ -423,6 +439,7 @@ components:
                   - "soh:Betrokkene"
                 "soh:identificatieType": "BSN"
                 "soh:identificatieWaarde": "123456789"
+                "soh:woonplaats": "Deventer"
 
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
@@ -515,8 +532,9 @@ components:
         De payload bevat een JSON-LD context en een graaf met de
         inhoudelijke informatie en de bijbehorende provenance. Een Betrokkene
         heeft een eigen domeinidentifier. Wanneer de Betrokkene in de payload
-        is opgenomen, wordt de persoonsidentificatie daarnaast weergegeven met
-        soh:identificatieType en soh:identificatieWaarde.
+        is opgenomen, worden de persoonsidentificatie en de woonplaats als
+        eigenschappen van de Betrokkene weergegeven met respectievelijk
+        soh:identificatieType en soh:identificatieWaarde, en soh:woonplaats.
       type: object
       required:
         - "@context"

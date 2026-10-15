@@ -129,7 +129,8 @@ als `prov:Agent` opgenomen.
         "@id": "urn:betrokkene:67890",
         "@type": "soh:Betrokkene",
         "soh:identificatieType": "BSN",
-        "soh:identificatieWaarde": "123456789"
+        "soh:identificatieWaarde": "123456789",
+        "soh:woonplaats": "Deventer"
       },
       {
         "@id": "urn:activity:beschikbaarstellen:12345",
@@ -264,7 +265,8 @@ Eigenschappen:
 
 - `identifier`;
 - `identificatieType`;
-- `identificatieWaarde`.
+- `identificatieWaarde`;
+- `woonplaats`.
 
 De `identifier` identificeert het domeinobject `Betrokkene` in de Knowledge graph. Deze identifier staat los van de persoonsidentificatie, die bestaat uit een typering en een identificatiewaarde. De typering is een stabiele code, bijvoorbeeld `BSN` of `V-NUMMER`.
 
@@ -365,7 +367,7 @@ De exacte toepassing op beschikbaarstelling wordt nog vastgesteld.
 | Concept | Type | PROV-typering | Belangrijkste eigenschappen |
 |---|---|---|---|
 | UitkomstOverleg | `soh:UitkomstOverleg` | `prov:Entity` | identifier, beschikbaarGesteldOp, inzageUrl |
-| Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identifier, identificatieType, identificatieWaarde |
+| Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identifier, identificatieType, identificatieWaarde, woonplaats |
 | Organisatie | `soh:Organisatie` | `prov:Agent` | identifier, naam |
 | BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
 | InzienUitkomstOverleg | `soh:InzienUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
@@ -433,6 +435,24 @@ Voorbeeld request:
 }
 ```
 
+Een deelnemer kan ook zoeken naar Uitkomsten Overleg waarbij een betrokkene
+woont in een bepaalde woonplaats. De woonplaats wordt als tekstuele eigenschap
+`soh:woonplaats` bij de `Betrokkene` vastgelegd.
+
+Voorbeeld request:
+
+``` json
+{
+  "betrokkeneWoonplaats": "Deventer"
+}
+```
+
+Bij het vergelijken van de zoekwaarde met de opgeslagen woonplaats wordt geen
+onderscheid gemaakt tussen hoofdletters en kleine letters. Zo leveren
+`Deventer`, `deventer` en `DEVENTER` dezelfde zoekresultaten op. Andere
+verschillen, zoals spaties of afwijkende schrijfwijzen, worden hiermee niet
+genegeerd.
+
 ### Resultaat van een informatievraag
 
 Een informatievraag wordt asynchroon verwerkt. Na acceptatie ontvangt de
@@ -465,9 +485,10 @@ informatieaanvraag voldoen, bevat de resultaatgraaf geen
 `soh:UitkomstOverleg`-nodes.
 
 Een resultaatgraaf bevat bij een opgenomen `Betrokkene` de persoonsidentificatie
-als combinatie van typering en identificatiewaarde. Daarmee is de identificatie
-interpreteerbaar, terwijl de `@id` van de Betrokkene de identifier van het object
-in de Knowledge graph blijft. De resultaatgraaf kan daarnaast, waar relevant,
+als combinatie van typering en identificatiewaarde en de woonplaats als
+`soh:woonplaats`. Daarmee kan een afnemer de identificatie en woonplaats van
+de betrokkene interpreteren, terwijl de `@id` van de Betrokkene de identifier
+van het object in de Knowledge graph blijft. De resultaatgraaf kan daarnaast, waar relevant,
 een `inzageUrl` bevatten waarmee de inhoudelijke resource via de Inzage-API kan
 worden geraadpleegd. De precieze omvang en structuur zijn afhankelijk van de
 informatievraag.
@@ -512,7 +533,8 @@ Voorbeeld van een queryresultaat:
         "@id": "urn:betrokkene:67890",
         "@type": "soh:Betrokkene",
         "soh:identificatieType": "BSN",
-        "soh:identificatieWaarde": "123456789"
+        "soh:identificatieWaarde": "123456789",
+        "soh:woonplaats": "Deventer"
       }
     ]
   }
