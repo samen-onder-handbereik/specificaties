@@ -121,6 +121,14 @@ domeinobject `Betrokkene` vastgelegd. Hiervoor wordt geen afzonderlijk
 benoemd domeinobject of PROV-element aangemaakt. De identifier van
 `Betrokkene` blijft onafhankelijk van de persoonsidentificatie.
 
+### Naamgeving van domeineigenschappen
+
+De namen van domeineigenschappen in JSON-LD volgen de conventie uit het
+[Knowledge graph-model](KnowledgeGraphModel.md#naamgeving-van-domeineigenschappen-in-json-ld):
+`soh:<Concept>.<eigenschap>`. De graph-build verwerkt deze termen volgens de
+vastgelegde mapping naar de eigenschappen van de graph-nodes. De conceptnaam
+vóór de punt geeft aan bij welk domeinconcept de eigenschap hoort.
+
 
 ## Eventtype naar graphmapping
 

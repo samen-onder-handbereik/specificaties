@@ -86,6 +86,22 @@ Domeinspecifieke typen, eigenschappen en relaties worden vastgelegd
 binnen de eigen `soh:`-namespace. In de voorbeelden wordt hiervoor de
 prefix `soh:` gebruikt.
 
+### Naamgeving van domeineigenschappen in JSON-LD
+
+Een domeineigenschap in een JSON-LD-representatie wordt gekwalificeerd met
+de naam van het concept waarop de eigenschap betrekking heeft. De vorm is
+`soh:<Concept>.<eigenschap>`, bijvoorbeeld `soh:Betrokkene.identificatieType`
+en `soh:UitkomstOverleg.identifier`. Deze conventie maakt expliciet bij welk
+concept een eigenschap hoort en voorkomt dat gelijknamige eigenschappen van
+verschillende concepten dezelfde term-URI krijgen.
+
+De puntnotatie is onderdeel van de lokale termnaam binnen de `soh:`-namespace.
+De JSON-LD-`@context` bevat hiervoor geen afzonderlijke termdefinities; deze
+bevat alleen de prefixdefinities die voor de representatie nodig zijn.
+
+Deze conventie betreft domeineigenschappen. Domeintypen en relaties, zoals
+`soh:Betrokkene` en `soh:heeftBetrokkene`, behouden hun eigen termnaam.
+
 Voorbeelden:
 
     (:Entity:UitkomstOverleg)

@@ -69,7 +69,7 @@ De CloudEvent wordt als JSON-object geserialiseerd volgens CloudEvents 1.0.
 | `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
 | `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`. |
 | `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. Dit hoeft niet gelijk te zijn aan het tijdstip van de activiteit. |
-| `subject` | Laat dit attribuut weg. |
+| `subject` | Neem de identifier van de Uitkomst Overleg op zoals die bekend is in het zaaksysteem van de organisatie die de Uitkomst Overleg beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
 | `datacontenttype` | Gebruik `application/ld+json`. CloudEvents vereist dit attribuut niet in alle gevallen; binnen deze samenwerkfunctie is het verplicht. |
 | `dataschema` | Gebruik `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. Dit is een aanvullende afspraak voor deze samenwerkfunctie. |
 | `data` | Neem een JSON-LD-document op met de PROV-JSON-LD-graaf zoals hieronder beschreven. |
@@ -95,7 +95,7 @@ De graph bevat precies één node voor elk van deze objecten:
 - `Organisatie` die de activiteit uitvoert;
 - `Betrokkene` waarop de Uitkomst Overleg betrekking heeft.
 
-Elk object heeft een eigen `@id`. Verwijzingen tussen nodes gebruiken
+Elk object heeft een eigen `@id`, die de node in de Knowledge graph identificeert. Verwijzingen tussen nodes gebruiken
 `{"@id": "<identifier>"}` en moeten overeenkomen met de `@id` van het
 bedoelde object in de graph.
 
@@ -107,8 +107,9 @@ bedoelde object in de graph.
 |---|---|
 | `@id` | Verplicht. URI die de Uitkomst Overleg in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
+| `soh:UitkomstOverleg.identifier` | Neem de identifier op waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
 | `soh:heeftBetrokkene` | Verplicht. Verwijst naar de opgenomen Betrokkene-node. |
-| `soh:beschikbaarGesteldOp` | Optioneel. Het tijdstip/de datum waarop deze Uitkomst Overleg beschikbaar is gesteld, als RFC 3339-datumtijd. Als ook `soh:tijdstip` is opgenomen bij de activiteit, beschrijven beide eigenschappen hetzelfde beschikbaarstellingsmoment. |
+| `soh:UitkomstOverleg.beschikbaarGesteldOp` | Optioneel. Het tijdstip/de datum waarop deze Uitkomst Overleg beschikbaar is gesteld, als RFC 3339-datumtijd. Als ook `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` is opgenomen bij de activiteit, beschrijven beide eigenschappen hetzelfde beschikbaarstellingsmoment. |
 
 
 `prov:wasGeneratedBy` wordt hier bewust niet gebruikt: die relatie zou
@@ -126,7 +127,7 @@ De volledige inhoud en `inzageUrl` zijn niet vereist in dit event. Een
 |---|---|
 | `@id` | Verplicht. Eigen URI die de provenance-activiteit identificeert. |
 | `@type` | Verplicht: zowel `prov:Activity` als `soh:BeschikbaarStellenUitkomstOverleg`. |
-| `soh:tijdstip` | Optioneel wanneer het daadwerkelijke tijdstip niet bekend of beschikbaar is. Indien aanwezig: RFC 3339-datumtijd en het tijdstip waarop de beschikbaarstellingsactiviteit plaatsvond. |
+| `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` | Optioneel wanneer het daadwerkelijke tijdstip niet bekend of beschikbaar is. Indien aanwezig: RFC 3339-datumtijd en het tijdstip waarop de beschikbaarstellingsactiviteit plaatsvond. |
 | `prov:wasAssociatedWith` | Verplicht. Verwijst naar de Organisatie-node die de activiteit heeft uitgevoerd. |
 | `soh:steltBeschikbaar` | Verwijst naar de UitkomstOverleg-node die beschikbaar wordt gesteld. |
 
@@ -148,9 +149,9 @@ systeem in het CloudEvent-attribuut `source`.
 |---|---|
 | `@id` | Verplicht. URI die het Betrokkene-object in de Knowledge graph identificeert. Gebruik niet zonder afzonderlijke afspraak het BSN of een ander persoonsidentificatienummer als `@id`. |
 | `@type` | Verplicht: `soh:Betrokkene`. Dit type maakt het object niet automatisch tot `prov:Agent`. |
-| `soh:identificatieType` | Optioneel. Opnemen wanneer identificatiegegevens noodzakelijk en toegestaan zijn. Stabiele code voor het type identificatienummer, bijvoorbeeld `BSN` of `V-NUMMER`. |
-| `soh:identificatieWaarde` | Optioneel. Alleen opnemen samen met `soh:identificatieType`, wanneer identificatiegegevens noodzakelijk en toegestaan zijn. De waarde is een string. |
-| `soh:woonplaats` | Optioneel. Indien aanwezig, een tekstuele waarde. |
+| `soh:Betrokkene.identificatieType` | Optioneel. Opnemen wanneer identificatiegegevens noodzakelijk en toegestaan zijn. Stabiele code voor het type identificatienummer, bijvoorbeeld `BSN` of `V-NUMMER`. |
+| `soh:Betrokkene.identificatieWaarde` | Optioneel. Alleen opnemen samen met `soh:Betrokkene.identificatieType`, wanneer identificatiegegevens noodzakelijk en toegestaan zijn. De waarde is een string. |
+| `soh:Betrokkene.woonplaats` | Optioneel. Indien aanwezig, een tekstuele waarde. |
 
 De `@id` identificeert het Betrokkene-object en staat los van de combinatie
 van identificatietype en identificatiewaarde. Het opnemen van de Betrokkene-node
@@ -163,11 +164,12 @@ van de identificatie-eigenschappen wordt opgenomen, moeten beide aanwezig zijn.
 De volgende identifiers hebben verschillende betekenissen en mogen niet
 door elkaar worden gebruikt:
 
-- CloudEvent `id`: identificeert het event;
-- Activity `@id`: identificeert de beschikbaarstellingsactiviteit;
-- Entity `@id`: identificeert de Uitkomst Overleg;
-- Agent `@id`: identificeert de Organisatie;
-- Betrokkene `@id`: identificeert het Betrokkene-object.
+- CloudEvent `id`: identificeert het CloudEvent;
+- Activity `@id`: identificeert de activiteit als node in de Knowledge graph;
+- Entity `@id`: identificeert de Uitkomst Overleg als node in de Knowledge graph;
+- Agent `@id`: identificeert de Organisatie als node in de Knowledge graph;
+- Betrokkene `@id`: identificeert het Betrokkene-object als node in de Knowledge graph;
+- `soh:UitkomstOverleg.identifier`: de identifier waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt.
 
 #### Volledig voorbeeld
 
@@ -180,6 +182,7 @@ De URN's en waarden zijn fictief.
   "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
   "time": "2026-10-15T10:30:00Z",
+  "subject": "ZAAK-2026-12345",
   "datacontenttype": "application/ld+json",
   "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
@@ -191,21 +194,22 @@ De URN's en waarden zijn fictief.
       {
         "@id": "urn:activity:beschikbaarstellen:12345",
         "@type": ["prov:Activity", "soh:BeschikbaarStellenUitkomstOverleg"],
-        "soh:tijdstip": "2026-10-15T10:30:00Z",
+        "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
         "prov:wasAssociatedWith": {"@id": "urn:nld:oin:00000001823288444000"},
         "soh:steltBeschikbaar": {"@id": "urn:uitkomst-overleg:12345"}
       },
       {
         "@id": "urn:uitkomst-overleg:12345",
         "@type": ["prov:Entity", "soh:UitkomstOverleg"],
+        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345",
         "soh:heeftBetrokkene": {"@id": "urn:betrokkene:67890"}
       },
       {
         "@id": "urn:betrokkene:67890",
         "@type": "soh:Betrokkene",
-        "soh:identificatieType": "BSN",
-        "soh:identificatieWaarde": "123456789",
-        "soh:woonplaats": "Deventer"
+        "soh:Betrokkene.identificatieType": "BSN",
+        "soh:Betrokkene.identificatieWaarde": "123456789",
+        "soh:Betrokkene.woonplaats": "Deventer"
       },
       {
         "@id": "urn:nld:oin:00000001823288444000",
@@ -219,8 +223,8 @@ De URN's en waarden zijn fictief.
 #### Nog te bevestigen ontwerpkeuzes
 
 - **Betrokkenegegevens:** het concept schrijft identificatietype en -waarde niet standaard verplicht voor. Bevestig per gebruikssituatie welke gegevens noodzakelijk en toegestaan zijn en of woonplaats mag worden opgenomen; beoordeel gegevensminimalisatie en autorisatie.
-- **Tijdstip:** bevestig of `soh:tijdstip` optioneel blijft wanneer het werkelijke tijdstip niet bekend is.
-- **Beschikbaarheidsdatum:** `soh:beschikbaarGesteldOp` is als optionele eigenschap bij de Entity opgenomen. Als deze én `soh:tijdstip` bij de Activity aanwezig zijn, moeten ze hetzelfde beschikbaarstellingsmoment beschrijven. Bevestig of deze dubbele representatie wenselijk is.
+- **Tijdstip:** bevestig of `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` optioneel blijft wanneer het werkelijke tijdstip niet bekend is.
+- **Beschikbaarheidsdatum:** `soh:UitkomstOverleg.beschikbaarGesteldOp` is als optionele eigenschap bij de Entity opgenomen. Als deze én `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` bij de Activity aanwezig zijn, moeten ze hetzelfde beschikbaarstellingsmoment beschrijven. Bevestig of deze dubbele representatie wenselijk is.
 
 ### Uitkomst ingezien
 
@@ -243,7 +247,7 @@ raadpleging van de inhoud wordt als afzonderlijke activiteit vastgelegd.
 | `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
 | `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`. |
 | `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. |
-| `subject` | Laat dit attribuut weg. |
+| `subject` | Neem de identifier op van de Uitkomst Overleg die is ingezien, zoals die bekend is in het zaaksysteem van de organisatie die de Uitkomst Overleg beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
 | `datacontenttype` | Gebruik `application/ld+json`. CloudEvents vereist dit attribuut niet in alle gevallen; binnen deze samenwerkfunctie is het verplicht. |
 | `dataschema` | Gebruik `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. Dit is een aanvullende afspraak voor deze samenwerkfunctie. |
 | `data` | Neem een JSON-LD-document op met de graaf van de inzageactiviteit. |
@@ -257,7 +261,7 @@ beschreven, en een `@graph`. De graph bevat minimaal:
 - één `UitkomstOverleg`-node waarnaar de activiteit verwijst;
 - één `Organisatie`-node die de inzage heeft uitgevoerd.
 
-Elk object heeft een eigen `@id`. Verwijzingen moeten overeenkomen met de
+Elk object heeft een eigen `@id`, die de node in de Knowledge graph identificeert. Verwijzingen moeten overeenkomen met de
 `@id` van het bedoelde object in de graph.
 
 #### Graph-objecten en relaties
@@ -268,7 +272,7 @@ Elk object heeft een eigen `@id`. Verwijzingen moeten overeenkomen met de
 |---|---|
 | `@id` | Verplicht. Eigen URI die de inzageactiviteit identificeert. |
 | `@type` | Verplicht: zowel `prov:Activity` als `soh:InzienUitkomstOverleg`. |
-| `soh:tijdstip` | Het daadwerkelijke tijdstip van inzage, als RFC 3339-datumtijd wanneer opgenomen. |
+| `soh:InzienUitkomstOverleg.tijdstip` | Het daadwerkelijke tijdstip van inzage, als RFC 3339-datumtijd wanneer opgenomen. |
 | `prov:used` | Verwijst naar de `UitkomstOverleg` die is ingezien. |
 | `prov:wasAssociatedWith` | Verwijst naar de Organisatie die de inzage heeft uitgevoerd. |
 
@@ -278,6 +282,7 @@ Elk object heeft een eigen `@id`. Verwijzingen moeten overeenkomen met de
 |---|---|
 | `@id` | Verplicht. URI die de geraadpleegde Uitkomst Overleg identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
+| `soh:UitkomstOverleg.identifier` | De identifier waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
 
 ##### Organisatie
 
@@ -304,6 +309,7 @@ komt overeen met de opgenomen Organisatie-node.
   "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien",
   "time": "2026-10-15T11:00:00Z",
+  "subject": "ZAAK-2026-12345",
   "datacontenttype": "application/ld+json",
   "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
@@ -315,13 +321,14 @@ komt overeen met de opgenomen Organisatie-node.
       {
         "@id": "urn:activity:inzien:67890",
         "@type": ["prov:Activity", "soh:InzienUitkomstOverleg"],
-        "soh:tijdstip": "2026-10-15T11:00:00Z",
+        "soh:InzienUitkomstOverleg.tijdstip": "2026-10-15T11:00:00Z",
         "prov:used": {"@id": "urn:uitkomst-overleg:12345"},
         "prov:wasAssociatedWith": {"@id": "urn:nld:kvknr:09220932"}
       },
       {
         "@id": "urn:uitkomst-overleg:12345",
-        "@type": ["prov:Entity", "soh:UitkomstOverleg"]
+        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
+        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345"
       },
       {
         "@id": "urn:nld:kvknr:09220932",
@@ -334,7 +341,7 @@ komt overeen met de opgenomen Organisatie-node.
 
 #### Aandachtspunten
 
-- Het CloudEvent `time` beschrijft de registratie van het event; `soh:tijdstip` beschrijft het daadwerkelijke tijdstip van inzage. Deze waarden kunnen verschillen.
+- Het CloudEvent `time` beschrijft de registratie van het event; `soh:InzienUitkomstOverleg.tijdstip` beschrijft het daadwerkelijke tijdstip van inzage. Deze waarden kunnen verschillen.
 - De organisatie die de inzage uitvoert, hoeft niet dezelfde te zijn als het systeem dat het event publiceert.
 - De inhoud van de Uitkomst Overleg wordt niet in dit event opgenomen.
 
@@ -389,9 +396,10 @@ event opgenomen.
 |---|---|
 | `@id` | Verplicht voor elke opgenomen Uitkomst Overleg; URI die het object in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
+| `soh:UitkomstOverleg.identifier` | Neem de identifier op waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
 | `soh:heeftBetrokkene` | Opnemen wanneer de graaf de Betrokkene waarop de Uitkomst Overleg betrekking heeft bevat. Verwijst naar de Betrokkene-node. |
-| `soh:beschikbaarGesteldOp` | Optioneel. RFC 3339-datumtijd van het beschikbaarstellingsmoment. Als ook `soh:tijdstip` van de beschikbaarstellingsactiviteit is opgenomen, beschrijven beide eigenschappen hetzelfde moment. |
-| `soh:inzageUrl` | Optioneel. Verwijst naar de resource die via de Inzage-API kan worden geraadpleegd. |
+| `soh:UitkomstOverleg.beschikbaarGesteldOp` | Optioneel. RFC 3339-datumtijd van het beschikbaarstellingsmoment. Als ook `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` van de beschikbaarstellingsactiviteit is opgenomen, beschrijven beide eigenschappen hetzelfde moment. |
+| `soh:UitkomstOverleg.inzageUrl` | Optioneel. Verwijst naar de resource die via de Inzage-API kan worden geraadpleegd. |
 
 ##### Betrokkene
 
@@ -399,9 +407,9 @@ event opgenomen.
 |---|---|
 | `@id` | Verplicht voor elke opgenomen Betrokkene; identificeert het object in de Knowledge graph en is niet automatisch het persoonsidentificatienummer. |
 | `@type` | Verplicht: `soh:Betrokkene`. |
-| `soh:identificatieType` | Opnemen wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
-| `soh:identificatieWaarde` | Opnemen samen met `soh:identificatieType` wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
-| `soh:woonplaats` | Optioneel wanneer relevant voor de informatievraag en toegestaan om terug te geven. |
+| `soh:Betrokkene.identificatieType` | Opnemen wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
+| `soh:Betrokkene.identificatieWaarde` | Opnemen samen met `soh:Betrokkene.identificatieType` wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
+| `soh:Betrokkene.woonplaats` | Optioneel wanneer relevant voor de informatievraag en toegestaan om terug te geven. |
 
 ##### Provenance-objecten
 
@@ -413,7 +421,7 @@ opnieuw de oorspronkelijke beschikbaarstellingsgebeurtenis.
 
 #### Identifiers en relaties
 
-- Het CloudEvent `id` identificeert het event; `subject` identificeert de asynchrone informatievraag waarop het resultaat betrekking heeft.
+- Het CloudEvent `id` identificeert het event; `subject` identificeert bij een queryresultaat de asynchrone informatievraag waarop het resultaat betrekking heeft. Bij de events voor beschikbaarstelling en inzage bevat `subject` de identifier van de Uitkomst Overleg in het zaaksysteem van de organisatie die deze beschikbaar stelt.
 - De `@id` van iedere graph-node identificeert het betreffende domeinobject of provenance-object.
 - Verwijzingen tussen nodes moeten overeenkomen met de `@id` van de bedoelde node in dezelfde graaf, tenzij een verwijzing naar een extern geïdentificeerd object expliciet is toegestaan.
 - Een resultaat kan nul, één of meer `UitkomstOverleg`-nodes bevatten.
@@ -444,16 +452,17 @@ zijn vastgelegd.
       {
         "@id": "urn:uitkomst-overleg:12345",
         "@type": ["prov:Entity", "soh:UitkomstOverleg"],
+        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345",
         "soh:heeftBetrokkene": {"@id": "urn:betrokkene:67890"},
-        "soh:beschikbaarGesteldOp": "2026-01-10",
-        "soh:inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
+        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-10",
+        "soh:UitkomstOverleg.inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
       },
       {
         "@id": "urn:betrokkene:67890",
         "@type": "soh:Betrokkene",
-        "soh:identificatieType": "BSN",
-        "soh:identificatieWaarde": "123456789",
-        "soh:woonplaats": "Deventer"
+        "soh:Betrokkene.identificatieType": "BSN",
+        "soh:Betrokkene.identificatieWaarde": "123456789",
+        "soh:Betrokkene.woonplaats": "Deventer"
       }
     ]
   }
@@ -465,7 +474,7 @@ zijn vastgelegd.
 - De concrete inhoud van de resultaatgraaf wordt bepaald door de informatievraag.
 - Een resultaat kan geen `UitkomstOverleg`-nodes bevatten wanneer geen objecten aan de informatievraag voldoen.
 - Het uitvoeren van een informatievraag geldt niet als inzage. Een daadwerkelijke raadpleging via de Inzage-API wordt als afzonderlijke activiteit vastgelegd.
-- De eigenschappen `soh:beschikbaarGesteldOp` en `soh:inzageUrl` moeten worden afgestemd op de definitieve naamgeving in het informatiemodel. In dit concept zijn beide expliciet als `soh:`-termen geschreven zodat hun JSON-LD-betekenis vastligt.
+- De eigenschappen `soh:UitkomstOverleg.beschikbaarGesteldOp` en `soh:UitkomstOverleg.inzageUrl` volgen de algemene naamgevingsconventie voor domeineigenschappen zoals vastgelegd in het Knowledge graph-model.
 
 ## Relatie met generieke CloudEvents-afspraken
 
@@ -502,7 +511,7 @@ Het domeinobject dat via de Inzage-API beschikbaar wordt gesteld.
 
 Eigenschappen:
 
-- `identifier`;
+- `identifier` --- de identifier waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt;
 - `beschikbaarGesteldOp`;
 - `inzageUrl`.
 
@@ -692,7 +701,7 @@ Voorbeeld request:
 
 Een deelnemer kan ook zoeken naar Uitkomsten Overleg waarbij een betrokkene
 woont in een bepaalde woonplaats. De woonplaats wordt als tekstuele eigenschap
-`soh:woonplaats` bij de `Betrokkene` vastgelegd.
+`soh:Betrokkene.woonplaats` bij de `Betrokkene` vastgelegd.
 
 Voorbeeld request:
 
@@ -741,7 +750,7 @@ informatieaanvraag voldoen, bevat de resultaatgraaf geen
 
 Een resultaatgraaf bevat bij een opgenomen `Betrokkene` de persoonsidentificatie
 als combinatie van typering en identificatiewaarde en de woonplaats als
-`soh:woonplaats`. Daarmee kan een afnemer de identificatie en woonplaats van
+`soh:Betrokkene.woonplaats`. Daarmee kan een afnemer de identificatie en woonplaats van
 de betrokkene interpreteren, terwijl de `@id` van de Betrokkene de identifier
 van het object in de Knowledge graph blijft. De resultaatgraaf kan daarnaast, waar relevant,
 een `inzageUrl` bevatten waarmee de inhoudelijke resource via de Inzage-API kan
@@ -781,15 +790,15 @@ Voorbeeld van een queryresultaat:
         "soh:heeftBetrokkene": {
           "@id": "urn:betrokkene:67890"
         },
-        "beschikbaarGesteldOp": "2026-01-10",
-        "inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
+        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-10",
+        "soh:UitkomstOverleg.inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
       },
       {
         "@id": "urn:betrokkene:67890",
         "@type": "soh:Betrokkene",
-        "soh:identificatieType": "BSN",
-        "soh:identificatieWaarde": "123456789",
-        "soh:woonplaats": "Deventer"
+        "soh:Betrokkene.identificatieType": "BSN",
+        "soh:Betrokkene.identificatieWaarde": "123456789",
+        "soh:Betrokkene.woonplaats": "Deventer"
       }
     ]
   }
