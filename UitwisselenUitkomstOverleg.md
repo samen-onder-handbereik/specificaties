@@ -62,17 +62,17 @@ scope van deze graph.
 
 De CloudEvent wordt als JSON-object geserialiseerd volgens CloudEvents 1.0.
 
-| Attribuut | Verplichtheid in dit profiel | Invulling |
-|---|---|---|
-| `specversion` | Verplicht | De vaste waarde `1.0`. |
-| `id` | Verplicht | Unieke identificatie van dit CloudEvent binnen de context van `source`. Dit profiel schrijft UUIDv7 voor; dit is een aanvullende profielafspraak en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
-| `source` | Verplicht | URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
-| `type` | Verplicht | Exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`. |
-| `time` | Optioneel volgens CloudEvents; binnen dit profiel aanbevolen | Registratietijdstip als RFC 3339-datumtijd. Dit hoeft niet gelijk te zijn aan het tijdstip van de activiteit. |
-| `subject` | Niet voorgeschreven | Laat weg tenzij hiervoor een afzonderlijke afspraak wordt vastgesteld. |
-| `datacontenttype` | Verplicht door dit profiel (CloudEvents zelf vereist dit attribuut niet in alle gevallen) | `application/ld+json`. |
-| `dataschema` | Verplicht door dit profiel; dit is een aanvullende profielafspraak | `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. |
-| `data` | Verplicht | JSON-LD-document met de PROV-JSON-LD-graaf zoals hieronder beschreven. |
+| Attribuut | Invulling |
+|---|---|
+| `specversion` | Gebruik de vaste waarde `1.0`. |
+| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
+| `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
+| `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`. |
+| `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. Dit hoeft niet gelijk te zijn aan het tijdstip van de activiteit. |
+| `subject` | Laat dit attribuut weg. |
+| `datacontenttype` | Gebruik `application/ld+json`. CloudEvents vereist dit attribuut niet in alle gevallen; binnen deze samenwerkfunctie is het verplicht. |
+| `dataschema` | Gebruik `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. Dit is een aanvullende afspraak voor deze samenwerkfunctie. |
+| `data` | Neem een JSON-LD-document op met de PROV-JSON-LD-graaf zoals hieronder beschreven. |
 
 #### Opbouw van `data`
 
@@ -109,7 +109,13 @@ bedoelde object in de graph.
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
 | `soh:heeftBetrokkene` | Verplicht. Verwijst naar de opgenomen Betrokkene-node. |
 | `soh:beschikbaarGesteldOp` | Optioneel. Het tijdstip/de datum waarop deze Uitkomst Overleg beschikbaar is gesteld, als RFC 3339-datumtijd. Als ook `soh:tijdstip` is opgenomen bij de activiteit, beschrijven beide eigenschappen hetzelfde beschikbaarstellingsmoment. |
-| `prov:wasGeneratedBy` | Niet gebruiken voor de beschikbaarstellingsactiviteit: die activiteit heeft de Uitkomst Overleg niet gegenereerd. |
+
+
+`prov:wasGeneratedBy` wordt hier bewust niet gebruikt: die relatie zou
+suggereren dat de beschikbaarstellingsactiviteit de Uitkomst Overleg heeft
+gegenereerd. Het gaat om een reeds bestaande Uitkomst Overleg. Het verband
+met de beschikbaarstellingsactiviteit wordt vastgelegd met de domeinrelatie
+`soh:steltBeschikbaar`.
 
 De volledige inhoud en `inzageUrl` zijn niet vereist in dit event. Een
 `inzageUrl` kan deel uitmaken van een queryresultaat.
@@ -122,11 +128,8 @@ De volledige inhoud en `inzageUrl` zijn niet vereist in dit event. Een
 | `@type` | Verplicht: zowel `prov:Activity` als `soh:BeschikbaarStellenUitkomstOverleg`. |
 | `soh:tijdstip` | Optioneel wanneer het daadwerkelijke tijdstip niet bekend of beschikbaar is. Indien aanwezig: RFC 3339-datumtijd en het tijdstip waarop de beschikbaarstellingsactiviteit plaatsvond. |
 | `prov:wasAssociatedWith` | Verplicht. Verwijst naar de Organisatie-node die de activiteit heeft uitgevoerd. |
-| `soh:steltBeschikbaar` | Voorgestelde domeinrelatie naar de UitkomstOverleg-node. Zolang deze relatie niet definitief is vastgesteld, is dit een conceptafspraak en geen definitief vocabulairecontract. |
+| `soh:steltBeschikbaar` | Verwijst naar de UitkomstOverleg-node die beschikbaar wordt gesteld. |
 
-De activiteit stelt een reeds bestaande Uitkomst Overleg beschikbaar. De
-relatie `prov:wasGeneratedBy` wordt daarom niet gebruikt om deze activiteit
-aan de Entity te koppelen.
 
 ##### Organisatie
 
@@ -168,8 +171,7 @@ door elkaar worden gebruikt:
 
 #### Volledig voorbeeld
 
-De URN's en waarden zijn fictief. `soh:steltBeschikbaar` is nog een voorstel
-en moet vóór vaststelling van dit profiel worden bevestigd.
+De URN's en waarden zijn fictief.
 
 ```json
 {
@@ -216,7 +218,6 @@ en moet vóór vaststelling van dit profiel worden bevestigd.
 
 #### Nog te bevestigen ontwerpkeuzes
 
-- **Domeinrelatie voor beschikbaarstelling:** bevestig de naam en betekenis van `soh:steltBeschikbaar`.
 - **Betrokkenegegevens:** het concept schrijft identificatietype en -waarde niet standaard verplicht voor. Bevestig per gebruikssituatie welke gegevens noodzakelijk en toegestaan zijn en of woonplaats mag worden opgenomen; beoordeel gegevensminimalisatie en autorisatie.
 - **Tijdstip:** bevestig of `soh:tijdstip` optioneel blijft wanneer het werkelijke tijdstip niet bekend is.
 - **Beschikbaarheidsdatum:** `soh:beschikbaarGesteldOp` is als optionele eigenschap bij de Entity opgenomen. Als deze én `soh:tijdstip` bij de Activity aanwezig zijn, moeten ze hetzelfde beschikbaarstellingsmoment beschrijven. Bevestig of deze dubbele representatie wenselijk is.
@@ -235,17 +236,17 @@ raadpleging van de inhoud wordt als afzonderlijke activiteit vastgelegd.
 
 #### CloudEvent-envelope
 
-| Attribuut | Verplichtheid in dit profiel | Invulling |
-|---|---|---|
-| `specversion` | Verplicht | De vaste waarde `1.0`. |
-| `id` | Verplicht | Unieke identificatie van dit CloudEvent binnen de context van `source`. Dit profiel schrijft UUIDv7 voor; dit is een aanvullende profielafspraak. |
-| `source` | Verplicht | URI-reference die het systeem identificeert dat het event registreert en publiceert. |
-| `type` | Verplicht | Exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`. |
-| `time` | Optioneel volgens CloudEvents; binnen dit profiel aanbevolen | Registratietijdstip als RFC 3339-datumtijd. |
-| `subject` | Niet voorgeschreven | Laat weg tenzij hiervoor een afzonderlijke afspraak wordt vastgesteld. |
-| `datacontenttype` | Verplicht door dit profiel (CloudEvents zelf vereist dit attribuut niet in alle gevallen) | `application/ld+json`. |
-| `dataschema` | Verplicht door dit profiel; dit is een aanvullende profielafspraak | `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. |
-| `data` | Verplicht | JSON-LD-document met de graph van de inzageactiviteit. |
+| Attribuut | Invulling |
+|---|---|
+| `specversion` | Gebruik de vaste waarde `1.0`. |
+| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
+| `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
+| `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`. |
+| `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. |
+| `subject` | Laat dit attribuut weg. |
+| `datacontenttype` | Gebruik `application/ld+json`. CloudEvents vereist dit attribuut niet in alle gevallen; binnen deze samenwerkfunctie is het verplicht. |
+| `dataschema` | Gebruik `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. Dit is een aanvullende afspraak voor deze samenwerkfunctie. |
+| `data` | Neem een JSON-LD-document op met de graaf van de inzageactiviteit. |
 
 #### Opbouw van `data`
 
@@ -354,17 +355,17 @@ beschikbaar is gesteld.
 
 #### CloudEvent-envelope
 
-| Attribuut | Verplichtheid in dit profiel | Invulling |
-|---|---|---|
-| `specversion` | Verplicht | De vaste waarde `1.0`. |
-| `id` | Verplicht | Unieke identificatie van dit CloudEvent binnen de context van `source`. Dit profiel schrijft UUIDv7 voor; dit is een aanvullende profielafspraak. |
-| `source` | Verplicht | URI-reference die het systeem identificeert dat het event registreert en publiceert. |
-| `type` | Verplicht | Exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`. |
-| `time` | Optioneel volgens CloudEvents; binnen dit profiel aanbevolen | Registratietijdstip als RFC 3339-datumtijd. |
-| `subject` | Verplicht in dit profiel | Het `interactieId` van de asynchrone informatievraag waarop het resultaat betrekking heeft. |
-| `datacontenttype` | Verplicht door dit profiel (CloudEvents zelf vereist dit attribuut niet in alle gevallen) | `application/ld+json`. |
-| `dataschema` | Verplicht door dit profiel; dit is een aanvullende profielafspraak | `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. |
-| `data` | Verplicht | JSON-LD-document met de resultaatgraaf. |
+| Attribuut | Invulling |
+|---|---|
+| `specversion` | Gebruik de vaste waarde `1.0`. |
+| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
+| `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
+| `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`. |
+| `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. |
+| `subject` | Neem het `interactieId` op van de asynchrone informatievraag waarop het resultaat betrekking heeft. |
+| `datacontenttype` | Gebruik `application/ld+json`. CloudEvents vereist dit attribuut niet in alle gevallen; binnen deze samenwerkfunctie is het verplicht. |
+| `dataschema` | Gebruik `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. Dit is een aanvullende afspraak voor deze samenwerkfunctie. |
+| `data` | Neem een JSON-LD-document op met de resultaatgraaf. |
 
 #### Opbouw van `data`
 
@@ -468,7 +469,7 @@ zijn vastgelegd.
 
 ## Relatie met generieke CloudEvents-afspraken
 
-CloudEvents 1.0 bepaalt de generieke envelope. Deze specificatie legt daarbovenop profielafspraken vast, zoals UUIDv7 voor `id` en het verplicht opnemen van `datacontenttype` en `dataschema`. Die verplichtingen gelden binnen dit SOH-profiel; ze mogen niet worden gelezen als algemene eisen die CloudEvents aan ieder event stelt. Het attribuut `time` is volgens CloudEvents optioneel en wordt binnen dit profiel aanbevolen.
+CloudEvents 1.0 bepaalt de generieke envelope. Deze specificatie legt daarbovenop aanvullende afspraken vast, zoals UUIDv7 voor `id` en het verplicht opnemen van `datacontenttype` en `dataschema`. Deze aanvullende verplichtingen gelden binnen deze samenwerkfunctie; ze mogen niet worden gelezen als algemene eisen die CloudEvents aan ieder event stelt. Het attribuut `time` is binnen deze samenwerkfunctie verplicht en bevat het registratietijdstip als RFC 3339-datumtijd.
 
 ## Informatiemodel
 
@@ -576,6 +577,7 @@ Eigenschappen:
 
 ### Relaties
 
+
 #### `soh:heeftBetrokkene`
 
 Domeinrelatie waarmee een UitkomstOverleg aan een Betrokkene wordt
@@ -614,21 +616,6 @@ InzienUitkomstOverleg
     |
 UitkomstOverleg
 ```
-
-#### `prov:wasGeneratedBy`
-
-PROV-relatie tussen een Entity en de activiteit waardoor deze is ontstaan.
-
-Voor het eventtype `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`
-wordt deze relatie niet gebruikt om de beschikbaarstellingsactiviteit te
-verbinden met de Uitkomst Overleg. De activiteit die de Uitkomst Overleg
-oorspronkelijk heeft gegenereerd valt buiten de scope van deze graph.
-De voorgestelde relatie `soh:steltBeschikbaar` legt het verband vast tussen
-de beschikbaarstellingsactiviteit en de reeds bestaande Uitkomst Overleg;
-zie [de normatieve beschrijving van het event](#uitkomst-beschikbaar-gesteld).
-Deze relatie blijft een voorstel totdat zij in het vocabulaire en de Graph Build
-Specification is bevestigd. De graphmapping mag de beschikbaarstellingsactiviteit
-niet als de ontstaansactiviteit van de Entity modelleren.
 
 ### Overzicht informatiemodel
 
@@ -866,3 +853,5 @@ De identifier wordt gebruikt voor:
 
 De `inzageUrl` is geen zelfstandige identificatie, maar een technische
 verwijzing naar de resource.
+
+---
