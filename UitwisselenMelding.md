@@ -14,7 +14,9 @@ Hier moet een plantuml-diagram komen.
 ### Uitwisseling 1: Stappen voor Uitwisselen Melding
 
 ## API's
-De OpenAPI-specificatie van de API _Melding_ is te downloaden via deze [link](yaml/Melding.yaml).
+De OpenAPI-specificatie van de API _Melding_ is te downloaden via deze [link](yaml/Melding.yaml) ([interactief bekijken](api.html?spec=Melding) · [openen in Swagger Editor](https://editor.swagger.io/?url=https://samen-onder-handbereik.github.io/specificaties/yaml/Melding.yaml)).
+
+<details class="soh-api" data-spec="Melding"><summary>API Melding interactief bekijken</summary></details>
 
 ## CloudEvents
 

@@ -17,7 +17,9 @@ De volledige inhoud van een Uitkomst Overleg kan via de Inzage-API worden geraad
 
 De Inzage-API biedt toegang tot de volledige inhoud van een Uitkomst Overleg. De Inzage-API wordt gebruikt wanneer een deelnemer de inhoudelijke Uitkomst Overleg daadwerkelijk wil raadplegen.
 
-De Inzage-API maakt onderdeel uit van de specificatie van de samenwerkfunctie. Een implementatie van de Inzage-API moet voldoen aan de door Samen Onder Handbereik gedefinieerde [OpenAPI-specificatie UitkomstOverleg.yaml](yaml/UitkomstOverleg.yaml).
+De Inzage-API maakt onderdeel uit van de specificatie van de samenwerkfunctie. Een implementatie van de Inzage-API moet voldoen aan de door Samen Onder Handbereik gedefinieerde [OpenAPI-specificatie UitkomstOverleg.yaml](yaml/UitkomstOverleg.yaml) ([interactief bekijken](api.html?spec=UitkomstOverleg) · [openen in Swagger Editor](https://editor.swagger.io/?url=https://samen-onder-handbereik.github.io/specificaties/yaml/UitkomstOverleg.yaml)).
+
+<details class="soh-api" data-spec="UitkomstOverleg"><summary>API Uitkomst Overleg interactief bekijken</summary></details>
 
 Een `inzageUrl` die in een queryresultaat kan worden opgenomen, verwijst naar een resource die via deze Inzage-API kan worden geraadpleegd.
 
@@ -175,50 +177,9 @@ door elkaar worden gebruikt:
 
 De URN's en waarden zijn fictief.
 
-```json
-{
-  "specversion": "1.0",
-  "id": "019b7a10-6c2d-7abc-8def-1234567890ab",
-  "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
-  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
-  "time": "2026-10-15T10:30:00Z",
-  "subject": "ZAAK-2026-12345",
-  "datacontenttype": "application/ld+json",
-  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
-  "data": {
-    "@context": {
-      "prov": "http://www.w3.org/ns/prov#",
-      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
-    },
-    "@graph": [
-      {
-        "@id": "urn:activity:beschikbaarstellen:12345",
-        "@type": ["prov:Activity", "soh:BeschikbaarStellenUitkomstOverleg"],
-        "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
-        "prov:wasAssociatedWith": {"@id": "urn:nld:oin:00000001823288444000"},
-        "soh:steltBeschikbaar": {"@id": "urn:uitkomst-overleg:12345"}
-      },
-      {
-        "@id": "urn:uitkomst-overleg:12345",
-        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
-        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345",
-        "soh:heeftBetrokkene": {"@id": "urn:betrokkene:67890"}
-      },
-      {
-        "@id": "urn:betrokkene:67890",
-        "@type": "soh:Betrokkene",
-        "soh:Betrokkene.identificatieType": "BSN",
-        "soh:Betrokkene.identificatieWaarde": "123456789",
-        "soh:Betrokkene.woonplaats": "Deventer"
-      },
-      {
-        "@id": "urn:nld:oin:00000001823288444000",
-        "@type": ["prov:Agent", "soh:Organisatie"]
-      }
-    ]
-  }
-}
-```
+<pre class="json" data-include="voorbeelden/uitkomst-overleg/uitkomst-beschikbaar-gesteld.json" data-include-format="text"></pre>
+
+[Dit voorbeeld als graph bekijken](kennis-graph.html?voorbeeld=uitkomst-overleg/uitkomst-beschikbaar-gesteld)
 
 #### Aandachtspunten
 
@@ -301,42 +262,9 @@ van een graph-object.
 De waarden zijn fictief. De `@id` waarnaar `prov:wasAssociatedWith` verwijst,
 komt overeen met de opgenomen Organisatie-node.
 
-```json
-{
-  "specversion": "1.0",
-  "id": "019b7a11-6c2d-7abc-8def-1234567890ab",
-  "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
-  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien",
-  "time": "2026-10-15T11:00:00Z",
-  "subject": "ZAAK-2026-12345",
-  "datacontenttype": "application/ld+json",
-  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
-  "data": {
-    "@context": {
-      "prov": "http://www.w3.org/ns/prov#",
-      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
-    },
-    "@graph": [
-      {
-        "@id": "urn:activity:inzien:67890",
-        "@type": ["prov:Activity", "soh:InzienUitkomstOverleg"],
-        "soh:InzienUitkomstOverleg.tijdstip": "2026-10-15T11:00:00Z",
-        "prov:used": {"@id": "urn:uitkomst-overleg:12345"},
-        "prov:wasAssociatedWith": {"@id": "urn:nld:kvknr:09220932"}
-      },
-      {
-        "@id": "urn:uitkomst-overleg:12345",
-        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
-        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345"
-      },
-      {
-        "@id": "urn:nld:kvknr:09220932",
-        "@type": ["prov:Agent", "soh:Organisatie"]
-      }
-    ]
-  }
-}
-```
+<pre class="json" data-include="voorbeelden/uitkomst-overleg/uitkomst-ingezien.json" data-include-format="text"></pre>
+
+[Dit voorbeeld als graph bekijken](kennis-graph.html?voorbeeld=uitkomst-overleg/uitkomst-ingezien)
 
 #### Aandachtspunten
 
@@ -605,6 +533,8 @@ UitkomstOverleg
 betrokkene zelf als actor optreedt in een provenance-activiteit, krijgt
 het betreffende domeinobject ook de typering `prov:Agent`.
 
+[Het informatiemodel als graph bekijken](kennis-graph.html?view=model), inclusief de verschillen tussen dit overzicht en de voorbeelden.
+
 ## Informatievragen
 
 ### Vooraf gedefinieerde informatievragen
@@ -740,9 +670,7 @@ Schematisch bevat de `@graph` dus één reeks afzonderlijke objecten:
 ```
 
 De lijnen in dit schema geven de relaties tussen nodes weer; de objecten zelf
-blijven afzonderlijke elementen in dezelfde array. De commentaarregels in het
-JSONC-voorbeeld hieronder zijn alleen bedoeld om de objecten voor de lezer te
-herkennen en vormen geen structurele groepering.
+blijven afzonderlijke elementen in dezelfde array.
 
 Het uitvoeren van een informatievraag geldt niet als inzage in een Uitkomst
 Overleg. Een queryresultaat geeft aan welke informatie beschikbaar is en kan
@@ -752,73 +680,14 @@ wordt deze inzage als afzonderlijke activiteit vastgelegd.
 
 Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg:
 
-```jsonc
-{
-  "specversion": "1.0",
-  "id": "123e4567-e89b-42d3-a456-426614174006",
-  "source": "urn:organisatie:voorbeeld:systeem:uitkomstoverleg",
-  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat",
-  "time": "2026-01-10T12:05:00Z",
-  "subject": "<interactie-id>",
-  "datacontenttype": "application/ld+json",
-  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
-  "data": {
-    "@context": {
-      "prov": "http://www.w3.org/ns/prov#",
-      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
-    },
-    "@graph": [
-      // Uitkomst Overleg 1
-      {
-        "@id": "urn:uitkomst-overleg:12345",
-        "@type": [
-          "prov:Entity",
-          "soh:UitkomstOverleg"
-        ],
-        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345",
-        "soh:heeftBetrokkene": {
-          "@id": "urn:betrokkene:67890"
-        },
-        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-10",
-        "soh:UitkomstOverleg.inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
-      },
-      // Betrokkene die bij Uitkomst Overleg 1 hoort.
-      {
-        "@id": "urn:betrokkene:67890",
-        "@type": "soh:Betrokkene",
-        "soh:Betrokkene.identificatieType": "BSN",
-        "soh:Betrokkene.identificatieWaarde": "123456789",
-        "soh:Betrokkene.woonplaats": "Deventer"
-      },
-      // Uitkomst Overleg 2
-      {
-        "@id": "urn:uitkomst-overleg:67890",
-        "@type": [
-          "prov:Entity",
-          "soh:UitkomstOverleg"
-        ],
-        "soh:UitkomstOverleg.identifier": "ZAAK-2026-67890",
-        "soh:heeftBetrokkene": {
-          "@id": "urn:betrokkene:54321"
-        },
-        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-12",
-        "soh:UitkomstOverleg.inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/67890"
-      },
-      // Betrokkene die bij Uitkomst Overleg 2 hoort.
-      {
-        "@id": "urn:betrokkene:54321",
-        "@type": "soh:Betrokkene",
-        "soh:Betrokkene.identificatieType": "V-NUMMER",
-        "soh:Betrokkene.identificatieWaarde": "1234567890",
-        "soh:Betrokkene.woonplaats": "Zwolle"
-      }
-    ]
-  }
-}
-```
+<pre class="json" data-include="voorbeelden/uitkomst-overleg/queryresultaat.json" data-include-format="text"></pre>
+
+[Dit voorbeeld als graph bekijken](kennis-graph.html?voorbeeld=uitkomst-overleg/queryresultaat)
 
 
-De commentaarregels zijn bedoeld ter toelichting; het voorbeeld is daarom JSONC en geen strikt JSON. De objecten staan als afzonderlijke blokken in één `@graph`-array. Verwijzingen via `@id` verbinden iedere Uitkomst Overleg met de bijbehorende Betrokkene.\n\nDit voorbeeld laat alleen de generieke structuur van een queryresultaat
+De objecten staan als afzonderlijke blokken in één `@graph`-array. Verwijzingen via `@id` verbinden iedere Uitkomst Overleg met de bijbehorende Betrokkene.
+
+Dit voorbeeld laat alleen de generieke structuur van een queryresultaat
 zien. De precieze resultaatgraaf wordt bepaald door de informatievraag en
 kan naast domeinobjecten ook activiteiten, actoren en relevante relaties
 bevatten.
@@ -840,6 +709,8 @@ Het schema is bedoeld voor structurele validatie. Het controleert niet
 de volledige semantische samenhang van de provenance-graaf. Semantische
 validatie, bijvoorbeeld met SHACL, kan in een toekomstige uitbreiding
 worden toegevoegd.
+
+Met de [kennis-graph](kennis-graph.html?view=paste) kan een eigen CloudEvent alvast worden gecontroleerd op `@id`-verwijzingen die niet naar een node in de `@graph` wijzen.
 
 In het CloudEvent wordt het schema aangewezen met het attribuut
 `dataschema`:

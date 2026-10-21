@@ -38,6 +38,15 @@ let respecConfig = {
       }
     ],
   github: "https://github.com/samen-onder-handbereik/specificaties",
+  otherLinks: [
+    {
+      key: "Interactief:",
+      data: [
+        { value: "API-specificaties", href: "api.html" },
+        { value: "Kennis-graph", href: "kennis-graph.html" },
+      ],
+    },
+  ],
 
   maxTocLevel: 5,
 

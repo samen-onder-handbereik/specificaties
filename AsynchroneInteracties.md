@@ -20,7 +20,7 @@ en eventuele domeinspecifieke validaties.
 
 De technische contracten van de generieke API's zijn vastgelegd in de
 OpenAPI-specificatie
-[AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml).
+[AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml) ([interactief bekijken](api.html?spec=AsynchroneInteracties) · [openen in Swagger Editor](https://editor.swagger.io/?url=https://samen-onder-handbereik.github.io/specificaties/yaml/AsynchroneInteracties.yaml)).
 
 ### Toepassingsgebied
 
@@ -643,4 +643,6 @@ De OpenAPI-specificatie bevat onder andere:
 
 De OpenAPI-specificatie voor het generieke asynchrone interactiepatroon
 is opgenomen in
-[AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml).
+[AsynchroneInteracties.yaml](yaml/AsynchroneInteracties.yaml) ([interactief bekijken](api.html?spec=AsynchroneInteracties) · [openen in Swagger Editor](https://editor.swagger.io/?url=https://samen-onder-handbereik.github.io/specificaties/yaml/AsynchroneInteracties.yaml)).
+
+<details class="soh-api" data-spec="AsynchroneInteracties"><summary>API Asynchrone Interacties interactief bekijken</summary></details>

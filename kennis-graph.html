@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kennis-graph - Samen onder Handbereik</title>
+  <link rel="shortcut icon" type="image/x-icon" href="https://leongrinwis.github.io/respectvngorg/media/handenblauwlogosmall.png" />
+  <style>
+    :root {
+      --soh-blue: #154273;
+      --bg: #fff;
+      --fg: #1f2933;
+      --muted: #5f6b7a;
+      --panel: #f4f6f9;
+      --border: #d3d9e0;
+      --error: #d92d20;
+      --entity: #ffc454;
+      --entity-border: #d9a33f;
+      --entity-text: #3b2f12;
+      --activity: #4c8eda;
+      --activity-border: #2f6db5;
+      --agent: #f79767;
+      --agent-border: #d4733f;
+      --other: #c990c0;
+      --other-border: #a46f9b;
+      --node-text: #fff;
+      --edge: #a5abb6;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #12171d;
+        --fg: #e4e9ef;
+        --muted: #9aa5b1;
+        --panel: #1c232c;
+        --border: #323d4a;
+        --error: #f97066;
+        --edge: #6b7685;
+      }
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--soh-blue);
+      color: #fff;
+    }
+    header h1 {
+      margin: 0 auto 0 0;
+      font-size: 1.2em;
+    }
+    header a {
+      color: #fff;
+    }
+    header .nav {
+      font-weight: bold;
+    }
+    header select,
+    header button {
+      font-size: 0.95em;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #fff;
+    }
+    header select {
+      max-width: 240px;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    header button {
+      color: var(--soh-blue);
+      background: #fff;
+      cursor: pointer;
+    }
+    header button[aria-pressed="true"] {
+      color: #fff;
+      background: transparent;
+    }
+    main {
+      display: grid;
+      flex: 1;
+      min-height: 0;
+      grid-template-columns: 1fr 360px;
+    }
+    .canvas {
+      position: relative;
+      min-height: 400px;
+      overflow: hidden;
+    }
+    #graph {
+      position: absolute;
+      inset: 0;
+    }
+    .hint {
+      position: absolute;
+      left: 12px;
+      bottom: 10px;
+      margin: 0;
+      font-size: 0.8em;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    aside {
+      overflow-y: auto;
+      padding: 16px;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+    }
+    aside h2 {
+      margin-top: 0;
+      font-size: 1.1em;
+    }
+    aside p,
+    aside li {
+      color: var(--muted);
+      font-size: 0.9em;
+    }
+    dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 12px;
+      font-size: 0.9em;
+    }
+    dt {
+      font-weight: bold;
+    }
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+    code {
+      font-size: 0.95em;
+    }
+    textarea {
+      width: 100%;
+      height: 220px;
+      font-family: monospace;
+      font-size: 0.85em;
+      background: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--border);
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      list-style: none;
+    }
+    .legend span {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 4px;
+      vertical-align: middle;
+      border-radius: 50%;
+    }
+    .problems {
+      color: var(--error);
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 800px) {
+      body {
+        height: auto;
+      }
+      main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 60vh auto;
+      }
+      aside {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1><a href="index.html">Specificatie samenwerkfuncties</a> · Kennis-graph</h1>
+    <a class="nav" href="api.html">API's</a>
+    <label for="example" class="sr-only">Voorbeeld</label>
+    <select id="example"></select>
+    <button id="view-model" type="button" aria-pressed="false">Informatiemodel</button>
+    <button id="view-paste" type="button" aria-pressed="false">Eigen JSON-LD</button>
+  </header>
+  <main>
+    <div class="canvas">
+      <div id="graph"></div>
+      <p class="hint">Sleep nodes om de graph te herschikken · dubbelklik voor de buren · scroll om te zoomen</p>
+    </div>
+    <aside>
+      <section id="paste" class="hidden">
+        <h2>Eigen JSON-LD</h2>
+        <p>Plak een CloudEvent of een JSON-LD-document met een <code>@graph</code>. De graph werkt bij terwijl je typt. Commentaarregels (<code>//</code>) zijn toegestaan.</p>
+        <textarea id="paste-input" spellcheck="false"></textarea>
+        <p><button id="paste-load" type="button">Gekozen voorbeeld laden</button></p>
+      </section>
+      <section id="details"></section>
+      <section>
+        <h2>Legenda</h2>
+        <ul class="legend">
+          <li><span style="background: var(--entity)"></span>prov:Entity</li>
+          <li><span style="background: var(--activity)"></span>prov:Activity</li>
+          <li><span style="background: var(--agent)"></span>prov:Agent</li>
+          <li><span style="background: var(--other)"></span>overig</li>
+          <li><span style="border: 2px dashed var(--error)"></span>ontbreekt</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.2/cytoscape.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/webcola@3.4.0/WebCola/cola.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-cola@2.5.1/cytoscape-cola.js"></script>
+  <script>
+    const exampleIndex = "voorbeelden/index.json";
+    const modelSources = ["UitwisselenUitkomstOverleg.md"];
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const examples = [];
+    const modelRows = [];
+    const footnoteMarks = /[¹²³⁴⁵⁶⁷⁸⁹]/;
+    let cy;
+    let current = { elements: [], intro: "" };
+
+    function parseJsonc(text) {
+      return JSON.parse(text.split("\n").filter((line) => !line.trim().startsWith("//")).join("\n"));
+    }
+
+    async function loadExamples() {
+      const { voorbeelden } = await (await fetch(exampleIndex)).json();
+      const folder = exampleIndex.replace(/[^/]*$/, "");
+      return Promise.all(
+        voorbeelden.map(async ({ titel, bestand, hoofdstuk }) => ({
+          id: bestand.replace(/\.json$/, ""),
+          title: titel,
+          file: folder + bestand,
+          chapter: hoofdstuk,
+          doc: await (await fetch(folder + bestand)).json(),
+        })),
+      );
+    }
+
+    function exampleById(id) {
+      return examples.find((example) => example.id === id) ?? examples[0];
+    }
+
+    function extractModelTable(file, markdown) {
+      const lines = markdown.split("\n");
+      let i = lines.findIndex((line) => /^#{2,4}\s+Overzicht informatiemodel\s*$/.test(line));
+      if (i === -1) {
+        return [];
+      }
+      while (i < lines.length && !lines[i].startsWith("|")) {
+        i++;
+      }
+      const table = [];
+      for (; i < lines.length && lines[i].startsWith("|"); i++) {
+        table.push(lines[i].split("|").slice(1, -1).map((cell) => cell.trim()));
+      }
+      const footnotes = new Map();
+      for (; i < lines.length && !lines[i].startsWith("#"); i++) {
+        const note = lines[i].match(new RegExp(`^(${footnoteMarks.source})\\s+(.*)`));
+        if (!note) {
+          continue;
+        }
+        const text = [note[2]];
+        while (lines[i + 1]?.trim()) {
+          text.push(lines[++i].trim());
+        }
+        footnotes.set(note[1], text.join(" "));
+      }
+      const plain = (cell) => cell.replace(/`/g, "").replace(footnoteMarks, "").trim();
+      return table.slice(2).map(([, type, prov, properties]) => ({
+        file,
+        type: plain(type),
+        prov: plain(prov),
+        condition: footnotes.get(prov.match(footnoteMarks)?.[0]) ?? null,
+        properties: properties.split(",").map((property) => `${plain(type)}.${property.trim()}`),
+      }));
+    }
+
+    function graphOf(doc) {
+      return (doc.data ?? doc)["@graph"] ?? [];
+    }
+
+    const asList = (value) => (Array.isArray(value) ? value : [value]);
+    const isRef = (value) => value && typeof value === "object" && Object.keys(value).length === 1 && "@id" in value;
+    const shortName = (name) => name.replace(/^[a-z]+:/, "");
+    const shortId = (id) => id.split(":").pop();
+
+    function primaryType(types) {
+      return types.find((type) => !type.startsWith("prov:")) ?? types[0] ?? "(geen type)";
+    }
+
+    function provClass(types) {
+      for (const [type, cls] of [["prov:Activity", "activity"], ["prov:Agent", "agent"], ["prov:Entity", "entity"]]) {
+        if (types.includes(type)) {
+          return cls;
+        }
+      }
+      return "other";
+    }
+
+    function buildInstanceGraph(doc) {
+      const nodes = graphOf(doc);
+      const ids = new Set(nodes.map((node) => node["@id"]));
+      const elements = [];
+      const problems = [];
+      for (const node of nodes) {
+        const types = asList(node["@type"] ?? []);
+        const literals = {};
+        const title = primaryType(types);
+        elements.push({
+          group: "nodes",
+          classes: provClass(types),
+          data: { id: node["@id"], title, label: `${shortName(title)}\n${shortId(node["@id"])}`, types, literals },
+        });
+        for (const [key, value] of Object.entries(node)) {
+          if (key.startsWith("@")) {
+            continue;
+          }
+          for (const item of asList(value)) {
+            if (!isRef(item)) {
+              literals[key] = value;
+              continue;
+            }
+            if (!ids.has(item["@id"])) {
+              ids.add(item["@id"]);
+              problems.push(`<code>${key}</code> van <code>${node["@id"]}</code> verwijst naar <code>${item["@id"]}</code>, maar die node staat niet in de <code>@graph</code>.`);
+              elements.push({
+                group: "nodes",
+                classes: "missing",
+                data: { id: item["@id"], title: "ontbreekt", label: `ontbreekt\n${shortId(item["@id"])}`, types: [], literals: {} },
+              });
+            }
+            elements.push({ group: "edges", data: { source: node["@id"], target: item["@id"], label: key } });
+          }
+        }
+      }
+      return { elements, problems };
+    }
+
+    function buildModelGraph() {
+      const types = new Map();
+      const edges = new Map();
+      const entryFor = (name) => {
+        if (!types.has(name)) {
+          types.set(name, { types: new Set([name]), properties: new Map(), examples: new Set(), condition: null });
+        }
+        return types.get(name);
+      };
+      const addProperty = (entry, property, source) => {
+        entry.properties.set(property, (entry.properties.get(property) ?? new Set()).add(source));
+      };
+
+      for (const row of modelRows) {
+        const entry = entryFor(row.type);
+        if (row.condition) {
+          entry.condition = `${row.prov}: ${row.condition}`;
+        } else {
+          entry.types.add(row.prov);
+        }
+        row.properties.forEach((property) => addProperty(entry, property, "model"));
+      }
+
+      for (const example of examples) {
+        const nodes = graphOf(example.doc);
+        const typeOf = new Map(nodes.map((node) => [node["@id"], asList(node["@type"] ?? [])]));
+        for (const node of nodes) {
+          const nodeTypes = typeOf.get(node["@id"]);
+          const name = primaryType(nodeTypes);
+          const entry = entryFor(name);
+          nodeTypes.forEach((type) => entry.types.add(type));
+          entry.examples.add(example.title);
+          for (const [key, value] of Object.entries(node)) {
+            if (key.startsWith("@")) {
+              continue;
+            }
+            for (const item of asList(value)) {
+              if (isRef(item) && typeOf.has(item["@id"])) {
+                const target = primaryType(typeOf.get(item["@id"]));
+                edges.set(`${name}|${key}|${target}`, { source: name, target, label: key });
+              } else if (!isRef(item)) {
+                addProperty(entry, key, "voorbeeld");
+              }
+            }
+          }
+        }
+      }
+
+      const differences = [];
+      const nodes = [...types].map(([name, entry]) => {
+        const properties = [...entry.properties].map(([property, found]) => {
+          if (found.size === 2) {
+            return property;
+          }
+          const where = found.has("model") ? "alleen in informatiemodel" : "alleen in voorbeelden";
+          differences.push(`<code>${escape(property)}</code>: ${where}`);
+          return `${property} (${where})`;
+        });
+        const literals = { eigenschappen: properties };
+        if (entry.condition) {
+          literals["PROV-typering"] = entry.condition;
+        }
+        literals["komt voor in"] = entry.examples.size ? [...entry.examples] : "geen enkel voorbeeld";
+        return {
+          group: "nodes",
+          classes: provClass([...entry.types]),
+          data: { id: name, title: name, label: shortName(name), types: [...entry.types], literals },
+        };
+      });
+      return { elements: [...nodes, ...[...edges.values()].map((edge) => ({ group: "edges", data: edge }))], differences };
+    }
+
+    function nodeStyle(cls) {
+      return {
+        "background-color": css(`--${cls}`),
+        "border-color": css(`--${cls}-border`),
+        color: cls === "entity" ? css("--entity-text") : css("--node-text"),
+      };
+    }
+
+    function drawGraph(elements) {
+      cy?.destroy();
+      cy = cytoscape({
+        container: document.getElementById("graph"),
+        elements: structuredClone(elements),
+        minZoom: 0.3,
+        maxZoom: 2.5,
+        style: [
+          {
+            selector: "node",
+            style: {
+              shape: "ellipse",
+              width: 110,
+              height: 110,
+              label: "data(label)",
+              "text-wrap": "wrap",
+              "text-overflow-wrap": "anywhere",
+              "text-max-width": 98,
+              "text-valign": "center",
+              "font-size": 10,
+              "font-weight": "bold",
+              "border-width": 2,
+              "underlay-padding": 9,
+              "underlay-opacity": 0,
+              "underlay-shape": "ellipse",
+              "transition-property": "opacity, underlay-opacity",
+              "transition-duration": 150,
+            },
+          },
+          { selector: ".entity", style: nodeStyle("entity") },
+          { selector: ".activity", style: nodeStyle("activity") },
+          { selector: ".agent", style: nodeStyle("agent") },
+          { selector: ".other", style: nodeStyle("other") },
+          {
+            selector: ".missing",
+            style: { "background-color": css("--bg"), "border-style": "dashed", "border-color": css("--error"), color: css("--error") },
+          },
+          {
+            selector: "edge",
+            style: {
+              label: "data(label)",
+              "font-size": 9,
+              color: css("--muted"),
+              "text-rotation": "autorotate",
+              "text-margin-y": -8,
+              width: 2,
+              "line-color": css("--edge"),
+              "target-arrow-color": css("--edge"),
+              "target-arrow-shape": "triangle",
+              "arrow-scale": 1.1,
+              "curve-style": "bezier",
+              "transition-property": "opacity",
+              "transition-duration": 150,
+            },
+          },
+          { selector: "node.hover, node:selected", style: { "underlay-color": css("--activity"), "underlay-opacity": 0.35 } },
+          { selector: "edge.hover, edge.focus", style: { "line-color": css("--activity"), "target-arrow-color": css("--activity"), color: css("--fg"), width: 3 } },
+          { selector: ".faded", style: { opacity: 0.15 } },
+        ],
+      });
+      cy.on("mouseover", "node, edge", (event) => event.target.addClass("hover"));
+      cy.on("mouseout", "node, edge", (event) => event.target.removeClass("hover"));
+      cy.on("tap", "node", (event) => showNode(event.target.data()));
+      cy.on("dbltap", "node", (event) => {
+        const neighbourhood = event.target.closedNeighborhood();
+        cy.elements().addClass("faded").removeClass("focus");
+        neighbourhood.removeClass("faded");
+        neighbourhood.edges().addClass("focus");
+      });
+      cy.on("tap", (event) => {
+        if (event.target === cy) {
+          cy.elements().removeClass("faded focus");
+          details.innerHTML = current.intro;
+        }
+      });
+      cy.layout({ name: "cola", animate: false, maxSimulationTime: 1500, edgeLength: 250, nodeSpacing: 25, padding: 40 })
+        .one("layoutstop", () => {
+          if (cy.zoom() > 1.1) {
+            cy.zoom(1.1);
+            cy.center();
+          }
+          cy.layout({ name: "cola", infinite: true, fit: false, edgeLength: 250, nodeSpacing: 25 }).run();
+        })
+        .run();
+    }
+
+    function render(elements, intro) {
+      current = { elements, intro };
+      details.innerHTML = intro;
+      drawGraph(elements);
+    }
+
+    const escape = (text) => String(text).replace(/[&<>"]/g, (c) => `&${{ "&": "amp", "<": "lt", ">": "gt", '"': "quot" }[c]};`);
+    const inlineCode = (text) => escape(text).replace(/`([^`]+)`/g, "<code>$1</code>");
+    const details = document.getElementById("details");
+
+    function showNode(data) {
+      const rows = Object.entries(data.literals)
+        .map(([key, value]) => `<dt><code>${escape(key)}</code></dt><dd>${asList(value).map(inlineCode).join("<br>") || "-"}</dd>`)
+        .join("");
+      const id = data.id === data.title ? "" : `<dt>@id</dt><dd><code>${escape(data.id)}</code></dd>`;
+      details.innerHTML = `
+        <h2>${escape(data.title)}</h2>
+        <dl>
+          ${id}
+          <dt>@type</dt><dd>${data.types.map((type) => `<code>${escape(type)}</code>`).join("<br>") || "-"}</dd>
+          ${rows}
+        </dl>`;
+    }
+
+    function exampleIntro(example, problems) {
+      const event = example.doc.type ? `<p>CloudEvent-type <code>${escape(example.doc.type)}</code>.</p>` : "";
+      const problemList = problems.length ? `<ul class="problems">${problems.map((problem) => `<li>${problem}</li>`).join("")}</ul>` : "";
+      return `<h2>${escape(example.title)}</h2>${event}<p>Bron: <a href="${escape(example.file)}">${escape(example.file)}</a>, opgenomen in <a href="${escape(example.chapter)}">${escape(example.chapter)}</a>. Klik op een node voor de details.</p>${problemList}`;
+    }
+
+    function setParam(key, value) {
+      const params = new URLSearchParams(location.search);
+      if (value === null) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+      history.replaceState(null, "", `?${params}`);
+    }
+
+    function setView(view) {
+      document.getElementById("view-model").setAttribute("aria-pressed", view === "model");
+      document.getElementById("view-paste").setAttribute("aria-pressed", view === "paste");
+      document.getElementById("paste").classList.toggle("hidden", view !== "paste");
+      setParam("view", view);
+    }
+
+    function showExample(id) {
+      const example = exampleById(id);
+      setView("voorbeeld");
+      setParam("voorbeeld", example.id);
+      const { elements, problems } = buildInstanceGraph(example.doc);
+      render(elements, exampleIntro(example, problems));
+    }
+
+    function showModel() {
+      setView("model");
+      const { elements, differences } = buildModelGraph();
+      const tables = [...new Set(modelRows.map((row) => row.file))];
+      const source = tables.length
+        ? `het overzicht informatiemodel in ${tables.map((file) => `<a href="${escape(file)}">${escape(file)}</a>`).join(", ")} en`
+        : "";
+      const differenceList = differences.length
+        ? `<p>Verschillen tussen informatiemodel en voorbeelden:</p><ul>${differences.map((difference) => `<li>${difference}</li>`).join("")}</ul>`
+        : "<p>Informatiemodel en voorbeelden noemen dezelfde eigenschappen.</p>";
+      render(
+        elements,
+        `<h2>Informatiemodel</h2><p>Afgeleid uit ${source} alle ${examples.length} voorbeelden: één node per type, met de relaties die tussen die types voorkomen. Klik op een type voor de eigenschappen.</p>${differenceList}`,
+      );
+    }
+
+    function showPaste() {
+      setView("paste");
+      if (document.getElementById("paste-input").value) {
+        showPasted();
+      } else {
+        loadSelectedExample();
+      }
+    }
+
+    function loadSelectedExample() {
+      document.getElementById("paste-input").value = JSON.stringify(exampleById(document.getElementById("example").value).doc, null, 2);
+      showPasted();
+    }
+
+    function showPasted() {
+      let doc;
+      try {
+        doc = parseJsonc(document.getElementById("paste-input").value);
+      } catch (err) {
+        render([], `<p class="problems">Geen geldige JSON: ${escape(err.message)}</p>`);
+        return;
+      }
+      if (!graphOf(doc).length) {
+        render([], `<p class="problems">Geen <code>@graph</code> gevonden, ook niet onder <code>data</code>.</p>`);
+        return;
+      }
+      const { elements, problems } = buildInstanceGraph(doc);
+      const summary = problems.length
+        ? `<ul class="problems">${problems.map((problem) => `<li>${problem}</li>`).join("")}</ul>`
+        : `<p>Alle <code>@id</code>-verwijzingen wijzen naar een node in de <code>@graph</code>.</p>`;
+      render(elements, `<h2>Resultaat</h2>${summary}`);
+    }
+
+    async function init() {
+      examples.push(...(await loadExamples()));
+      for (const file of modelSources) {
+        const response = await fetch(file);
+        if (response.ok) {
+          modelRows.push(...extractModelTable(file, await response.text()));
+        }
+      }
+      const select = document.getElementById("example");
+      examples.forEach((example) => select.add(new Option(example.title, example.id)));
+      select.addEventListener("change", () => showExample(select.value));
+      document.getElementById("view-model").addEventListener("click", showModel);
+      document.getElementById("view-paste").addEventListener("click", showPaste);
+      document.getElementById("paste-load").addEventListener("click", loadSelectedExample);
+      let typing;
+      document.getElementById("paste-input").addEventListener("input", () => {
+        clearTimeout(typing);
+        typing = setTimeout(showPasted, 400);
+      });
+
+      const params = new URLSearchParams(location.search);
+      select.value = exampleById(params.get("voorbeeld")).id;
+      const views = { model: showModel, paste: showPaste };
+      (views[params.get("view")] ?? (() => showExample(select.value)))();
+    }
+
+    init();
+  </script>
+</body>
+
+</html>

@@ -333,6 +333,8 @@ Een eenvoudige representatie van de samenhang:
               v
     (:Entity:Betrokkene)
 
+De voorbeelden en het informatiemodel van de samenwerkfuncties zijn interactief te bekijken in de [kennis-graph](kennis-graph.html).
+
 ## Samenwerkfunctie-specifieke uitbreiding
 
 Een samenwerkfunctie bepaalt:

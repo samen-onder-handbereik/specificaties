@@ -1,0 +1,19 @@
+{
+  "voorbeelden": [
+    {
+      "titel": "Uitkomst beschikbaar gesteld",
+      "bestand": "uitkomst-overleg/uitkomst-beschikbaar-gesteld.json",
+      "hoofdstuk": "UitwisselenUitkomstOverleg.md"
+    },
+    {
+      "titel": "Uitkomst ingezien",
+      "bestand": "uitkomst-overleg/uitkomst-ingezien.json",
+      "hoofdstuk": "UitwisselenUitkomstOverleg.md"
+    },
+    {
+      "titel": "Resultaat van een informatievraag",
+      "bestand": "uitkomst-overleg/queryresultaat.json",
+      "hoofdstuk": "UitwisselenUitkomstOverleg.md"
+    }
+  ]
+}
