@@ -393,7 +393,9 @@ object binnen de provenance-graaf.
 
 ### Concepten
 
-#### UitkomstOverleg
+#### UitkomstOverleg {#concept-uitkomstoverleg}
+
+[UitkomstOverleg als graph bekijken](kennis-graph.html?view=model&type=soh:UitkomstOverleg)
 
 Type:
 
@@ -408,7 +410,9 @@ Eigenschappen:
 - `beschikbaarGesteldOp`;
 - `inzageUrl`.
 
-#### Betrokkene
+#### Betrokkene {#concept-betrokkene}
+
+[Betrokkene als graph bekijken](kennis-graph.html?view=model&type=soh:Betrokkene)
 
 Type:
 
@@ -432,7 +436,9 @@ Eigenschappen:
 
 De `identifier` identificeert het domeinobject `Betrokkene` in de Knowledge graph. Deze identifier staat los van de persoonsidentificatie, die bestaat uit een typering en een identificatiewaarde. De typering is een stabiele code, bijvoorbeeld `BSN` of `V-NUMMER`.
 
-#### Organisatie
+#### Organisatie {#concept-organisatie}
+
+[Organisatie als graph bekijken](kennis-graph.html?view=model&type=soh:Organisatie)
 
 Type:
 
@@ -446,7 +452,9 @@ Eigenschappen:
 - `identifier`;
 - `naam`.
 
-#### BeschikbaarStellenUitkomstOverleg
+#### BeschikbaarStellenUitkomstOverleg {#concept-beschikbaarstellenuitkomstoverleg}
+
+[BeschikbaarStellenUitkomstOverleg als graph bekijken](kennis-graph.html?view=model&type=soh:BeschikbaarStellenUitkomstOverleg)
 
 Type:
 
@@ -461,7 +469,9 @@ Eigenschappen:
 - `tijdstip` --- het tijdstip waarop de activiteit daadwerkelijk heeft
   plaatsgevonden.
 
-#### InzienUitkomstOverleg
+#### InzienUitkomstOverleg {#concept-inzienuitkomstoverleg}
+
+[InzienUitkomstOverleg als graph bekijken](kennis-graph.html?view=model&type=soh:InzienUitkomstOverleg)
 
 Type:
 

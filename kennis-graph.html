@@ -61,7 +61,7 @@
     }
     header h1 {
       margin: 0 auto 0 0;
-      font-size: 1.2em;
+      font-size: 1.1em;
     }
     header a {
       color: #fff;
@@ -77,7 +77,7 @@
       border: 1px solid #fff;
     }
     header select {
-      max-width: 240px;
+      max-width: 200px;
     }
     .sr-only {
       position: absolute;
@@ -178,6 +178,14 @@
     .problems {
       color: var(--error);
     }
+    fieldset {
+      margin: 0 0 16px;
+      border: 1px solid var(--border);
+    }
+    #combine-examples label {
+      display: block;
+      font-size: 0.9em;
+    }
     .hidden {
       display: none;
     }
@@ -204,6 +212,7 @@
     <label for="example" class="sr-only">Voorbeeld</label>
     <select id="example"></select>
     <button id="view-model" type="button" aria-pressed="false">Informatiemodel</button>
+    <button id="view-combined" type="button" aria-pressed="false">Gecombineerd</button>
     <button id="view-paste" type="button" aria-pressed="false">Eigen JSON-LD</button>
   </header>
   <main>
@@ -218,6 +227,10 @@
         <textarea id="paste-input" spellcheck="false"></textarea>
         <p><button id="paste-load" type="button">Gekozen voorbeeld laden</button></p>
       </section>
+      <fieldset id="combine" class="hidden">
+        <legend>Samen te voegen voorbeelden</legend>
+        <div id="combine-examples"></div>
+      </fieldset>
       <section id="details"></section>
       <section>
         <h2>Legenda</h2>
@@ -227,6 +240,7 @@
           <li><span style="background: var(--agent)"></span>prov:Agent</li>
           <li><span style="background: var(--other)"></span>overig</li>
           <li><span style="border: 2px dashed var(--error)"></span>ontbreekt</li>
+          <li><span style="border: 4px double var(--fg)"></span>in meerdere voorbeelden</li>
         </ul>
       </section>
     </aside>
@@ -241,6 +255,8 @@
     const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     const examples = [];
     const modelRows = [];
+    const conceptAnchors = new Map();
+    const combineChoice = new Set();
     const footnoteMarks = /[¹²³⁴⁵⁶⁷⁸⁹]/;
     let cy;
     let current = { elements: [], intro: "" };
@@ -300,6 +316,15 @@
         condition: footnotes.get(prov.match(footnoteMarks)?.[0]) ?? null,
         properties: properties.split(",").map((property) => `${plain(type)}.${property.trim()}`),
       }));
+    }
+
+    function extractConceptAnchors(markdown) {
+      for (const line of markdown.split("\n")) {
+        const heading = line.match(/^#{2,6}\s+(\S+)\s+\{#(concept-[a-z0-9-]+)\}\s*$/);
+        if (heading) {
+          conceptAnchors.set(heading[1], `index.html#${heading[2]}`);
+        }
+      }
     }
 
     function graphOf(doc) {
@@ -435,6 +460,52 @@
       return { elements: [...nodes, ...[...edges.values()].map((edge) => ({ group: "edges", data: edge }))], differences };
     }
 
+    function buildCombinedGraph(selected) {
+      const nodes = new Map();
+      const edges = new Map();
+      for (const example of selected) {
+        for (const node of graphOf(example.doc)) {
+          const id = node["@id"];
+          if (!nodes.has(id)) {
+            nodes.set(id, { types: new Set(), literals: new Map(), examples: new Set() });
+          }
+          const entry = nodes.get(id);
+          asList(node["@type"] ?? []).forEach((type) => entry.types.add(type));
+          entry.examples.add(example.title);
+          for (const [key, value] of Object.entries(node)) {
+            if (key.startsWith("@")) {
+              continue;
+            }
+            for (const item of asList(value)) {
+              if (isRef(item)) {
+                edges.set(`${id}|${key}|${item["@id"]}`, { source: id, target: item["@id"], label: key });
+              } else {
+                entry.literals.set(key, (entry.literals.get(key) ?? new Set()).add(item));
+              }
+            }
+          }
+        }
+      }
+      const shared = [...nodes].filter(([, entry]) => entry.examples.size > 1).map(([id]) => id);
+      const elements = [...nodes].map(([id, entry]) => {
+        const types = [...entry.types];
+        const title = primaryType(types);
+        const literals = Object.fromEntries([...entry.literals].map(([key, values]) => [key, [...values]]));
+        literals["komt voor in"] = [...entry.examples];
+        return {
+          group: "nodes",
+          classes: entry.examples.size > 1 ? `${provClass(types)} shared` : provClass(types),
+          data: { id, title, label: `${shortName(title)}\n${shortId(id)}`, types, literals },
+        };
+      });
+      for (const edge of edges.values()) {
+        if (nodes.has(edge.target)) {
+          elements.push({ group: "edges", data: edge });
+        }
+      }
+      return { elements, shared };
+    }
+
     function nodeStyle(cls) {
       return {
         "background-color": css(`--${cls}`),
@@ -476,6 +547,7 @@
           { selector: ".activity", style: nodeStyle("activity") },
           { selector: ".agent", style: nodeStyle("agent") },
           { selector: ".other", style: nodeStyle("other") },
+          { selector: ".shared", style: { "border-width": 7, "border-style": "double" } },
           {
             selector: ".missing",
             style: { "background-color": css("--bg"), "border-style": "dashed", "border-color": css("--error"), color: css("--error") },
@@ -529,10 +601,15 @@
         .run();
     }
 
-    function render(elements, intro) {
+    function render(elements, intro, focus) {
       current = { elements, intro };
       details.innerHTML = intro;
       drawGraph(elements);
+      const node = focus ? cy.$id(focus) : cy.collection();
+      if (node.nonempty()) {
+        node.select();
+        showNode(node.data());
+      }
     }
 
     const escape = (text) => String(text).replace(/[&<>"]/g, (c) => `&${{ "&": "amp", "<": "lt", ">": "gt", '"': "quot" }[c]};`);
@@ -544,13 +621,16 @@
         .map(([key, value]) => `<dt><code>${escape(key)}</code></dt><dd>${asList(value).map(inlineCode).join("<br>") || "-"}</dd>`)
         .join("");
       const id = data.id === data.title ? "" : `<dt>@id</dt><dd><code>${escape(data.id)}</code></dd>`;
+      const anchor = conceptAnchors.get(shortName(data.title));
+      const spec = anchor ? `<p><a href="${escape(anchor)}">${escape(shortName(data.title))} in de specificatie</a></p>` : "";
       details.innerHTML = `
         <h2>${escape(data.title)}</h2>
         <dl>
           ${id}
           <dt>@type</dt><dd>${data.types.map((type) => `<code>${escape(type)}</code>`).join("<br>") || "-"}</dd>
           ${rows}
-        </dl>`;
+        </dl>
+        ${spec}`;
     }
 
     function exampleIntro(example, problems) {
@@ -571,9 +651,12 @@
 
     function setView(view) {
       document.getElementById("view-model").setAttribute("aria-pressed", view === "model");
+      document.getElementById("view-combined").setAttribute("aria-pressed", view === "gecombineerd");
       document.getElementById("view-paste").setAttribute("aria-pressed", view === "paste");
       document.getElementById("paste").classList.toggle("hidden", view !== "paste");
+      document.getElementById("combine").classList.toggle("hidden", view !== "gecombineerd");
       setParam("view", view);
+      setParam("type", null);
     }
 
     function showExample(id) {
@@ -584,8 +667,9 @@
       render(elements, exampleIntro(example, problems));
     }
 
-    function showModel() {
+    function showModel(focus) {
       setView("model");
+      setParam("type", focus ?? null);
       const { elements, differences } = buildModelGraph();
       const tables = [...new Set(modelRows.map((row) => row.file))];
       const source = tables.length
@@ -597,6 +681,19 @@
       render(
         elements,
         `<h2>Informatiemodel</h2><p>Afgeleid uit ${source} alle ${examples.length} voorbeelden: één node per type, met de relaties die tussen die types voorkomen. Klik op een type voor de eigenschappen.</p>${differenceList}`,
+        focus,
+      );
+    }
+
+    function showCombined() {
+      setView("gecombineerd");
+      const selected = examples.filter((example) => combineChoice.has(example.id));
+      const { elements, shared } = buildCombinedGraph(selected);
+      const nodeCount = elements.filter((el) => el.group === "nodes").length;
+      const sharedList = shared.length ? `<ul>${shared.map((id) => `<li><code>${escape(id)}</code></li>`).join("")}</ul>` : "";
+      render(
+        elements,
+        `<h2>Gecombineerd</h2><p>${selected.length} voorbeelden samengevoegd tot één graph. Nodes met hetzelfde <code>@id</code> worden één node, omdat de Knowledge graph geen dubbele domeinobjecten mag bevatten (zie <a href="index.html#graphbuildspecification">Graph Build Specification</a>).</p><p>${nodeCount} nodes, waarvan ${shared.length} in meer dan één voorbeeld (dubbele rand):</p>${sharedList}<p>Een queryresultaat is een weergave van de graph en geen gebeurtenis die de graph opbouwt. Zet het uit om alleen de gebeurtenissen te combineren.</p>`,
       );
     }
 
@@ -638,13 +735,34 @@
       for (const file of modelSources) {
         const response = await fetch(file);
         if (response.ok) {
-          modelRows.push(...extractModelTable(file, await response.text()));
+          const markdown = await response.text();
+          modelRows.push(...extractModelTable(file, markdown));
+          extractConceptAnchors(markdown);
         }
       }
       const select = document.getElementById("example");
       examples.forEach((example) => select.add(new Option(example.title, example.id)));
       select.addEventListener("change", () => showExample(select.value));
-      document.getElementById("view-model").addEventListener("click", showModel);
+      document.getElementById("view-model").addEventListener("click", () => showModel());
+      document.getElementById("view-combined").addEventListener("click", showCombined);
+      const combineList = document.getElementById("combine-examples");
+      for (const example of examples) {
+        combineChoice.add(example.id);
+        const box = document.createElement("input");
+        box.type = "checkbox";
+        box.checked = true;
+        box.addEventListener("change", () => {
+          if (box.checked) {
+            combineChoice.add(example.id);
+          } else {
+            combineChoice.delete(example.id);
+          }
+          showCombined();
+        });
+        const label = document.createElement("label");
+        label.append(box, ` ${example.title}`);
+        combineList.append(label);
+      }
       document.getElementById("view-paste").addEventListener("click", showPaste);
       document.getElementById("paste-load").addEventListener("click", loadSelectedExample);
       let typing;
@@ -655,7 +773,7 @@
 
       const params = new URLSearchParams(location.search);
       select.value = exampleById(params.get("voorbeeld")).id;
-      const views = { model: showModel, paste: showPaste };
+      const views = { model: () => showModel(params.get("type")), gecombineerd: showCombined, paste: showPaste };
       (views[params.get("view")] ?? (() => showExample(select.value)))();
     }
 
