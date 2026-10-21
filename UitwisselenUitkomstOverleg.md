@@ -220,11 +220,10 @@ De URN's en waarden zijn fictief.
 }
 ```
 
-#### Nog te bevestigen ontwerpkeuzes
+#### Aandachtspunten
 
-- **Betrokkenegegevens:** het concept schrijft identificatietype en -waarde niet standaard verplicht voor. Bevestig per gebruikssituatie welke gegevens noodzakelijk en toegestaan zijn en of woonplaats mag worden opgenomen; beoordeel gegevensminimalisatie en autorisatie.
-- **Tijdstip:** bevestig of `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` optioneel blijft wanneer het werkelijke tijdstip niet bekend is.
-- **Beschikbaarheidsdatum:** `soh:UitkomstOverleg.beschikbaarGesteldOp` is als optionele eigenschap bij de Entity opgenomen. Als deze én `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` bij de Activity aanwezig zijn, moeten ze hetzelfde beschikbaarstellingsmoment beschrijven. Bevestig of deze dubbele representatie wenselijk is.
+- Dit event registreert de beschikbaarstelling van een bestaande Uitkomst Overleg, niet de activiteit waarmee deze oorspronkelijk is gegenereerd.
+- Interpreteer `soh:Betrokkene.identificatieType` en `soh:Betrokkene.identificatieWaarde` in samenhang. De `@id` van de `Betrokkene` identificeert het object in de Knowledge graph en is niet de persoonsidentificatie.
 
 ### Uitkomst ingezien
 
@@ -426,48 +425,14 @@ opnieuw de oorspronkelijke beschikbaarstellingsgebeurtenis.
 - Verwijzingen tussen nodes moeten overeenkomen met de `@id` van de bedoelde node in dezelfde graaf, tenzij een verwijzing naar een extern geïdentificeerd object expliciet is toegestaan.
 - Een resultaat kan nul, één of meer `UitkomstOverleg`-nodes bevatten.
 
-#### Volledig voorbeeld
+#### Voorbeeld
 
-Dit voorbeeld bevat één gevonden Uitkomst Overleg. De voorbeeldwaarden zijn
-fictief. De `soh:`-prefix wordt ook gebruikt voor de eigenschappen
-`beschikbaarGesteldOp` en `inzageUrl` zodat deze als termen in de JSON-LD-context
-zijn vastgelegd.
+Een voorbeeld van een queryresultaat met meerdere Uitkomsten Overleg is
+opgenomen onder [Resultaat van een informatievraag](#resultaat-van-een-informatievraag)
+in de paragraaf *Informatievragen*. Dat voorbeeld laat zien hoe meerdere
+`UitkomstOverleg`-objecten en bijbehorende `Betrokkene`-objecten binnen één
+`@graph`-array worden opgenomen.
 
-```json
-{
-  "specversion": "1.0",
-  "id": "019b7a12-6c2d-7abc-8def-1234567890ab",
-  "source": "urn:organisatie:voorbeeld:systeem:uitkomstoverleg",
-  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat",
-  "time": "2026-10-15T11:05:00Z",
-  "subject": "<interactie-id>",
-  "datacontenttype": "application/ld+json",
-  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
-  "data": {
-    "@context": {
-      "prov": "http://www.w3.org/ns/prov#",
-      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
-    },
-    "@graph": [
-      {
-        "@id": "urn:uitkomst-overleg:12345",
-        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
-        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345",
-        "soh:heeftBetrokkene": {"@id": "urn:betrokkene:67890"},
-        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-10",
-        "soh:UitkomstOverleg.inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
-      },
-      {
-        "@id": "urn:betrokkene:67890",
-        "@type": "soh:Betrokkene",
-        "soh:Betrokkene.identificatieType": "BSN",
-        "soh:Betrokkene.identificatieWaarde": "123456789",
-        "soh:Betrokkene.woonplaats": "Deventer"
-      }
-    ]
-  }
-}
-```
 
 #### Aandachtspunten
 
@@ -757,15 +722,37 @@ een `inzageUrl` bevatten waarmee de inhoudelijke resource via de Inzage-API kan
 worden geraadpleegd. De precieze omvang en structuur zijn afhankelijk van de
 informatievraag.
 
+De objecten in de resultaatgraaf zijn **afzonderlijke nodes in één `@graph`-array**.
+Ze worden niet gegroepeerd in aparte blokken per Uitkomst Overleg. De volgorde
+waarin de objecten in de array staan en de inspringing van de JSON leggen geen
+relatie tussen die objecten vast. De relatie wordt expliciet gelegd met een
+verwijzing via `@id`: bijvoorbeeld `soh:heeftBetrokkene` verwijst vanuit een
+`UitkomstOverleg` naar de bijbehorende `Betrokkene`.
+
+Schematisch bevat de `@graph` dus één reeks afzonderlijke objecten:
+
+```text
+@graph
+  ├─ UitkomstOverleg 1 ── soh:heeftBetrokkene ──> Betrokkene 1
+  ├─ Betrokkene 1
+  ├─ UitkomstOverleg 2 ── soh:heeftBetrokkene ──> Betrokkene 2
+  └─ Betrokkene 2
+```
+
+De lijnen in dit schema geven de relaties tussen nodes weer; de objecten zelf
+blijven afzonderlijke elementen in dezelfde array. De commentaarregels in het
+JSONC-voorbeeld hieronder zijn alleen bedoeld om de objecten voor de lezer te
+herkennen en vormen geen structurele groepering.
+
 Het uitvoeren van een informatievraag geldt niet als inzage in een Uitkomst
 Overleg. Een queryresultaat geeft aan welke informatie beschikbaar is en kan
 een verwijzing bevatten naar de inhoudelijke resource. Wanneer een deelnemer
 vervolgens de inhoudelijke Uitkomst Overleg via de Inzage-API raadpleegt,
 wordt deze inzage als afzonderlijke activiteit vastgelegd.
 
-Voorbeeld van een queryresultaat:
+Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg:
 
-``` json
+```jsonc
 {
   "specversion": "1.0",
   "id": "123e4567-e89b-42d3-a456-426614174006",
@@ -781,31 +768,57 @@ Voorbeeld van een queryresultaat:
       "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
     },
     "@graph": [
+      // Uitkomst Overleg 1
       {
         "@id": "urn:uitkomst-overleg:12345",
         "@type": [
           "prov:Entity",
           "soh:UitkomstOverleg"
         ],
+        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345",
         "soh:heeftBetrokkene": {
           "@id": "urn:betrokkene:67890"
         },
         "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-10",
         "soh:UitkomstOverleg.inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/12345"
       },
+      // Betrokkene die bij Uitkomst Overleg 1 hoort.
       {
         "@id": "urn:betrokkene:67890",
         "@type": "soh:Betrokkene",
         "soh:Betrokkene.identificatieType": "BSN",
         "soh:Betrokkene.identificatieWaarde": "123456789",
         "soh:Betrokkene.woonplaats": "Deventer"
+      },
+      // Uitkomst Overleg 2
+      {
+        "@id": "urn:uitkomst-overleg:67890",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ],
+        "soh:UitkomstOverleg.identifier": "ZAAK-2026-67890",
+        "soh:heeftBetrokkene": {
+          "@id": "urn:betrokkene:54321"
+        },
+        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-12",
+        "soh:UitkomstOverleg.inzageUrl": "https://organisatie.example/inzage/uitkomst-overleg/67890"
+      },
+      // Betrokkene die bij Uitkomst Overleg 2 hoort.
+      {
+        "@id": "urn:betrokkene:54321",
+        "@type": "soh:Betrokkene",
+        "soh:Betrokkene.identificatieType": "V-NUMMER",
+        "soh:Betrokkene.identificatieWaarde": "1234567890",
+        "soh:Betrokkene.woonplaats": "Zwolle"
       }
     ]
   }
 }
 ```
 
-Dit voorbeeld laat alleen de generieke structuur van een queryresultaat
+
+De commentaarregels zijn bedoeld ter toelichting; het voorbeeld is daarom JSONC en geen strikt JSON. De objecten staan als afzonderlijke blokken in één `@graph`-array. Verwijzingen via `@id` verbinden iedere Uitkomst Overleg met de bijbehorende Betrokkene.\n\nDit voorbeeld laat alleen de generieke structuur van een queryresultaat
 zien. De precieze resultaatgraaf wordt bepaald door de informatievraag en
 kan naast domeinobjecten ook activiteiten, actoren en relevante relaties
 bevatten.

@@ -156,9 +156,13 @@ met relatie:
 
     (Activity)
         |
-        | prov:generated
+        | soh:steltBeschikbaar
         v
     (Entity)
+
+Standaard PROV-relaties en domeinspecifieke relaties kunnen naast elkaar
+worden gebruikt. Welke relatie of relaties bij een gebeurtenis horen, wordt
+vastgelegd in de samenwerkfunctie-specifieke mapping.
 
 De concrete mapping van eventtypen naar Activities, Entities en relaties
 maakt onderdeel uit van de samenwerkfunctie-specifieke uitwerking.
