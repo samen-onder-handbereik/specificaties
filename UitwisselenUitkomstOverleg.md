@@ -8,6 +8,13 @@ Overleg.
 De samenwerkfunctie ondersteunt het beschikbaar stellen, vinden en
 raadplegen van Uitkomsten Overleg tussen ketenpartners.
 
+Onder een *Uitkomst Overleg* wordt verstaan: de vastlegging van wat in een
+Casusoverleg is besproken en besloten, inclusief een overzicht van de concrete
+besluiten en acties. De Uitkomst Overleg hoeft geen eigen identifier te hebben.
+Waar een identifier wordt uitgewisseld, gaat het om de identifier van het
+Casusoverleg zelf, zoals die bekend is in het zaaksysteem van de organisatie
+die de vastlegging beschikbaar stelt.
+
 CloudEvents bevatten niet de volledige inhoud van een Uitkomst Overleg.
 Zij bevatten informatie die nodig is voor notificatie, provenance, auditing
 en het opbouwen van een Knowledge graph.
@@ -71,7 +78,7 @@ De CloudEvent wordt als JSON-object geserialiseerd volgens CloudEvents 1.0.
 | `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
 | `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`. |
 | `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. Dit hoeft niet gelijk te zijn aan het tijdstip van de activiteit. |
-| `subject` | Neem de identifier van de Uitkomst Overleg op zoals die bekend is in het zaaksysteem van de organisatie die de Uitkomst Overleg beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
+| `subject` | Neem de identifier op van het Casusoverleg waarop de vastgelegde Uitkomst Overleg betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die de vastlegging beschikbaar stelt. Dit is niet de technische `@id` van de graph-node en ook geen afzonderlijke identifier van de vastlegging. |
 | `datacontenttype` | Gebruik `application/ld+json`. CloudEvents vereist dit attribuut niet in alle gevallen; binnen deze samenwerkfunctie is het verplicht. |
 | `dataschema` | Gebruik `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. Dit is een aanvullende afspraak voor deze samenwerkfunctie. |
 | `data` | Neem een JSON-LD-document op met de PROV-JSON-LD-graaf zoals hieronder beschreven. |
@@ -109,7 +116,7 @@ bedoelde object in de graph.
 |---|---|
 | `@id` | Verplicht. URI die de Uitkomst Overleg in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
-| `soh:UitkomstOverleg.identifier` | Neem de identifier op waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
+| `soh:UitkomstOverleg.identifier` | Neem de identifier op van het Casusoverleg waarop deze vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die de vastlegging beschikbaar stelt. Deze waarde identificeert dus het Casusoverleg, niet de Uitkomst Overleg als afzonderlijke vastlegging en niet de technische `@id` van de graph-node. |
 | `soh:heeftBetrokkene` | Verplicht. Verwijst naar de opgenomen Betrokkene-node. |
 | `soh:UitkomstOverleg.beschikbaarGesteldOp` | Optioneel. Het tijdstip/de datum waarop deze Uitkomst Overleg beschikbaar is gesteld, als RFC 3339-datumtijd. Als ook `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` is opgenomen bij de activiteit, beschrijven beide eigenschappen hetzelfde beschikbaarstellingsmoment. |
 
@@ -171,7 +178,7 @@ door elkaar worden gebruikt:
 - Entity `@id`: identificeert de Uitkomst Overleg als node in de Knowledge graph;
 - Agent `@id`: identificeert de Organisatie als node in de Knowledge graph;
 - Betrokkene `@id`: identificeert het Betrokkene-object als node in de Knowledge graph;
-- `soh:UitkomstOverleg.identifier`: de identifier waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt.
+- `soh:UitkomstOverleg.identifier`: de identifier van het Casusoverleg waarop de vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt.
 
 #### Volledig voorbeeld
 
@@ -207,7 +214,7 @@ raadpleging van de inhoud wordt als afzonderlijke activiteit vastgelegd.
 | `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
 | `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`. |
 | `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. |
-| `subject` | Neem de identifier op van de Uitkomst Overleg die is ingezien, zoals die bekend is in het zaaksysteem van de organisatie die de Uitkomst Overleg beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
+| `subject` | Neem de identifier op van het Casusoverleg waarop de ingeziene vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die de vastlegging beschikbaar stelt. Dit is niet de technische `@id` van de graph-node en ook geen afzonderlijke identifier van de vastlegging. |
 | `datacontenttype` | Gebruik `application/ld+json`. CloudEvents vereist dit attribuut niet in alle gevallen; binnen deze samenwerkfunctie is het verplicht. |
 | `dataschema` | Gebruik `https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json`. Dit is een aanvullende afspraak voor deze samenwerkfunctie. |
 | `data` | Neem een JSON-LD-document op met de graaf van de inzageactiviteit. |
@@ -323,7 +330,7 @@ event opgenomen.
 |---|---|
 | `@id` | Verplicht voor elke opgenomen Uitkomst Overleg; URI die het object in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
-| `soh:UitkomstOverleg.identifier` | Neem de identifier op waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
+| `soh:UitkomstOverleg.identifier` | Neem de identifier op van het Casusoverleg waarop deze vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die de vastlegging beschikbaar stelt. Deze waarde identificeert dus het Casusoverleg, niet de Uitkomst Overleg als afzonderlijke vastlegging en niet de technische `@id` van de graph-node. |
 | `soh:heeftBetrokkene` | Opnemen wanneer de graaf de Betrokkene waarop de Uitkomst Overleg betrekking heeft bevat. Verwijst naar de Betrokkene-node. |
 | `soh:UitkomstOverleg.beschikbaarGesteldOp` | Optioneel. RFC 3339-datumtijd van het beschikbaarstellingsmoment. Als ook `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` van de beschikbaarstellingsactiviteit is opgenomen, beschrijven beide eigenschappen hetzelfde moment. |
 | `soh:UitkomstOverleg.inzageUrl` | Optioneel. Verwijst naar de resource die via de Inzage-API kan worden geraadpleegd. |
@@ -348,7 +355,7 @@ opnieuw de oorspronkelijke beschikbaarstellingsgebeurtenis.
 
 #### Identifiers en relaties
 
-- Het CloudEvent `id` identificeert het event; `subject` identificeert bij een queryresultaat de asynchrone informatievraag waarop het resultaat betrekking heeft. Bij de events voor beschikbaarstelling en inzage bevat `subject` de identifier van de Uitkomst Overleg in het zaaksysteem van de organisatie die deze beschikbaar stelt.
+- Het CloudEvent `id` identificeert het event; `subject` identificeert bij een queryresultaat de asynchrone informatievraag waarop het resultaat betrekking heeft. Bij de events voor beschikbaarstelling en inzage bevat `subject` de identifier van het Casusoverleg waarop de vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt.
 - De `@id` van iedere graph-node identificeert het betreffende domeinobject of provenance-object.
 - Verwijzingen tussen nodes moeten overeenkomen met de `@id` van de bedoelde node in dezelfde graaf, tenzij een verwijzing naar een extern geïdentificeerd object expliciet is toegestaan.
 - Een resultaat kan nul, één of meer `UitkomstOverleg`-nodes bevatten.
@@ -402,7 +409,7 @@ Type:
 - `soh:UitkomstOverleg`;
 - `prov:Entity`.
 
-Het domeinobject dat via de Inzage-API beschikbaar wordt gesteld.
+De vastlegging van wat in een Casusoverleg is besproken en besloten, inclusief de concrete besluiten en acties. Deze vastlegging wordt via de Inzage-API beschikbaar gesteld en hoeft geen eigen identifier te hebben.
 
 Eigenschappen:
 
@@ -740,7 +747,7 @@ De opbouw bestaat uit:
 
 -   het basisadres van de Inzage-API;
 -   het pad naar het resource-type;
--   de identifier van de UitkomstOverleg-resource.
+-   de identifier van het Casusoverleg waarop de vastlegging betrekking heeft.
 
 Voorbeeld:
 
