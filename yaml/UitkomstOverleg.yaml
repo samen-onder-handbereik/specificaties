@@ -7,11 +7,6 @@ info:
     N.B. De specificatie is gegenereerd vanuit een informatiemodel dan nog in bewerking is. Het model en de op basis van dit model verkregen OpenAPI-specificatie zijn daarom zeer zeker nog niet 'in beton gegoten'. Suggesties voor aanpassingen en uitbreidingen worden verwelkomd.
   version: "0.1"
 tags:
-- name: Actie
-  description: |-
-    Een handeling die door een (medewerker van een) organisatie uitgevoerd dient te worden.
-
-    Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cfbb3c22-2d0b-9be9-c25f-56752f598046) voor meer informatie.
 - name: Besluit
   description: |-
     Een na overweging of beraadslaging vastgestelde beslissing van een overheidsorgaan voor een individueel of concreet geval.
@@ -22,117 +17,17 @@ tags:
     Een periodiek beraad waarbij meerdere bij de zaak betrokken organisaties in een samenwerking samenwerken.
 
     Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#casusoverleg:~:text=digitaal%20is%20opgeslagen.-,Casusoverleg,-voorkeursterm) voor meer informatie.
+- name: Taak
+  description: |-
+    Een samenhangende set activiteiten.
+
+    Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#taak:~:text=Gemma%20bedrijfsobject-,Taak,-voorkeursterm) voor meer informatie.
 - name: Zaak
   description: |-
     Een samenhangende hoeveelheid werk met een welgedefinieerde aanleiding en een welgedefinieerd eindresultaat, waarvan kwaliteit en doorlooptijd bewaakt moeten worden.
 
     Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#zaak:~:text=artikel%209%3A28-,Zaak,-voorkeursterm) voor meer informatie.
 paths:
-  /v1/actie:
-    get:
-      tags:
-      - Actie
-      summary: Retourneert de lijst van alle Actie objecten
-      description: Retourneert een gepagineerde lijst van alle Actie objecten
-      operationId: haalAlleActieOp
-      parameters:
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/pageSize'
-      - $ref: '#/components/parameters/sortField'
-      responses:
-        "200":
-          description: OK
-          headers:
-            RateLimit-Remaining:
-              $ref: '#/components/headers/RateLimit-Remaining'
-            Warning:
-              $ref: '#/components/headers/Warning'
-            RateLimit-Reset:
-              $ref: '#/components/headers/RateLimit-Reset'
-            X-Pagination-Limit:
-              $ref: '#/components/headers/X-Pagination-Limit'
-            X-Pagination-Page:
-              $ref: '#/components/headers/X-Pagination-Page'
-            RateLimit-Limit:
-              $ref: '#/components/headers/RateLimit-Limit'
-            API-Version:
-              $ref: '#/components/headers/API-Version'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GepagineerdActieLijst"
-        "400":
-          $ref: '#/components/responses/400'
-        "401":
-          $ref: '#/components/responses/401'
-        "403":
-          $ref: '#/components/responses/403'
-        "405":
-          $ref: '#/components/responses/405'
-        "415":
-          $ref: '#/components/responses/415'
-        "429":
-          $ref: '#/components/responses/429'
-        "500":
-          $ref: '#/components/responses/500'
-        "503":
-          $ref: '#/components/responses/503'
-  /v1/actie/{id}:
-    get:
-      tags:
-      - Actie
-      summary: Retourneert een Actie object op basis van zijn unieke identificatie
-      description: Retourneert een individueel Actie object op basis van zijn unieke
-        identificatie
-      operationId: haalActieOp
-      parameters:
-      - name: id
-        in: path
-        description: Actie ID
-        required: true
-        schema:
-          type: string
-        example: 123
-      responses:
-        "200":
-          description: OK
-          headers:
-            RateLimit-Remaining:
-              $ref: '#/components/headers/RateLimit-Remaining'
-            Warning:
-              $ref: '#/components/headers/Warning'
-            RateLimit-Reset:
-              $ref: '#/components/headers/RateLimit-Reset'
-            X-Pagination-Limit:
-              $ref: '#/components/headers/X-Pagination-Limit'
-            X-Pagination-Page:
-              $ref: '#/components/headers/X-Pagination-Page'
-            RateLimit-Limit:
-              $ref: '#/components/headers/RateLimit-Limit'
-            API-Version:
-              $ref: '#/components/headers/API-Version'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Actie"
-        "400":
-          $ref: '#/components/responses/400'
-        "401":
-          $ref: '#/components/responses/401'
-        "403":
-          $ref: '#/components/responses/403'
-        "404":
-          $ref: '#/components/responses/404'
-        "405":
-          $ref: '#/components/responses/405'
-        "415":
-          $ref: '#/components/responses/415'
-        "429":
-          $ref: '#/components/responses/429'
-        "500":
-          $ref: '#/components/responses/500'
-        "503":
-          $ref: '#/components/responses/503'
   /v1/besluit:
     get:
       tags:
@@ -325,6 +220,111 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Casusoverleg"
+        "400":
+          $ref: '#/components/responses/400'
+        "401":
+          $ref: '#/components/responses/401'
+        "403":
+          $ref: '#/components/responses/403'
+        "404":
+          $ref: '#/components/responses/404'
+        "405":
+          $ref: '#/components/responses/405'
+        "415":
+          $ref: '#/components/responses/415'
+        "429":
+          $ref: '#/components/responses/429'
+        "500":
+          $ref: '#/components/responses/500'
+        "503":
+          $ref: '#/components/responses/503'
+  /v1/taak:
+    get:
+      tags:
+      - Taak
+      summary: Retourneert de lijst van alle Taak objecten
+      description: Retourneert een gepagineerde lijst van alle Taak objecten
+      operationId: haalAlleTaakOp
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/sortField'
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimit-Remaining'
+            Warning:
+              $ref: '#/components/headers/Warning'
+            RateLimit-Reset:
+              $ref: '#/components/headers/RateLimit-Reset'
+            X-Pagination-Limit:
+              $ref: '#/components/headers/X-Pagination-Limit'
+            X-Pagination-Page:
+              $ref: '#/components/headers/X-Pagination-Page'
+            RateLimit-Limit:
+              $ref: '#/components/headers/RateLimit-Limit'
+            API-Version:
+              $ref: '#/components/headers/API-Version'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GepagineerdTaakLijst"
+        "400":
+          $ref: '#/components/responses/400'
+        "401":
+          $ref: '#/components/responses/401'
+        "403":
+          $ref: '#/components/responses/403'
+        "405":
+          $ref: '#/components/responses/405'
+        "415":
+          $ref: '#/components/responses/415'
+        "429":
+          $ref: '#/components/responses/429'
+        "500":
+          $ref: '#/components/responses/500'
+        "503":
+          $ref: '#/components/responses/503'
+  /v1/taak/{id}:
+    get:
+      tags:
+      - Taak
+      summary: Retourneert een Taak object op basis van zijn unieke identificatie
+      description: Retourneert een individueel Taak object op basis van zijn unieke
+        identificatie
+      operationId: haalTaakOp
+      parameters:
+      - name: id
+        in: path
+        description: Taak ID
+        required: true
+        schema:
+          type: string
+        example: 123
+      responses:
+        "200":
+          description: OK
+          headers:
+            RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimit-Remaining'
+            Warning:
+              $ref: '#/components/headers/Warning'
+            RateLimit-Reset:
+              $ref: '#/components/headers/RateLimit-Reset'
+            X-Pagination-Limit:
+              $ref: '#/components/headers/X-Pagination-Limit'
+            X-Pagination-Page:
+              $ref: '#/components/headers/X-Pagination-Page'
+            RateLimit-Limit:
+              $ref: '#/components/headers/RateLimit-Limit'
+            API-Version:
+              $ref: '#/components/headers/API-Version'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Taak"
         "400":
           $ref: '#/components/responses/400'
         "401":
@@ -746,14 +746,10 @@ components:
           description: Beschrijving van de fout op de parameterwaarde
           example: "Waarde is geen geldige integer."
 
-    Actie:
+    Besluit:
       required:
-      - belegdBij
-      - conditie
-      - heeftBetrekkingOp
       - id
       - idCasusoverleg
-      - informering
       - omschrijving
       - url
       type: object
@@ -766,31 +762,71 @@ components:
           readOnly: true
         id:
           type: string
-          description: De unieke identificatie van de actie.
+          description: De unieke identificatie van het besluit.
         omschrijving:
           type: string
-          description: De omschrijving van de actie.
-        conditie:
-          type: string
-          description: Een conditie waaraan dient te worden voldaan om de uitvoering
-            van de actie te triggeren.
-        informering:
-          type: string
-          description: "Aanduiding van de mate en wijze waarop de betrokkene is geï\
-            nformeerd over de voorgenomen of uitgevoerde actie, inclusief – indien\
-            \ van toepassing – de reden waarom informering achterwege is gebleven."
+          description: De omschrijving van het besluit.
         idCasusoverleg:
           type: string
-          description: Het id van het casusoverleg waarin tot de actie is besloten.
-        heeftBetrekkingOp:
-          $ref: "#/components/schemas/Betrokkene"
-        belegdBij:
-          $ref: "#/components/schemas/Organisatie"
+          description: Het id van het casusoverleg waarin het besluit is genomen.
       description: |-
-        Een handeling die door een (medewerker van een) organisatie uitgevoerd dient te worden.
+        Een na overweging of beraadslaging vastgestelde beslissing van een overheidsorgaan voor een individueel of concreet geval.
 
-        Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cfbb3c22-2d0b-9be9-c25f-56752f598046) voor meer informatie.
+        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#:~:text=te%20nemen%20Beslissing-,Besluit,-voorkeursterm) voor meer informatie.
       nullable: true
+    GepagineerdBase:
+      required:
+      - pagina
+      - paginaGrootte
+      type: object
+      properties:
+        pagina:
+          minimum: 1
+          type: integer
+          description: Huidig paginanummer
+          format: int32
+        paginaGrootte:
+          maximum: 100
+          type: integer
+          description: Aantal objecten per pagina
+          format: int32
+        totaalAantal:
+          minimum: 0
+          type: integer
+          description: Totaal aantal beschikbare objecten
+          format: int32
+          nullable: true
+        sorteer:
+          type: string
+          description: Komma gescheiden lijst van velden waarop gesorteerd moet worden.
+            Door een minteken (-) voor de veldnaam te zetten wordt het veld in aflopende
+            sorteervolgorde gesorteerd.
+          example: "name,-geboorteDatum"
+        volgende:
+          type: string
+          description: Link naar de volgende pagina
+          format: uri
+          nullable: true
+          example: "http://mijn-api.org/api/v1/klanten/?pagina=4&paginaGrootte=10&sorteer=name,-geboorteDatum"
+        vorige:
+          type: string
+          description: Link naar de vorige pagina
+          format: uri
+          nullable: true
+          example: "http://mijn-api.org/api/v1/klanten/?pagina=2&paginaGrootte=10&sorteer=name,-geboorteDatum"
+      description: Basis schema voor gepagineerde resultaten
+    GepagineerdBesluitLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Besluit"
     Adres:
       required:
       - huisnummer
@@ -863,6 +899,55 @@ components:
         Een natuurlijk of niet-natuurlijk persoon die het onderwerp is van een zaak of die een uitvoerende rol speelt in een zaak.
 
         Zie deze [link](https://srk-begrippen.wikixl.nl/index.php/Begrip:Id-cf8a64b4-f3e7-2613-4888-90e09e2b3a17) voor meer informatie.
+    Casusoverleg:
+      required:
+      - betreft
+      - datum
+      - eindTijd
+      - id
+      - notulen
+      - startTijd
+      - url
+      type: object
+      properties:
+        url:
+          minLength: 1
+          type: string
+          description: URL-referentie naar de resource waarnaar verwezen wordt
+          format: uri
+          readOnly: true
+        id:
+          type: string
+          description: De unieke identificatie van het casusoverleg.
+        datum:
+          type: string
+          description: De datum waarop het casusoverleg heeft plaatsgevonden.
+          format: date
+        startTijd:
+          $ref: "#/components/schemas/Time"
+        eindTijd:
+          $ref: "#/components/schemas/Time"
+        notulen:
+          type: string
+          description: De notulen van het casusoverleg.
+        betreft:
+          $ref: "#/components/schemas/Zaak"
+      description: |-
+        Een periodiek beraad waarbij meerdere bij de zaak betrokken organisaties in een samenwerking samenwerken.
+
+        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#casusoverleg:~:text=digitaal%20is%20opgeslagen.-,Casusoverleg,-voorkeursterm) voor meer informatie.
+    GepagineerdCasusoverlegLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Casusoverleg"
     Naam:
       required:
       - geslachtsnaam
@@ -925,63 +1010,14 @@ components:
         Een instelling of instantie die werkzaamheden uitvoert op het gebied van het sociaal domein of aanpalende domeinen.
 
         Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#organisatie:~:text=van%20een%20Plan.-,Organisatie,-voorkeursterm) voor meer informatie.
-    GepagineerdActieLijst:
+    Taak:
       required:
-      - resultaten
-      type: object
-      allOf:
-      - $ref: "#/components/schemas/GepagineerdBase"
-      - type: object
-        properties:
-          resultaten:
-            type: array
-            items:
-              $ref: "#/components/schemas/Actie"
-    GepagineerdBase:
-      required:
-      - pagina
-      - paginaGrootte
-      type: object
-      properties:
-        pagina:
-          minimum: 1
-          type: integer
-          description: Huidig paginanummer
-          format: int32
-        paginaGrootte:
-          maximum: 100
-          type: integer
-          description: Aantal objecten per pagina
-          format: int32
-        totaalAantal:
-          minimum: 0
-          type: integer
-          description: Totaal aantal beschikbare objecten
-          format: int32
-          nullable: true
-        sorteer:
-          type: string
-          description: Komma gescheiden lijst van velden waarop gesorteerd moet worden.
-            Door een minteken (-) voor de veldnaam te zetten wordt het veld in aflopende
-            sorteervolgorde gesorteerd.
-          example: "name,-geboorteDatum"
-        volgende:
-          type: string
-          description: Link naar de volgende pagina
-          format: uri
-          nullable: true
-          example: "http://mijn-api.org/api/v1/klanten/?pagina=4&paginaGrootte=10&sorteer=name,-geboorteDatum"
-        vorige:
-          type: string
-          description: Link naar de vorige pagina
-          format: uri
-          nullable: true
-          example: "http://mijn-api.org/api/v1/klanten/?pagina=2&paginaGrootte=10&sorteer=name,-geboorteDatum"
-      description: Basis schema voor gepagineerde resultaten
-    Besluit:
-      required:
+      - belegdBij
+      - conditie
+      - heeftBetrekkingOp
       - id
       - idCasusoverleg
+      - informering
       - omschrijving
       - url
       type: object
@@ -994,79 +1030,31 @@ components:
           readOnly: true
         id:
           type: string
-          description: De unieke identificatie van het besluit.
+          description: De unieke identificatie van de taak.
         omschrijving:
           type: string
-          description: De omschrijving van het besluit.
+          description: De omschrijving van de taak.
+        conditie:
+          type: string
+          description: Een conditie waaraan dient te worden voldaan om de uitvoering
+            van de taak te triggeren.
+        informering:
+          type: string
+          description: "Aanduiding van de mate en wijze waarop de betrokkene is geï\
+            nformeerd over de voorgenomen of uitgevoerde taak, inclusief – indien\
+            \ van toepassing – de reden waarom informering achterwege is gebleven."
         idCasusoverleg:
           type: string
-          description: Het id van het casusoverleg waarin het besluit is genomen.
+          description: Het id van het casusoverleg waarin tot de taak is besloten.
+        heeftBetrekkingOp:
+          $ref: "#/components/schemas/Betrokkene"
+        belegdBij:
+          $ref: "#/components/schemas/Organisatie"
       description: |-
-        Een na overweging of beraadslaging vastgestelde beslissing van een overheidsorgaan voor een individueel of concreet geval.
+        Een samenhangende set activiteiten.
 
-        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#:~:text=te%20nemen%20Beslissing-,Besluit,-voorkeursterm) voor meer informatie.
+        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#taak:~:text=Gemma%20bedrijfsobject-,Taak,-voorkeursterm) voor meer informatie.
       nullable: true
-    GepagineerdBesluitLijst:
-      required:
-      - resultaten
-      type: object
-      allOf:
-      - $ref: "#/components/schemas/GepagineerdBase"
-      - type: object
-        properties:
-          resultaten:
-            type: array
-            items:
-              $ref: "#/components/schemas/Besluit"
-    Casusoverleg:
-      required:
-      - betreft
-      - datum
-      - eindTijd
-      - id
-      - notulen
-      - startTijd
-      - url
-      type: object
-      properties:
-        url:
-          minLength: 1
-          type: string
-          description: URL-referentie naar de resource waarnaar verwezen wordt
-          format: uri
-          readOnly: true
-        id:
-          type: string
-          description: De unieke identificatie van het casusoverleg.
-        datum:
-          type: string
-          description: De datum waarop het casusoverleg heeft plaatsgevonden.
-          format: date
-        startTijd:
-          $ref: "#/components/schemas/Time"
-        eindTijd:
-          $ref: "#/components/schemas/Time"
-        notulen:
-          type: string
-          description: De notulen van het casusoverleg.
-        betreft:
-          $ref: "#/components/schemas/Zaak"
-      description: |-
-        Een periodiek beraad waarbij meerdere bij de zaak betrokken organisaties in een samenwerking samenwerken.
-
-        Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#casusoverleg:~:text=digitaal%20is%20opgeslagen.-,Casusoverleg,-voorkeursterm) voor meer informatie.
-    GepagineerdCasusoverlegLijst:
-      required:
-      - resultaten
-      type: object
-      allOf:
-      - $ref: "#/components/schemas/GepagineerdBase"
-      - type: object
-        properties:
-          resultaten:
-            type: array
-            items:
-              $ref: "#/components/schemas/Casusoverleg"
     Time:
       required:
       - id
@@ -1105,10 +1093,10 @@ components:
           type: string
           description: De datum waarop de zaak is gestart.
           format: date
-        heeftActie:
+        heeftTaak:
           type: array
           items:
-            $ref: "#/components/schemas/Actie"
+            $ref: "#/components/schemas/Taak"
         heeftBesluit:
           type: array
           items:
@@ -1117,6 +1105,18 @@ components:
         Een samenhangende hoeveelheid werk met een welgedefinieerde aanleiding en een welgedefinieerd eindresultaat, waarvan kwaliteit en doorlooptijd bewaakt moeten worden.
 
         Zie deze [link](https://samen-onder-handbereik.github.io/afsprakenstelsel/others/begrippenkader/#zaak:~:text=artikel%209%3A28-,Zaak,-voorkeursterm) voor meer informatie.
+    GepagineerdTaakLijst:
+      required:
+      - resultaten
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/GepagineerdBase"
+      - type: object
+        properties:
+          resultaten:
+            type: array
+            items:
+              $ref: "#/components/schemas/Taak"
     GepagineerdZaakLijst:
       required:
       - resultaten
