@@ -66,14 +66,73 @@
         "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
         "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678901",
         "prov:wasAssociatedWith": {
-          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e60"
         },
         "soh:steltBeschikbaar": {
           "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
         }
       },
       {
-        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56",
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e61",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ],
+        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-10-15T11:15:00Z",
+        "soh:UitkomstOverleg.inzageUrl": "https://inzage.voorbeeld.nl/uitkomst-overleg/CO-2026-67890",
+        "soh:hoortBijCasusoverleg": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e62"
+        },
+        "soh:heeftBetrokkene": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e64"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e62",
+        "@type": [
+          "prov:Entity",
+          "soh:Casusoverleg"
+        ],
+        "soh:Casusoverleg.identifier": "CO-2026-67890",
+        "soh:heeftBetrekkingOpZaak": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e63"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e63",
+        "@type": [
+          "prov:Entity",
+          "soh:Zaak"
+        ],
+        "soh:Zaak.identifier": "ZAAK-2026-67890"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e64",
+        "@type": [
+          "prov:Entity",
+          "soh:Betrokkene"
+        ],
+        "soh:Betrokkene.identificatieType": "BSN",
+        "soh:Betrokkene.identificatieWaarde": "987654321",
+        "soh:Betrokkene.woonplaats": "Apeldoorn"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e65",
+        "@type": [
+          "prov:Activity",
+          "soh:BeschikbaarStellenUitkomstOverleg"
+        ],
+        "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T11:15:00Z",
+        "soh:Activity.cloudEventId": "0199f0a0-5678-7abc-8def-012345678902",
+        "prov:wasAssociatedWith": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e60"
+        },
+        "soh:steltBeschikbaar": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e61"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e60",
         "@type": [
           "prov:Agent",
           "soh:Organisatie"
