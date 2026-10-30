@@ -19,6 +19,7 @@
           "soh:BeschikbaarStellenUitkomstOverleg"
         ],
         "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
+        "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678901",
         "prov:wasAssociatedWith": {
           "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"
         },

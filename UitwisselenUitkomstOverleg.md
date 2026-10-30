@@ -181,7 +181,7 @@ relaties te voorkomen.
 |---|---|
 | `@id` | Verplicht. UUIDv7-URI die de Organisatie-node in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
-| `soh:Organisatie.identificatieType` | Verplicht. Stabiele code voor het type organisatie-identificatienummer, bijvoorbeeld `OIN` of `KVK`. |
+| `soh:Organisatie.identificatieType` | Verplicht. Soort organisatieidentificatie, bijvoorbeeld `OIN` of `KVK`. |
 | `soh:Organisatie.identificatieWaarde` | Verplicht. Waarde van het organisatie-identificatienummer, weergegeven als string. |
 
 De `@id` waarnaar `prov:wasAssociatedWith` verwijst, moet overeenkomen met
@@ -197,15 +197,14 @@ hoeft niet dezelfde te zijn als het systeem in het CloudEvent-attribuut
 |---|---|
 | `@id` | Verplicht. URI die het Betrokkene-object in de Knowledge graph identificeert. Gebruik niet zonder afzonderlijke afspraak het BSN of een ander persoonsidentificatienummer als `@id`. |
 | `@type` | Verplicht: `soh:Betrokkene`. Dit type maakt het object niet automatisch tot `prov:Agent`. |
-| `soh:Betrokkene.identificatieType` | Optioneel. Opnemen wanneer identificatiegegevens noodzakelijk en toegestaan zijn. Stabiele code voor het type identificatienummer, bijvoorbeeld `BSN` of `V-NUMMER`. |
-| `soh:Betrokkene.identificatieWaarde` | Optioneel. Alleen opnemen samen met `soh:Betrokkene.identificatieType`, wanneer identificatiegegevens noodzakelijk en toegestaan zijn. De waarde is een string. |
+| `soh:Betrokkene.identificatieType` | Verplicht. Soort persoonsidentificatie, bijvoorbeeld `BSN` of `V-NUMMER`. |
+| `soh:Betrokkene.identificatieWaarde` | Verplicht. De bijbehorende waarde van het persoonsidentificatienummer, weergegeven als string. |
 | `soh:Betrokkene.woonplaats` | Optioneel. Indien aanwezig, een tekstuele waarde. |
 
 De `@id` identificeert het Betrokkene-object en staat los van de combinatie
-van identificatietype en identificatiewaarde. Het opnemen van de Betrokkene-node
-vereist niet automatisch dat ook persoonsidentificatie wordt verstrekt. Neem
-persoonsgegevens alleen op voor zover dat noodzakelijk en toegestaan is. Als één
-van de identificatie-eigenschappen wordt opgenomen, moeten beide aanwezig zijn.
+van identificatietype en identificatiewaarde. Iedere opgenomen Betrokkene moet
+voorzien zijn van beide identificatie-eigenschappen. De combinatie identificeert
+de persoon; de `@id` identificeert uitsluitend de node in de Knowledge graph.
 
 #### Identifiers
 
@@ -246,8 +245,6 @@ Graph technisch te identificeren.
 
 #### Volledig voorbeeld
 
-De URN's en waarden zijn fictief.
-
 ```json
 {
   "specversion": "1.0",
@@ -270,6 +267,7 @@ De URN's en waarden zijn fictief.
           "soh:BeschikbaarStellenUitkomstOverleg"
         ],
         "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
+        "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678901",
         "prov:wasAssociatedWith": {
           "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
         },
@@ -421,7 +419,7 @@ Elk object heeft een eigen `@id`, die de node in de Knowledge graph identificeer
 |---|---|
 | `@id` | Verplicht. UUIDv7-URI die de Organisatie-node in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
-| `soh:Organisatie.identificatieType` | Verplicht. Stabiele code voor het type organisatie-identificatienummer, bijvoorbeeld `OIN` of `KVK`. |
+| `soh:Organisatie.identificatieType` | Verplicht. Soort organisatieidentificatie, bijvoorbeeld `OIN` of `KVK`. |
 | `soh:Organisatie.identificatieWaarde` | Verplicht. Waarde van het organisatie-identificatienummer, weergegeven als string. |
 
 #### Identifiers
@@ -432,8 +430,8 @@ van een graph-object.
 
 #### Volledig voorbeeld
 
-De waarden zijn fictief. De `@id` waarnaar `prov:wasAssociatedWith` verwijst,
-komt overeen met de opgenomen Organisatie-node.
+De `@id` waarnaar `prov:wasAssociatedWith` verwijst, komt overeen met de
+opgenomen Organisatie-node.
 
 ```json
 {
@@ -457,6 +455,7 @@ komt overeen met de opgenomen Organisatie-node.
           "soh:InzienUitkomstOverleg"
         ],
         "soh:InzienUitkomstOverleg.tijdstip": "2026-10-15T11:00:00Z",
+        "soh:Activity.cloudEventId": "0199f0a0-5678-7abc-8def-012345678902",
         "prov:used": {
           "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
         },
@@ -590,8 +589,8 @@ de relatie `soh:heeftBetrekkingOpZaak`.
 |---|---|
 | `@id` | Verplicht voor elke opgenomen Betrokkene; identificeert het object in de Knowledge graph en is niet automatisch het persoonsidentificatienummer. |
 | `@type` | Verplicht: `soh:Betrokkene`. |
-| `soh:Betrokkene.identificatieType` | Opnemen wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
-| `soh:Betrokkene.identificatieWaarde` | Opnemen samen met `soh:Betrokkene.identificatieType` wanneer de persoonsidentificatie in het resultaat wordt verstrekt. |
+| `soh:Betrokkene.identificatieType` | Verplicht bij iedere opgenomen Betrokkene. Soort persoonsidentificatie. |
+| `soh:Betrokkene.identificatieWaarde` | Verplicht bij iedere opgenomen Betrokkene. De bijbehorende waarde van het persoonsidentificatienummer, weergegeven als string. |
 | `soh:Betrokkene.woonplaats` | Optioneel wanneer relevant voor de informatievraag en toegestaan om terug te geven. |
 
 ##### Provenance-objecten
@@ -730,12 +729,11 @@ provenance-graaf vervult.
 
 Eigenschappen:
 
-- `identifier`;
-- `identificatieType`;
-- `identificatieWaarde`;
+- `identificatieType` --- verplicht. Soort persoonsidentificatie, bijvoorbeeld `BSN` of `V-NUMMER`;
+- `identificatieWaarde` --- verplicht. De bijbehorende waarde van het persoonsidentificatienummer, weergegeven als string;
 - `woonplaats`.
 
-De `identifier` identificeert het domeinobject `Betrokkene` in de Knowledge graph. Deze identifier staat los van de persoonsidentificatie, die bestaat uit een typering en een identificatiewaarde. De typering is een stabiele code, bijvoorbeeld `BSN` of `V-NUMMER`.
+De `@id` identificeert de Betrokkene-node in de Knowledge graph. Deze technische identificatie staat los van de persoonsidentificatie, die bestaat uit de combinatie van `identificatieType` en `identificatieWaarde`. Voor de Betrokkene wordt geen afzonderlijke `identifier`-eigenschap gebruikt.
 
 #### Organisatie {#concept-organisatie}
 
@@ -772,7 +770,7 @@ Activiteit waarbij een Uitkomst Overleg beschikbaar wordt gesteld.
 
 Eigenschappen:
 
-- `identifier`;
+- `soh:Activity.cloudEventId` --- het `id`-attribuut van het oorspronkelijke CloudEvent waaruit deze Activity is afgeleid;
 - `tijdstip` --- het tijdstip waarop de activiteit daadwerkelijk heeft
   plaatsgevonden.
 
@@ -789,7 +787,7 @@ Activiteit waarbij een Uitkomst Overleg wordt geraadpleegd.
 
 Eigenschappen:
 
-- `identifier`;
+- `soh:Activity.cloudEventId` --- het `id`-attribuut van het oorspronkelijke CloudEvent waaruit deze Activity is afgeleid;
 - `tijdstip` --- het tijdstip waarop de activiteit daadwerkelijk heeft
   plaatsgevonden;
 - verantwoordelijke organisatie.
@@ -868,10 +866,10 @@ UitkomstOverleg
 | Casusoverleg | `soh:Casusoverleg` | indien relevant `prov:Entity` | identifier |
 | Zaak | `soh:Zaak` | indien relevant `prov:Entity` | identifier |
 | UitkomstOverleg | `soh:UitkomstOverleg` | `prov:Entity` | beschikbaarGesteldOp, inzageUrl |
-| Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identifier, identificatieType, identificatieWaarde, woonplaats |
+| Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identificatieType, identificatieWaarde, woonplaats |
 | Organisatie | `soh:Organisatie` | `prov:Agent` | identificatieType, identificatieWaarde, naam |
-| BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
-| InzienUitkomstOverleg | `soh:InzienUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
+| BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | `prov:Activity` | cloudEventId, tijdstip |
+| InzienUitkomstOverleg | `soh:InzienUitkomstOverleg` | `prov:Activity` | cloudEventId, tijdstip |
 
 ¹ Een `Betrokkene` is niet intrinsiek een `prov:Agent`. Wanneer de
 betrokkene zelf als actor optreedt in een provenance-activiteit, krijgt
@@ -1092,6 +1090,7 @@ Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg:
           "soh:BeschikbaarStellenUitkomstOverleg"
         ],
         "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
+        "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678901",
         "prov:wasAssociatedWith": {
           "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
         },

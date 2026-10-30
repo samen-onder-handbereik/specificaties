@@ -209,15 +209,15 @@ Het CloudEvent-id:
 -   is niet de `@id` van een Activity of Entity;
 -   wordt niet als zelfstandig object in de Knowledge graph opgenomen.
 
-Wanneer provenance wordt opgebouwd vanuit een CloudEvent, kan het
-oorspronkelijke CloudEvent-id afzonderlijk op de Activity worden vastgelegd
-met de eigenschap `cloudEventId`. Daarmee blijft de herkomst van de
-provenance-informatie herleidbaar tot het ontvangen CloudEvent.
+Wanneer provenance wordt opgebouwd vanuit een CloudEvent, wordt het
+oorspronkelijke CloudEvent-id verplicht op de Activity vastgelegd met de
+domeineigenschap `soh:Activity.cloudEventId`. Daarmee blijft de herkomst van
+de provenance-informatie herleidbaar tot het ontvangen CloudEvent.
 
 Voorbeeld:
 
     (:Activity {
-        cloudEventId: "0199f0a0-1234-7abc-8def-012345678901"
+        "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678901"
     })
 
 De Activity zelf heeft daarnaast een eigen `@id` (UUIDv7-URI), die
@@ -240,8 +240,8 @@ Voor de identificatie van personen en organisaties kunnen verschillende
 soorten identificatienummers worden gebruikt. Een identificatie bestaat uit
 een typering en een identificatiewaarde. De typering geeft aan om welk soort
 identificatienummer het gaat, bijvoorbeeld een BSN, V-nummer, OIN of
-KvK-nummer, en wordt uitgedrukt met een stabiele code uit een beheerde
-waardelijst.
+KvK-nummer, en wordt benoemd als het soort persoonsidentificatie of het soort
+organisatieidentificatie.
 
 Dit uitgangspunt geldt voor de hele gegevensketen: de aanlevering van gegevens
 via CloudEvents, de opslag en modellering in de Knowledge graph, de bevraging
@@ -280,8 +280,8 @@ te koppelen, maar vervangt de `@id` niet.
 
 Het CloudEvent-attribuut `id` identificeert het CloudEvent zelf en staat
 eveneens los van de `@id` van de nodes die op basis van dat event worden
-vastgelegd. Het CloudEvent-id kan, indien nodig, als `cloudEventId` op
-de betreffende Activity worden bewaard.
+vastgelegd. Het oorspronkelijke CloudEvent-id wordt verplicht als
+`soh:Activity.cloudEventId` op de betreffende Activity bewaard.
 
 
 ## Technische representatie

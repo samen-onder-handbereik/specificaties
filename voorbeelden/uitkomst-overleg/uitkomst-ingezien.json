@@ -19,6 +19,7 @@
           "soh:InzienUitkomstOverleg"
         ],
         "soh:InzienUitkomstOverleg.tijdstip": "2026-10-15T11:00:00Z",
+        "soh:Activity.cloudEventId": "0199f0a0-5678-7abc-8def-012345678902",
         "prov:used": {
           "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
         },

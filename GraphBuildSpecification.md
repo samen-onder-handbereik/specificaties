@@ -97,11 +97,11 @@ Voorbeeld:
     (:Activity:BeschikbaarStellenUitkomstOverleg)
     {
         @id: "urn:uuid:<uuidv7>",
-        cloudEventId: "<cloud-event-id>"
+        "soh:Activity.cloudEventId": "<cloud-event-id>"
     }
 
 De `@id` identificeert de Activity als node in de Knowledge graph. De
-eigenschap `cloudEventId` verwijst naar het oorspronkelijke CloudEvent en
+eigenschap `soh:Activity.cloudEventId` verwijst naar het oorspronkelijke CloudEvent en
 legt de herkomst van de provenance-informatie vast. Deze waarde is gelijk
 aan het `id`-attribuut van het ontvangen CloudEvent. De `@id` van de Activity,
 het CloudEvent-veld `id` en eventuele domeinidentificaties hebben elk een
@@ -112,8 +112,9 @@ worden beschouwd.
 
 Voor de identificatie van personen en organisaties wordt, waar deze
 identificatie onderdeel is van de aangeleverde of teruggegeven domeingegevens,
-één combinatie van een typering en een identificatiewaarde gebruikt. De
-typering is een stabiele code uit een beheerde waardelijst.
+één combinatie van een typering en een identificatiewaarde gebruikt. Voor een
+persoon is dit het soort persoonsidentificatie; voor een organisatie het soort\ organisatieidentificatie. De toegestane waarden worden bepaald door
+de samenwerkfunctie-specificatie.
 
 Voor een persoon kan dit bijvoorbeeld `BSN` of `V-NUMMER` zijn. Voor een
 organisatie kan dit bijvoorbeeld `OIN` of `KVK` zijn.

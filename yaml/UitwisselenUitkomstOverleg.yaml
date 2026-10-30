@@ -71,10 +71,10 @@ paths:
         gevoelige gegevens zoals een BSN of een ander identificatienummer,
         geen onderdeel vormen van de URL.
 
-        De identificatie van de Betrokkene bestaat uit een typering en een
-        identificatiewaarde. De typering maakt duidelijk om welk soort nummer
-        het gaat. De identifier van de Betrokkene in de Knowledge Graph is
-        hiervan onderscheiden.
+        De identificatie van de Betrokkene bestaat uit het soort
+        persoonsidentificatie en de bijbehorende identificatiewaarde. De
+        identifier van de Betrokkene in de Knowledge Graph is hiervan
+        onderscheiden.
 
         Een queryresultaat identificeert de Betrokkene met de eigen identifier
         van het domeinobject. Identificatiegegevens worden als getypeerde
@@ -213,11 +213,13 @@ components:
               "soh:inzageUrl": "https://inzage.voorbeeld.nl/inzage/uitkomst-overleg/casusoverleg-98765"
               "soh:UitkomstOverleg.heeftBetrokkene":
                 "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
-              "prov:wasGeneratedBy":
-                "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
+              "soh:steltBeschikbaar":
+                "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
             - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
               "@type":
                 - "prov:Activity"
+                - "soh:BeschikbaarStellenUitkomstOverleg"
+              "soh:Activity.cloudEventId": "019bb6c0-1234-7abc-8def-426614174003"
               "prov:wasAssociatedWith":
                 "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
             - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
@@ -307,8 +309,8 @@ components:
     Identificatie:
       description: |
         Identificatie van een Betrokkene. De identificatie bestaat uit een
-        typering en de bijbehorende waarde. De typering is een stabiele code
-        uit een beheerde waardelijst, bijvoorbeeld "BSN" of "V-NUMMER".
+        soort persoonsidentificatie en de bijbehorende waarde. Het soort persoonsidentificatie
+        is bijvoorbeeld "BSN" of "V-NUMMER".
       type: object
       required:
         - identificatieType
@@ -316,7 +318,7 @@ components:
       properties:
         identificatieType:
           type: string
-          description: Code die aangeeft om welk soort identificatienummer het gaat.
+          description: Soort persoonsidentificatie, bijvoorbeeld BSN of V-NUMMER.
           examples:
             - "BSN"
             - "V-NUMMER"
@@ -329,8 +331,8 @@ components:
     BetrokkeneGraphNode:
       description: |
         Voorbeeldschema voor een Betrokkene in de PROV/JSON-LD-graaf. De @id
-        identificeert de graph-node met een UUIDv7-URI. De persoonsidentificatie wordt daarnaast weergegeven met een typering en
-        een waarde; deze vervangen de @id niet.
+        identificeert de graph-node met een UUIDv7-URI. De persoonsidentificatie wordt daarnaast weergegeven met het soort
+        persoonsidentificatie en de bijbehorende waarde; deze vervangen de @id niet.
       type: object
       required:
         - "@id"
@@ -350,7 +352,7 @@ components:
           description: PROV- en domeintypen van de Betrokkene-node.
         "soh:Betrokkene.identificatieType":
           type: string
-          description: Code die het soort identificatienummer van de Betrokkene aanduidt.
+          description: Soort persoonsidentificatie, bijvoorbeeld BSN of V-NUMMER.
           examples:
             - "BSN"
             - "V-NUMMER"
@@ -367,8 +369,8 @@ components:
       description: |
         Voorbeeldschema voor een Organisatie in de PROV/JSON-LD-graaf. De @id
         identificeert de graph-node met een UUIDv7-URI. De organisatie-identificatie
-        wordt daarnaast weergegeven met een typering en een waarde; deze vervangen
-        de @id niet.
+        wordt daarnaast weergegeven met het soort organisatieidentificatie en de
+        bijbehorende waarde; deze vervangen de @id niet.
       type: object
       required:
         - "@id"
@@ -388,7 +390,7 @@ components:
           description: PROV- en domeintypen van de Organisatie-node.
         "soh:Organisatie.identificatieType":
           type: string
-          description: Code die het soort organisatie-identificatienummer aanduidt.
+          description: Soort organisatieidentificatie, bijvoorbeeld OIN of KVK.
           examples:
             - "OIN"
             - "KVK"
@@ -400,8 +402,8 @@ components:
     QueryRequest:
       description: |
         Zoekcriteria voor beschikbare Uitkomsten Overleg. De persoonsidentificatie
-        bestaat uit een typering en een waarde en is niet de identifier van de
-        Betrokkene in de Knowledge Graph. Bij zoeken op betrokkeneWoonplaats worden
+        bestaat uit het soort persoonsidentificatie en de bijbehorende waarde en is
+        niet de identifier van de Betrokkene in de Knowledge Graph. Bij zoeken op betrokkeneWoonplaats worden
         hoofdletterverschillen genegeerd.
       type: object
       properties:
@@ -460,18 +462,23 @@ components:
                   - "soh:UitkomstOverleg"
                 "soh:UitkomstOverleg.heeftBetrokkene":
                   "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
-                "prov:wasGeneratedBy":
-                  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
+                "soh:steltBeschikbaar":
+                  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
 
               - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
                 "@type":
                   - "prov:Activity"
+                  - "soh:BeschikbaarStellenUitkomstOverleg"
+                "soh:Activity.cloudEventId": "019bb6c0-1234-7abc-8def-426614174003"
                 "prov:wasAssociatedWith":
                   "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
 
               - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
                 "@type":
                   - "prov:Agent"
+                  - "soh:Organisatie"
+                "soh:Organisatie.identificatieType": "OIN"
+                "soh:Organisatie.identificatieWaarde": "00000000000000000000"
               - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
                 "@type":
                   - "prov:Entity"
@@ -517,6 +524,7 @@ components:
                 "@type":
                   - "prov:Activity"
                   - "soh:InzienUitkomstOverleg"
+                "soh:Activity.cloudEventId": "019bb6c0-1234-7abc-8def-426614174005"
                 "prov:used":
                   "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
                 "prov:wasAssociatedWith":
