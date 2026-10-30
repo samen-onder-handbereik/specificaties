@@ -10,7 +10,7 @@ raadplegen van Uitkomsten Overleg tussen ketenpartners.
 
 Onder een *Uitkomst Overleg* wordt verstaan: de vastlegging van wat in een
 Casusoverleg is besproken en besloten, inclusief een overzicht van de concrete
-besluiten en acties. De Uitkomst Overleg hoeft geen eigen identifier te hebben.
+besluiten en taken. De Uitkomst Overleg hoeft geen eigen identifier te hebben.
 Waar een identifier wordt uitgewisseld, gaat het om de identifier van het
 Casusoverleg zelf, zoals die bekend is in het zaaksysteem van de organisatie
 die de vastlegging beschikbaar stelt.
@@ -611,7 +611,7 @@ opnieuw de oorspronkelijke beschikbaarstellingsgebeurtenis.
 #### Voorbeeld
 
 Een voorbeeld van een queryresultaat met meerdere Uitkomsten Overleg is
-opgenomen onder [Resultaat van een informatievraag](#resultaat-van-een-informatievraag)
+opgenomen onder [Queryresultaat van Uitkomst Overleg](#queryresultaat-van-uitkomst-overleg)
 in de paragraaf *Informatievragen*. Dat voorbeeld laat zien hoe meerdere
 `UitkomstOverleg`-objecten en bijbehorende `Betrokkene`-objecten binnen één
 `@graph`-array worden opgenomen.
@@ -703,7 +703,7 @@ Type:
 - `soh:UitkomstOverleg`;
 - `prov:Entity`.
 
-De vastlegging van wat in een Casusoverleg is besproken en besloten, inclusief de concrete besluiten en acties. Deze vastlegging wordt via de Inzage-API beschikbaar gesteld en hoeft geen eigen externe identifier te hebben. De technische `@id` identificeert de node in de Knowledge graph.
+De vastlegging van wat in een Casusoverleg is besproken en besloten, inclusief de concrete besluiten en taken. Deze vastlegging wordt via de Inzage-API beschikbaar gesteld en hoeft geen eigen externe identifier te hebben. De technische `@id` identificeert de node in de Knowledge graph.
 
 Eigenschappen:
 
@@ -954,7 +954,7 @@ onderscheid gemaakt tussen hoofdletters en kleine letters. Zo leveren
 verschillen, zoals spaties of afwijkende schrijfwijzen, worden hiermee niet
 genegeerd.
 
-### Resultaat van een informatievraag
+### Queryresultaat van Uitkomst Overleg
 
 Een informatievraag wordt asynchroon verwerkt. Na acceptatie ontvangt de
 initiator een `interactieId`. Met dit `interactieId` kan de initiator via de
@@ -1022,7 +1022,7 @@ een verwijzing bevatten naar de inhoudelijke resource. Wanneer een deelnemer
 vervolgens de inhoudelijke Uitkomst Overleg via de Inzage-API raadpleegt,
 wordt deze inzage als afzonderlijke activiteit vastgelegd.
 
-Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg:
+Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg, die door dezelfde organisatie beschikbaar zijn gesteld en bij verschillende Casusoverleggen horen:
 
 ```json
 {
@@ -1041,69 +1041,75 @@ Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg:
     "@graph": [
       {
         "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54",
-        "@type": [
-          "prov:Entity",
-          "soh:UitkomstOverleg"
-        ],
+        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
         "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-10-15T10:30:00Z",
         "soh:UitkomstOverleg.inzageUrl": "https://inzage.voorbeeld.nl/uitkomst-overleg/CO-2026-12345",
-        "soh:hoortBijCasusoverleg": {
-          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"
-        },
-        "soh:heeftBetrokkene": {
-          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
-        }
+        "soh:hoortBijCasusoverleg": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"},
+        "soh:heeftBetrokkene": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"}
       },
       {
         "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56",
-        "@type": [
-          "prov:Entity",
-          "soh:Casusoverleg"
-        ],
+        "@type": ["prov:Entity", "soh:Casusoverleg"],
         "soh:Casusoverleg.identifier": "CO-2026-12345",
-        "soh:heeftBetrekkingOpZaak": {
-          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57"
-        }
+        "soh:heeftBetrekkingOpZaak": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57"}
       },
       {
         "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57",
-        "@type": [
-          "prov:Entity",
-          "soh:Zaak"
-        ],
+        "@type": ["prov:Entity", "soh:Zaak"],
         "soh:Zaak.identifier": "ZAAK-2026-12345"
       },
       {
         "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55",
-        "@type": [
-          "prov:Entity",
-          "soh:Betrokkene"
-        ],
+        "@type": ["prov:Entity", "soh:Betrokkene"],
         "soh:Betrokkene.identificatieType": "BSN",
         "soh:Betrokkene.identificatieWaarde": "123456789",
         "soh:Betrokkene.woonplaats": "Deventer"
       },
       {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e60",
+        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
+        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-10-14T14:15:00Z",
+        "soh:UitkomstOverleg.inzageUrl": "https://inzage.voorbeeld.nl/uitkomst-overleg/CO-2026-67890",
+        "soh:hoortBijCasusoverleg": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e62"},
+        "soh:heeftBetrokkene": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e61"}
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e62",
+        "@type": ["prov:Entity", "soh:Casusoverleg"],
+        "soh:Casusoverleg.identifier": "CO-2026-67890",
+        "soh:heeftBetrekkingOpZaak": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e63"}
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e63",
+        "@type": ["prov:Entity", "soh:Zaak"],
+        "soh:Zaak.identifier": "ZAAK-2026-67890"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e61",
+        "@type": ["prov:Entity", "soh:Betrokkene"],
+        "soh:Betrokkene.identificatieType": "BSN",
+        "soh:Betrokkene.identificatieWaarde": "987654321",
+        "soh:Betrokkene.woonplaats": "Zutphen"
+      },
+      {
         "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50",
-        "@type": [
-          "prov:Activity",
-          "soh:BeschikbaarStellenUitkomstOverleg"
-        ],
+        "@type": ["prov:Activity", "soh:BeschikbaarStellenUitkomstOverleg"],
         "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
         "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678901",
-        "prov:wasAssociatedWith": {
-          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
-        },
-        "soh:steltBeschikbaar": {
-          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
-        }
+        "prov:wasAssociatedWith": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"},
+        "soh:steltBeschikbaar": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"}
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e64",
+        "@type": ["prov:Activity", "soh:BeschikbaarStellenUitkomstOverleg"],
+        "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-14T14:15:00Z",
+        "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678902",
+        "prov:wasAssociatedWith": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"},
+        "soh:steltBeschikbaar": {"@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e60"}
       },
       {
         "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52",
-        "@type": [
-          "prov:Agent",
-          "soh:Organisatie"
-        ],
+        "@type": ["prov:Agent", "soh:Organisatie"],
         "soh:Organisatie.identificatieType": "OIN",
         "soh:Organisatie.identificatieWaarde": "00000000000000000000"
       }
@@ -1111,6 +1117,7 @@ Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg:
   }
 }
 ```
+
 
 [Dit voorbeeld als graph bekijken](kennis-graph.html?voorbeeld=uitkomst-overleg/queryresultaat)
 
