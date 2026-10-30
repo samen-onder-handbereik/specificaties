@@ -163,37 +163,37 @@ components:
       summary: CloudEvent waarmee een Uitkomst Overleg beschikbaar wordt gesteld
       value:
         specversion: "1.0"
-        id: "123e4567-e89b-42d3-a456-426614174003"
-        source: "urn:organisatie:voorbeeld"
+        id: "019bb6c0-1234-7abc-8def-426614174003"
+        source: "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
         type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
         time: "2026-01-15T10:30:00Z"
-        subject: "uitkomst-overleg-98765"
+        subject: "casusoverleg-98765"
         datacontenttype: "application/ld+json"
         data:
           "@context":
             prov: "http://www.w3.org/ns/prov#"
             soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
           "@graph":
-            - "@id": "urn:uitkomst-overleg-98765"
+            - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
               "@type":
                 - "prov:Entity"
                 - "soh:UitkomstOverleg"
-              "soh:beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
-              "soh:heeftBetrokkene":
-                "@id": "urn:betrokkene:12345"
-            - "@id": "urn:betrokkene:12345"
+              "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
+              "soh:UitkomstOverleg.heeftBetrokkene":
+                "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
+            - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
               "@type":
                 - "prov:Entity"
                 - "soh:Betrokkene"
-              "soh:identificatieType": "BSN"
-              "soh:identificatieWaarde": "123456789"
-              "soh:woonplaats": "Deventer"
+              "soh:Betrokkene.identificatieType": "BSN"
+              "soh:Betrokkene.identificatieWaarde": "123456789"
+              "soh:Betrokkene.woonplaats": "Deventer"
 
     UitkomstOverlegQueryResultEventVoorbeeld:
       summary: CloudEvent als antwoord op een informatievraag
       value:
         specversion: "1.0"
-        id: "123e4567-e89b-42d3-a456-426614174004"
+        id: "019bb6c0-1234-7abc-8def-426614174004"
         source: "urn:organisatie:queryvoorziening"
         type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat"
         time: "2026-01-15T12:00:00Z"
@@ -205,31 +205,34 @@ components:
             prov: "http://www.w3.org/ns/prov#"
             soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
           "@graph":
-            - "@id": "urn:uitkomst-overleg-98765"
+            - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
               "@type":
                 - "prov:Entity"
                 - "soh:UitkomstOverleg"
-              "soh:beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
-              "soh:inzageUrl": "https://inzage.voorbeeld.nl/uitkomst/98765"
-              "soh:heeftBetrokkene":
-                "@id": "urn:betrokkene:12345"
+              "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
+              "soh:inzageUrl": "https://inzage.voorbeeld.nl/inzage/uitkomst-overleg/casusoverleg-98765"
+              "soh:UitkomstOverleg.heeftBetrokkene":
+                "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
               "prov:wasGeneratedBy":
-                "@id": "urn:activity:beschikbaarstellen:12345"
-            - "@id": "urn:activity:beschikbaarstellen:12345"
+                "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
+            - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
               "@type":
                 - "prov:Activity"
               "prov:wasAssociatedWith":
-                "@id": "urn:organisatie:voorbeeld"
-            - "@id": "urn:organisatie:voorbeeld"
+                "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
+            - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
               "@type":
                 - "prov:Agent"
-            - "@id": "urn:betrokkene:12345"
+                - "soh:Organisatie"
+              "soh:Organisatie.identificatieType": "OIN"
+              "soh:Organisatie.identificatieWaarde": "00000000000000000000"
+            - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
               "@type":
                 - "prov:Entity"
                 - "soh:Betrokkene"
-              "soh:identificatieType": "BSN"
-              "soh:identificatieWaarde": "123456789"
-              "soh:woonplaats": "Deventer"
+              "soh:Betrokkene.identificatieType": "BSN"
+              "soh:Betrokkene.identificatieWaarde": "123456789"
+              "soh:Betrokkene.woonplaats": "Deventer"
 
   schemas:
 
@@ -326,37 +329,73 @@ components:
     BetrokkeneGraphNode:
       description: |
         Voorbeeldschema voor een Betrokkene in de PROV/JSON-LD-graaf. De @id
-        identificeert het domeinobject. De persoonsidentificatie wordt daarnaast weergegeven met een typering en
+        identificeert de graph-node met een UUIDv7-URI. De persoonsidentificatie wordt daarnaast weergegeven met een typering en
         een waarde; deze vervangen de @id niet.
       type: object
       required:
         - "@id"
         - "@type"
-        - "soh:identificatieType"
-        - "soh:identificatieWaarde"
+        - "soh:Betrokkene.identificatieType"
+        - "soh:Betrokkene.identificatieWaarde"
       properties:
         "@id":
           type: string
-          description: Eigen identifier van het Betrokkene-domeinobject in de Knowledge Graph.
+          format: uri
+          pattern: '^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'
+          description: UUIDv7-URI die deze Betrokkene-node in de Knowledge Graph identificeert.
         "@type":
           type: array
           items:
             type: string
           description: PROV- en domeintypen van de Betrokkene-node.
-        "soh:identificatieType":
+        "soh:Betrokkene.identificatieType":
           type: string
           description: Code die het soort identificatienummer van de Betrokkene aanduidt.
           examples:
             - "BSN"
             - "V-NUMMER"
-        "soh:identificatieWaarde":
+        "soh:Betrokkene.identificatieWaarde":
           type: string
           description: Waarde van het identificatienummer, weergegeven als string.
           example: "123456789"
-        "soh:woonplaats":
+        "soh:Betrokkene.woonplaats":
           type: string
           description: Woonplaats van de Betrokkene.
           example: "Deventer"
+
+    OrganisatieGraphNode:
+      description: |
+        Voorbeeldschema voor een Organisatie in de PROV/JSON-LD-graaf. De @id
+        identificeert de graph-node met een UUIDv7-URI. De organisatie-identificatie
+        wordt daarnaast weergegeven met een typering en een waarde; deze vervangen
+        de @id niet.
+      type: object
+      required:
+        - "@id"
+        - "@type"
+        - "soh:Organisatie.identificatieType"
+        - "soh:Organisatie.identificatieWaarde"
+      properties:
+        "@id":
+          type: string
+          format: uri
+          pattern: '^urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'
+          description: UUIDv7-URI die deze Organisatie-node in de Knowledge graph identificeert.
+        "@type":
+          type: array
+          items:
+            type: string
+          description: PROV- en domeintypen van de Organisatie-node.
+        "soh:Organisatie.identificatieType":
+          type: string
+          description: Code die het soort organisatie-identificatienummer aanduidt.
+          examples:
+            - "OIN"
+            - "KVK"
+        "soh:Organisatie.identificatieWaarde":
+          type: string
+          description: Waarde van het organisatie-identificatienummer, weergegeven als string.
+          example: "00000000000000000000"
 
     QueryRequest:
       description: |
@@ -403,11 +442,11 @@ components:
         gebeurt via de generieke Asynchrone Interactie API.
       examples:
         - specversion: "1.0"
-          id: "123e4567-e89b-42d3-a456-426614174003"
-          source: "urn:organisatie:voorbeeld"
+          id: "019bb6c0-1234-7abc-8def-426614174003"
+          source: "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
           type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld"
           time: "2026-01-15T10:30:00Z"
-          subject: "uitkomst-overleg-98765"
+          subject: "casusoverleg-98765"
           datacontenttype: "application/ld+json"
           data:
             "@context":
@@ -415,31 +454,31 @@ components:
               prov: "http://www.w3.org/ns/prov#"
               soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
             "@graph":
-              - "@id": "urn:uitkomst-overleg-98765"
+              - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
                 "@type":
                   - "prov:Entity"
                   - "soh:UitkomstOverleg"
-                "soh:heeftBetrokkene":
-                  "@id": "urn:betrokkene:12345"
+                "soh:UitkomstOverleg.heeftBetrokkene":
+                  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
                 "prov:wasGeneratedBy":
-                  "@id": "urn:activity:beschikbaarstellen:12345"
+                  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
 
-              - "@id": "urn:activity:beschikbaarstellen:12345"
+              - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50"
                 "@type":
                   - "prov:Activity"
                 "prov:wasAssociatedWith":
-                  "@id": "urn:organisatie:voorbeeld"
+                  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
 
-              - "@id": "urn:organisatie:voorbeeld"
+              - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
                 "@type":
                   - "prov:Agent"
-              - "@id": "urn:betrokkene:12345"
+              - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
                 "@type":
                   - "prov:Entity"
                   - "soh:Betrokkene"
-                "soh:identificatieType": "BSN"
-                "soh:identificatieWaarde": "123456789"
-                "soh:woonplaats": "Deventer"
+                "soh:Betrokkene.identificatieType": "BSN"
+                "soh:Betrokkene.identificatieWaarde": "123456789"
+                "soh:Betrokkene.woonplaats": "Deventer"
 
       allOf:
         - $ref: './AsynchroneInteracties.yaml#/components/schemas/CloudEvent'
@@ -463,29 +502,32 @@ components:
         provenance-informatie.
       examples:
         - specversion: "1.0"
-          id: "123e4567-e89b-42d3-a456-426614174005"
-          source: "urn:organisatie:inzage"
+          id: "019bb6c0-1234-7abc-8def-426614174005"
+          source: "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e53"
           type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien"
           time: "2026-01-15T11:00:00Z"
-          subject: "uitkomst-overleg-98765"
+          subject: "casusoverleg-98765"
           datacontenttype: "application/ld+json"
           data:
             "@context":
               prov: "http://www.w3.org/ns/prov#"
               soh: "https://samen-onder-handbereik.github.io/specificaties/schema/"
             "@graph":
-              - "@id": "urn:activity:inzage:67890"
+              - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e51"
                 "@type":
                   - "prov:Activity"
                   - "soh:InzienUitkomstOverleg"
                 "prov:used":
-                  "@id": "urn:uitkomst-overleg-98765"
+                  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
                 "prov:wasAssociatedWith":
-                  "@id": "urn:organisatie:inzage"
+                  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e53"
 
-              - "@id": "urn:organisatie:inzage"
+              - "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e53"
                 "@type":
                   - "prov:Agent"
+                  - "soh:Organisatie"
+                "soh:Organisatie.identificatieType": "OIN"
+                "soh:Organisatie.identificatieWaarde": "00000000000000000000"
                 # Agent die de inzage heeft uitgevoerd.
 
       allOf:
@@ -504,12 +546,13 @@ components:
         Deze resource bevat de gegevens waarmee een Uitkomst Overleg
         kan worden geraadpleegd via de inzagevoorziening.
       type: object
-      required:
-        - identifier
       properties:
-        identifier:
+        casusoverlegIdentifier:
           type: string
-          description: Unieke identifier van de UitkomstOverleg-resource.
+          description: |
+            Identifier van het Casusoverleg in het bronsysteem waarop de
+            Uitkomst Overleg betrekking heeft. Dit is geen afzonderlijke
+            identifier van de Uitkomst Overleg zelf.
         beschikbaarGesteldOp:
           type: string
           format: date-time
@@ -517,14 +560,20 @@ components:
         inzageUrl:
           type: string
           format: uri
+          example: "https://organisatie.example/inzage/uitkomst-overleg/casusoverleg-98765?peildatum=2026-01-15T10%3A30%3A00Z"
           description: |
             URL waarmee de Uitkomst Overleg kan worden ingezien.
 
-            De inzageUrl verwijst naar de inzagevoorziening en is geen
-            primaire identifier van de UitkomstOverleg-resource.
+            De URL gebruikt de identifier van het Casusoverleg in het pad.
+            Optioneel kan de queryparameter peildatum worden toegevoegd met
+            een datum-tijdwaarde conform RFC 3339. Als deze parameter aanwezig
+            is, retourneert de Inzage-API de toestand zoals die op dat tijdstip
+            bekend was; latere wijzigingen blijven buiten beschouwing. Zonder
+            peildatum wordt de actuele toestand geretourneerd.
 
-            De opbouw van de inzageUrl wordt beschreven in de
-            specificatie UitwisselenUitkomstOverleg.
+            De inzageUrl is een technische verwijzing en geen afzonderlijke
+            identifier van de Uitkomst Overleg. Zie de specificatie
+            UitwisselenUitkomstOverleg voor de volledige URL-afspraak.
 
     ProvenancePayload:
       description: |
@@ -534,7 +583,8 @@ components:
         heeft een eigen domeinidentifier. Wanneer de Betrokkene in de payload
         is opgenomen, worden de persoonsidentificatie en de woonplaats als
         eigenschappen van de Betrokkene weergegeven met respectievelijk
-        soh:identificatieType en soh:identificatieWaarde, en soh:woonplaats.
+        soh:Betrokkene.identificatieType en
+        soh:Betrokkene.identificatieWaarde, en soh:Betrokkene.woonplaats.
       type: object
       required:
         - "@context"
@@ -565,8 +615,8 @@ components:
 
         Wanneer een Betrokkene onderdeel is van het queryresultaat, bevat de
         graaf zowel de eigen identifier van de Betrokkene als de getypeerde
-        persoonsidentificatie, bestaande uit soh:identificatieType en
-        soh:identificatieWaarde. Daardoor is de identificatie voor afnemers
+        persoonsidentificatie, bestaande uit soh:Betrokkene.identificatieType en
+        soh:Betrokkene.identificatieWaarde. Daardoor is de identificatie voor afnemers
         interpreteerbaar zonder de identifier van de graph-node als
         persoonsidentificatienummer te gebruiken.
       allOf:

@@ -1,12 +1,11 @@
 {
   "specversion": "1.0",
-  "id": "019b7a10-6c2d-7abc-8def-1234567890ab",
-  "source": "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg",
+  "id": "0199f0a0-1234-7abc-8def-012345678901",
+  "source": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56",
   "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
   "time": "2026-10-15T10:30:00Z",
-  "subject": "ZAAK-2026-12345",
+  "subject": "CO-2026-12345",
   "datacontenttype": "application/ld+json",
-  "dataschema": "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json",
   "data": {
     "@context": {
       "prov": "http://www.w3.org/ns/prov#",
@@ -14,28 +13,69 @@
     },
     "@graph": [
       {
-        "@id": "urn:activity:beschikbaarstellen:12345",
-        "@type": ["prov:Activity", "soh:BeschikbaarStellenUitkomstOverleg"],
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50",
+        "@type": [
+          "prov:Activity",
+          "soh:BeschikbaarStellenUitkomstOverleg"
+        ],
         "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
-        "prov:wasAssociatedWith": {"@id": "urn:nld:oin:00000001823288444000"},
-        "soh:steltBeschikbaar": {"@id": "urn:uitkomst-overleg:12345"}
+        "prov:wasAssociatedWith": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"
+        },
+        "soh:steltBeschikbaar": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
+        }
       },
       {
-        "@id": "urn:uitkomst-overleg:12345",
-        "@type": ["prov:Entity", "soh:UitkomstOverleg"],
-        "soh:UitkomstOverleg.identifier": "ZAAK-2026-12345",
-        "soh:heeftBetrokkene": {"@id": "urn:betrokkene:67890"}
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ],
+        "soh:heeftBetrokkene": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
+        },
+        "soh:hoortBijCasusoverleg": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e53"
+        }
       },
       {
-        "@id": "urn:betrokkene:67890",
-        "@type": "soh:Betrokkene",
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e53",
+        "@type": [
+          "prov:Entity",
+          "soh:Casusoverleg"
+        ],
+        "soh:Casusoverleg.identifier": "CO-2026-12345",
+        "soh:heeftBetrekkingOpZaak": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54",
+        "@type": [
+          "prov:Entity",
+          "soh:Zaak"
+        ],
+        "soh:Zaak.identifier": "ZAAK-2026-12345"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55",
+        "@type": [
+          "prov:Entity",
+          "soh:Betrokkene"
+        ],
         "soh:Betrokkene.identificatieType": "BSN",
         "soh:Betrokkene.identificatieWaarde": "123456789",
         "soh:Betrokkene.woonplaats": "Deventer"
       },
       {
-        "@id": "urn:nld:oin:00000001823288444000",
-        "@type": ["prov:Agent", "soh:Organisatie"]
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56",
+        "@type": [
+          "prov:Agent",
+          "soh:Organisatie"
+        ],
+        "soh:Organisatie.identificatieType": "OIN",
+        "soh:Organisatie.identificatieWaarde": "00000000000000000000"
       }
     ]
   }

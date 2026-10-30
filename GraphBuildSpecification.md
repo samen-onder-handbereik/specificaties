@@ -40,20 +40,32 @@ bepaald welke provenance-activiteit het event representeert.
         v
     prov:Entity
 
-### Identiteiten worden niet hergebruikt
+### Verschillende identificaties worden onderscheiden
 
 Bij het opbouwen van de Knowledge graph worden verschillende soorten
-identificaties onderscheiden.
+identificaties onderscheiden:
 
--   `CloudEvent.id`
-    -   Identificeert het CloudEvent zelf.
--   `Activity.identifier`
-    -   Identificeert de provenance-activiteit.
--   `Entity.identifier`
-    -   Identificeert het domeinobject.
+-   `CloudEvent.id` identificeert het CloudEvent zelf;
+-   de JSON-LD-eigenschap `@id` identificeert een node in de Knowledge graph;
+-   domeineigenschappen, zoals `soh:Casusoverleg.identifier`, kunnen een
+    object identificeren binnen een bronsysteem.
 
 Deze identificaties hebben ieder hun eigen betekenis en worden niet
 onderling vervangen.
+
+Iedere node in de Knowledge graph krijgt een eigen `@id`. Hiervoor wordt
+een UUIDv7 gebruikt, opgenomen als URI met het schema `urn:uuid:`. Dit
+geldt voor zowel PROV-nodes (`Entity`, `Activity` en `Agent`) als
+domeinspecifieke nodes. Er wordt naast `@id` geen afzonderlijke
+`Activity.identifier` of `Entity.identifier` gebruikt als technische
+identificatie van de graph-node.
+
+Dezelfde node behoudt dezelfde `@id` wanneer deze in meerdere gebeurtenissen
+of queryresultaten voorkomt. Bij verwerking wordt een bestaande node dus
+herkend en hergebruikt; er wordt niet bij iedere gebeurtenis een nieuwe UUID
+voor hetzelfde object gegenereerd. De UUIDv7 wordt niet afgeleid van het
+CloudEvent-id of van een identifier uit een bronsysteem, zoals
+`soh:Casusoverleg.identifier`.
 
 ## Algemene mappingregels
 
@@ -72,7 +84,7 @@ teruggeeft, valt niet onder deze mappingregel.
 
 De Activity bevat minimaal:
 
--   een eigen identifier;
+-   een eigen UUIDv7 als technische node-identificatie (`@id`);
 -   het type activiteit;
 -   een verwijzing naar het oorspronkelijke CloudEvent.
 
@@ -84,42 +96,45 @@ Voorbeeld:
         v
     (:Activity:BeschikbaarStellenUitkomstOverleg)
     {
-        identifier: "<activity-identifier>",
+        @id: "urn:uuid:<uuidv7>",
         cloudEventId: "<cloud-event-id>"
     }
 
-De `cloudEventId` verwijst naar het oorspronkelijke CloudEvent. Deze
-identifier is onafhankelijk van de `identifier` van de Activity.
+De `@id` identificeert de Activity als node in de Knowledge graph. De
+eigenschap `cloudEventId` verwijst naar het oorspronkelijke CloudEvent en
+legt de herkomst van de provenance-informatie vast. Deze waarde is gelijk
+aan het `id`-attribuut van het ontvangen CloudEvent. De `@id` van de Activity,
+het CloudEvent-veld `id` en eventuele domeinidentificaties hebben elk een
+eigen functie en mogen niet zonder expliciete afspraak als uitwisselbaar
+worden beschouwd.
 
-### Activity naar Entity
+### Identificatie van personen en organisaties
 
-Een Activity kan leiden tot het ontstaan of beschikbaar komen van een
-domeinobject.
+Voor de identificatie van personen en organisaties wordt, waar deze
+identificatie onderdeel is van de aangeleverde of teruggegeven domeingegevens,
+één combinatie van een typering en een identificatiewaarde gebruikt. De
+typering is een stabiele code uit een beheerde waardelijst.
 
-    (:Activity:BeschikbaarStellenUitkomstOverleg)
-            |
-            | prov:generated
-            v
-    (:Entity:UitkomstOverleg)
+Voor een persoon kan dit bijvoorbeeld `BSN` of `V-NUMMER` zijn. Voor een
+organisatie kan dit bijvoorbeeld `OIN` of `KVK` zijn.
 
-De Entity krijgt een eigen identifier.
-
-### Identificatie van personen
-
-Voor de identificatie van een persoon wordt één combinatie van een typering
-en een identificatiewaarde gebruikt. De typering is een stabiele code uit een
-beheerde waardelijst, bijvoorbeeld `BSN` of `V-NUMMER`.
-
-De persoonsidentificatie staat los van de identifier van het domeinobject dat
-de persoon in de Knowledge graph representeert. De persoonsidentificatie wordt
-niet gebruikt als identifier van de graph-node en leidt niet op zichzelf tot
-een `prov:Activity`, `prov:Entity` of `prov:Agent`.
+De domeinidentificatie staat los van de technische `@id` van de node in de
+Knowledge graph. De identificatie wordt dus niet gebruikt als `@id` en leidt
+niet op zichzelf tot een `prov:Activity`, `prov:Entity` of `prov:Agent`.
 
 Wanneer de identificatie deel uitmaakt van de aangeleverde domeingegevens,
-wordt de combinatie van typering en waarde als eigenschap van het
-domeinobject `Betrokkene` vastgelegd. Hiervoor wordt geen afzonderlijk
-benoemd domeinobject of PROV-element aangemaakt. De identifier van
-`Betrokkene` blijft onafhankelijk van de persoonsidentificatie.
+wordt de combinatie van typering en waarde als eigenschap van het betreffende
+domeinobject vastgelegd. Voor een persoon betreft dit bijvoorbeeld
+`soh:Betrokkene.identificatieType` en
+`soh:Betrokkene.identificatieWaarde`. Voor een organisatie betreft dit
+bijvoorbeeld `soh:Organisatie.identificatieType` en
+`soh:Organisatie.identificatieWaarde`. Hiervoor wordt geen afzonderlijk
+benoemd domeinobject of PROV-element aangemaakt.
+
+De samenwerkfunctie-specificatie bepaalt of een domeinidentificatie wordt
+opgenomen en welke identificatietypen zijn toegestaan. Als een
+identificatiecombinatie wordt opgenomen, worden typering en waarde samen
+vastgelegd.
 
 ### Naamgeving van domeineigenschappen
 
@@ -128,6 +143,9 @@ De namen van domeineigenschappen in JSON-LD volgen de conventie uit het
 `soh:<Concept>.<eigenschap>`. De graph-build verwerkt deze termen volgens de
 vastgelegde mapping naar de eigenschappen van de graph-nodes. De conceptnaam
 vóór de punt geeft aan bij welk domeinconcept de eigenschap hoort.
+
+Ook de eigenschap waarmee het oorspronkelijke CloudEvent-id op de Activity
+wordt vastgelegd, volgt deze conventie: `soh:Activity.cloudEventId`.
 
 
 ## Eventtype naar graphmapping
@@ -146,19 +164,17 @@ CloudEvent type:
 
 leidt tot:
 
-    Activity:
-    BeschikbaarStellenUitkomstOverleg
+    Activity: BeschikbaarStellenUitkomstOverleg
 
-    Entity:
-    UitkomstOverleg
+    Entity: UitkomstOverleg
 
 met relatie:
 
-    (Activity)
+    (Activity: BeschikbaarStellenUitkomstOverleg)
         |
         | soh:steltBeschikbaar
         v
-    (Entity)
+    (Entity: UitkomstOverleg)
 
 Standaard PROV-relaties en domeinspecifieke relaties kunnen naast elkaar
 worden gebruikt. Welke relatie of relaties bij een gebeurtenis horen, wordt
@@ -184,6 +200,12 @@ Deze node representeert zowel `prov:Entity` als `soh:UitkomstOverleg`.
 
 Er wordt geen afzonderlijke node gemaakt voor het PROV-type en het
 domeintype.
+
+Iedere node krijgt één technische identificatie in de vorm van een UUIDv7-URI
+in `@id`. Deze identificatie blijft behouden wanneer dezelfde node in een
+volgend event of queryresultaat voorkomt. Een herkenbare identificatie uit
+een bronsysteem, zoals een OIN, KvK-nummer, BSN of Casusoverleg-identifier,
+wordt indien relevant als afzonderlijke domeineigenschap vastgelegd.
 
 ## Validatie van de provenance-payload
 

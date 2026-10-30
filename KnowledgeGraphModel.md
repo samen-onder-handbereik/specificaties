@@ -52,7 +52,7 @@ Voorbeeld:
 
 ``` json
 {
-  "@id": "urn:uitkomst-overleg:98765",
+  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50",
   "@type": [
     "prov:Entity",
     "soh:UitkomstOverleg"
@@ -63,6 +63,9 @@ Voorbeeld:
 Technisch wordt dit bijvoorbeeld weergegeven als:
 
     (:Entity:UitkomstOverleg)
+
+De node heeft zowel het label `Entity`, dat overeenkomt met `prov:Entity`,
+als het label `UitkomstOverleg`, dat overeenkomt met `soh:UitkomstOverleg`.
 
 ## Generiek graphmodel
 
@@ -91,7 +94,7 @@ prefix `soh:` gebruikt.
 Een domeineigenschap in een JSON-LD-representatie wordt gekwalificeerd met
 de naam van het concept waarop de eigenschap betrekking heeft. De vorm is
 `soh:<Concept>.<eigenschap>`, bijvoorbeeld `soh:Betrokkene.identificatieType`
-en `soh:UitkomstOverleg.identifier`. Deze conventie maakt expliciet bij welk
+en `soh:Casusoverleg.identifier`. Deze conventie maakt expliciet bij welk
 concept een eigenschap hoort en voorkomt dat gelijknamige eigenschappen van
 verschillende concepten dezelfde term-URI krijgen.
 
@@ -122,36 +125,29 @@ Er wordt onderscheid gemaakt tussen:
 -   PROV-relaties;
 -   domeinspecifieke relaties.
 
-Voorbeelden van PROV-relaties:
+Voorbeeld van een PROV-relatie:
 
-    (:Activity:BeschikbaarStellenUitkomstOverleg)
+    (:Activity)
             |
             | prov:generated
             v
-    (:Entity:UitkomstOverleg)
+    (:Entity)
 
-In de grafische voorbeelden wordt de relatie weergegeven vanuit het
+In dit grafische voorbeeld wordt de relatie weergegeven vanuit het
 perspectief dat voor de lezer het meest natuurlijk is. `prov:generated`
-wordt daarbij weergegeven van Activity naar Entity. In RDF is de
+wordt weergegeven van Activity naar Entity. In RDF is de
 corresponderende relatie `prov:wasGeneratedBy` gericht van Entity naar
 Activity.
 
-Voorbeelden van domeinspecifieke relaties:
-
-    (:UitkomstOverleg)
-            |
-            | soh:heeftBetrokkene
-            v
-    (:Betrokkene)
-
-Domeinspecifieke relaties worden vastgelegd binnen een eigen namespace.
-In de voorbeelden wordt hiervoor de prefix `soh:` gebruikt. Hiermee
-wordt zichtbaar gemaakt dat de relatie geen onderdeel is van PROV, maar
-afkomstig is uit het domeinmodel van Samen Onder Handbereik.
+Domeinspecifieke relaties verbinden domeinobjecten en worden vastgelegd
+binnen de namespace van de betreffende samenwerkfunctie. In de voorbeelden
+wordt hiervoor de prefix `soh:` gebruikt. Een domeinspecifieke relatie
+maakt zichtbaar dat het verband niet door PROV wordt gedefinieerd, maar
+voortkomt uit het domeinmodel.
 
 Een relatie beschrijft altijd een betekenisvol verband tussen twee
-objecten. Een samenwerkfunctie bepaalt welke domeinspecifieke relaties
-worden vastgelegd.
+objecten. De samenwerkfunctie bepaalt welke domeinspecifieke relaties
+worden vastgelegd en wat hun richting en betekenis zijn.
 
 ## Modellering van nodes
 
@@ -163,12 +159,10 @@ Domeinobjecten worden gemodelleerd als nodes met:
 -   één of meer domeinspecifieke labels;
 -   eigenschappen die bij het object horen.
 
-Voorbeeld:
-
-    (:Entity:UitkomstOverleg {
-        identifier: "uitkomst-overleg-98765",
-        beschikbaarGesteldOp: "2026-01-15T10:30:00Z"
-    })
+Een domeinobject kan met een ander domeinobject worden verbonden
+via een domeinspecifieke relatie. De concrete typen, eigenschappen,
+relatienaam en relatierichting worden bepaald door het informatiemodel
+van de samenwerkfunctie.
 
 ### Activiteiten
 
@@ -178,25 +172,20 @@ Activiteiten worden gemodelleerd als nodes met:
 -   een samenwerkfunctie-specifiek activiteitstype;
 -   eigenschappen die de activiteit beschrijven.
 
-Voorbeeld:
-
-    (:Activity:BeschikbaarStellenUitkomstOverleg {
-        identifier: "urn:activity:beschikbaarstellen:12345"
-    })
-
-De identifier van een Activity identificeert de provenance-activiteit en
-heeft geen betekenis binnen het domeinmodel.
+Ook een Activity krijgt een eigen `@id`, net als iedere andere node in de
+Knowledge graph. Deze `@id` is een UUIDv7-URI en identificeert de node.
+Er wordt geen afzonderlijke `Activity.identifier` gebruikt.
 
 ## Meervoudige relaties
 
 Een informatieobject kan betrokken zijn bij meerdere activiteiten en
 relaties.
 
-Een `UitkomstOverleg` kan bijvoorbeeld:
+Een domeinobject kan bijvoorbeeld:
 
--   beschikbaar zijn gesteld;
--   zijn ingezien;
--   onderdeel zijn van meerdere provenance-ketens.
+-   met andere domeinobjecten verbonden zijn;
+-   door verschillende activiteiten zijn gegenereerd of gebruikt;
+-   betrokken zijn bij meerdere provenance-ketens.
 
 Daarom wordt provenance gekoppeld aan activiteiten en niet rechtstreeks
 aan het informatieobject.
@@ -217,19 +206,22 @@ Het attribuut `id` van een CloudEvent identificeert het CloudEvent zelf.
 
 Het CloudEvent-id:
 
--   wordt niet gebruikt als identifier van een Activity;
--   wordt niet gebruikt als identifier van een Entity;
+-   is niet de `@id` van een Activity of Entity;
 -   wordt niet als zelfstandig object in de Knowledge graph opgenomen.
 
-Wanneer provenance wordt opgebouwd vanuit een CloudEvent, kan de relatie
-met het oorspronkelijke CloudEvent worden vastgelegd op de Activity.
+Wanneer provenance wordt opgebouwd vanuit een CloudEvent, kan het
+oorspronkelijke CloudEvent-id afzonderlijk op de Activity worden vastgelegd
+met de eigenschap `cloudEventId`. Daarmee blijft de herkomst van de
+provenance-informatie herleidbaar tot het ontvangen CloudEvent.
 
 Voorbeeld:
 
-    (:Activity:BeschikbaarStellenUitkomstOverleg {
-        identifier: "urn:activity:beschikbaarstellen:12345",
-        cloudEventId: "event-12345"
+    (:Activity {
+        cloudEventId: "0199f0a0-1234-7abc-8def-012345678901"
     })
+
+De Activity zelf heeft daarnaast een eigen `@id` (UUIDv7-URI), die
+onafhankelijk is van het CloudEvent-id.
 
 ## Validatie van provenance-gegevens
 
@@ -242,42 +234,55 @@ garandeert niet dat de volledige provenance-graaf semantisch correct is.
 Semantische validatie, bijvoorbeeld met SHACL, kan in een toekomstige
 uitbreiding worden toegevoegd.
 
-## Identificatie van personen
+## Identificatie van personen en organisaties
 
-Voor de identificatie van personen kunnen verschillende soorten
-identificatienummers worden gebruikt. Een persoonsidentificatie bestaat uit
+Voor de identificatie van personen en organisaties kunnen verschillende
+soorten identificatienummers worden gebruikt. Een identificatie bestaat uit
 een typering en een identificatiewaarde. De typering geeft aan om welk soort
-identificatienummer het gaat, bijvoorbeeld een BSN of een V-nummer, en wordt
-uitgedrukt met een stabiele code uit een beheerde waardelijst.
+identificatienummer het gaat, bijvoorbeeld een BSN, V-nummer, OIN of
+KvK-nummer, en wordt uitgedrukt met een stabiele code uit een beheerde
+waardelijst.
 
 Dit uitgangspunt geldt voor de hele gegevensketen: de aanlevering van gegevens
 via CloudEvents, de opslag en modellering in de Knowledge graph, de bevraging
-van de Knowledge graph en de representatie van personen in queryresultaten.
+van de Knowledge graph en de representatie van personen en organisaties in
+queryresultaten.
 
-De identifier waarmee een persoon als object in de Knowledge graph wordt
-geïdentificeerd, staat los van de persoonsidentificatie. Een identificatienummer
+De `@id` waarmee een persoon of organisatie als object in de Knowledge graph wordt
+geïdentificeerd, staat los van de domeinidentificatie. Een identificatienummer
 wordt dus niet automatisch gebruikt als `@id` van een `prov:Agent`,
 `prov:Entity` of ander domeinobject.
 
 Identificatiegegevens worden, waar ze onderdeel zijn van de aangeleverde of
-teruggegeven domeingegevens, bij de persoon gerepresenteerd als één combinatie
+teruggegeven domeingegevens, bij de persoon of organisatie gerepresenteerd als één combinatie
 van typering en waarde. Daarvoor wordt geen afzonderlijk benoemd domeinobject
 of PROV-element voor de identificatie geïntroduceerd. De
 samenwerkfunctie-specificatie bepaalt hoe deze combinatie wordt aangeleverd,
 opgeslagen, teruggegeven en gebruikt bij bevraging.
 
-## Identificatie
+## Identificatie van nodes
 
-Binnen de Knowledge graph bestaan verschillende soorten identifiers:
+Iedere node in de Knowledge graph krijgt een eigen `@id`. Deze
+identificatie wordt gevormd door een UUIDv7, weergegeven als URI met het
+schema `urn:uuid:`. Dit geldt voor zowel PROV-nodes (`Entity`, `Activity`
+en `Agent`) als domeinspecifieke nodes.
 
--   **CloudEvent `id`**
-    -   technische identificatie van het event.
--   **Activity identifier**
-    -   identificatie van de provenance-activiteit.
--   **Entity identifier**
-    -   identificatie van het domeinobject.
+De `@id` identificeert de node in de Knowledge graph. Een node behoudt
+dezelfde `@id` wanneer deze in verschillende CloudEvents, queryresultaten
+of andere representaties voorkomt. Er wordt dus geen nieuwe `@id`
+gegenereerd telkens wanneer dezelfde node opnieuw wordt opgenomen in een
+bericht of resultaat.
 
-Deze identifiers worden niet door elkaar gebruikt.
+Een identifier uit een bronsysteem, zoals
+`soh:Casusoverleg.identifier`, blijft een afzonderlijke domeineigenschap.
+Deze kan worden gebruikt om een node te vinden of aan een bestaande node
+te koppelen, maar vervangt de `@id` niet.
+
+Het CloudEvent-attribuut `id` identificeert het CloudEvent zelf en staat
+eveneens los van de `@id` van de nodes die op basis van dat event worden
+vastgelegd. Het CloudEvent-id kan, indien nodig, als `cloudEventId` op
+de betreffende Activity worden bewaard.
+
 
 ## Technische representatie
 
@@ -294,7 +299,8 @@ Voorbeelden:
 -   `prov:Entity` wordt vertaald naar label `Entity`.
 -   `prov:Activity` wordt vertaald naar label `Activity`.
 -   `prov:Agent` wordt vertaald naar label `Agent`.
--   `soh:UitkomstOverleg` wordt vertaald naar label `UitkomstOverleg`.
+Domeinspecifieke typen worden op overeenkomstige wijze vertaald naar
+labels die bij de betreffende samenwerkfunctie horen.
 
 Een node kan meerdere labels hebben.
 
@@ -302,38 +308,50 @@ Een node kan meerdere labels hebben.
 
 Eigenschappen worden opgeslagen als node-properties.
 
-Voorbeelden:
+De `@id` van een node wordt in de JSON-LD-representatie opgenomen als
+`@id`. In de graph-database wordt deze identificatie als technische
+node-identificatie opgeslagen. De precieze opslagmapping is
+implementatieafhankelijk; `@id` is de semantische identificatie in de
+uitgewisselde representatie.
 
-    (:Entity:UitkomstOverleg {
-        identifier: "..."
-    })
+Voorbeelden van JSON-LD-nodes:
 
-en:
+```json
+{
+  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50",
+  "@type": ["prov:Entity", "soh:UitkomstOverleg"],
+  "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-01-15T10:30:00Z"
+}
+```
 
-    (:Activity:BeschikbaarStellenUitkomstOverleg {
-        identifier: "...",
-        cloudEventId: "..."
-    })
+```json
+{
+  "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e51",
+  "@type": ["prov:Activity", "soh:BeschikbaarStellenUitkomstOverleg"],
+  "soh:Activity.cloudEventId": "0199f0a0-1234-7abc-8def-012345678901"
+}
+```
 
 ## Conceptueel voorbeeld
 
-Een eenvoudige representatie van de samenhang:
+Een generieke PROV-samenhang kan er als volgt uitzien:
 
-    (:Agent:Organisatie)
-              |
-              | prov:wasAssociatedWith
-              v
-    (:Activity:BeschikbaarStellenUitkomstOverleg)
-              |
-              | prov:generated
-              v
-    (:Entity:UitkomstOverleg)
-              |
-              | soh:heeftBetrokkene
-              v
-    (:Entity:Betrokkene)
+    (:Agent)
+          |
+          | prov:wasAssociatedWith
+          v
+    (:Activity)
+          |
+          | prov:generated
+          v
+    (:Entity)
 
-De voorbeelden en het informatiemodel van de samenwerkfuncties zijn interactief te bekijken in de [kennis-graph](kennis-graph.html).
+De domeinspecifieke objecten en relaties die daarnaast in de Knowledge
+graph voorkomen, worden beschreven in de specificatie van de betreffende
+samenwerkfunctie.
+
+De voorbeelden en het informatiemodel van de samenwerkfuncties zijn
+interactief te bekijken in de [kennis-graph](kennis-graph.html).
 
 ## Samenwerkfunctie-specifieke uitbreiding
 

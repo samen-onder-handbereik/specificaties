@@ -17,8 +17,14 @@ die de vastlegging beschikbaar stelt.
 
 CloudEvents bevatten niet de volledige inhoud van een Uitkomst Overleg.
 Zij bevatten informatie die nodig is voor notificatie, provenance, auditing
-en het opbouwen van een Knowledge graph.
-De volledige inhoud van een Uitkomst Overleg kan via de Inzage-API worden geraadpleegd.
+en het opbouwen van een Knowledge graph. De volledige inhoud van een Uitkomst
+Overleg kan via de Inzage-API worden geraadpleegd.
+
+Voor deze samenwerkfunctie geldt als overgangsafspraak dat het event ook de
+Zaak-identificatie aanlevert die nodig is om het Casusoverleg aan de betreffende
+Zaak te relateren. De structurele verantwoordelijkheid voor het aanleveren
+van die relatie ligt uiteindelijk bij de samenwerkfunctie Overleggen over de
+casus, omdat die samenwerkfunctie daarvoor de meest logische plek is.
 
 ### Inzage-API
 
@@ -102,7 +108,10 @@ De graph bevat precies één node voor elk van deze objecten:
 - `UitkomstOverleg`;
 - `BeschikbaarStellenUitkomstOverleg`;
 - `Organisatie` die de activiteit uitvoert;
-- `Betrokkene` waarop de Uitkomst Overleg betrekking heeft.
+- `Betrokkene` waarop de Uitkomst Overleg betrekking heeft;
+- `Casusoverleg` waarop de vastlegging betrekking heeft;
+- `Zaak` waarop het Casusoverleg betrekking heeft, zodat de relatie met de Zaak
+  kan worden vastgelegd.
 
 Elk object heeft een eigen `@id`, die de node in de Knowledge graph identificeert. Verwijzingen tussen nodes gebruiken
 `{"@id": "<identifier>"}` en moeten overeenkomen met de `@id` van het
@@ -116,7 +125,7 @@ bedoelde object in de graph.
 |---|---|
 | `@id` | Verplicht. URI die de Uitkomst Overleg in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
-| `soh:UitkomstOverleg.identifier` | Neem de identifier op van het Casusoverleg waarop deze vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die de vastlegging beschikbaar stelt. Deze waarde identificeert dus het Casusoverleg, niet de Uitkomst Overleg als afzonderlijke vastlegging en niet de technische `@id` van de graph-node. |
+| `soh:hoortBijCasusoverleg` | Verplicht. Verwijst naar de opgenomen `Casusoverleg`-node waarop deze vastlegging betrekking heeft. |
 | `soh:heeftBetrokkene` | Verplicht. Verwijst naar de opgenomen Betrokkene-node. |
 | `soh:UitkomstOverleg.beschikbaarGesteldOp` | Optioneel. Het tijdstip/de datum waarop deze Uitkomst Overleg beschikbaar is gesteld, als RFC 3339-datumtijd. Als ook `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` is opgenomen bij de activiteit, beschrijven beide eigenschappen hetzelfde beschikbaarstellingsmoment. |
 
@@ -128,7 +137,32 @@ met de beschikbaarstellingsactiviteit wordt vastgelegd met de domeinrelatie
 `soh:steltBeschikbaar`.
 
 De volledige inhoud en `inzageUrl` zijn niet vereist in dit event. Een
-`inzageUrl` kan deel uitmaken van een queryresultaat.
+`inzageUrl` kan deel uitmaken van een queryresultaat. De identifier van het
+Casusoverleg wordt vastgelegd op de `Casusoverleg`-node, niet op de
+`UitkomstOverleg`-node.
+
+##### Casusoverleg
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die de node van het Casusoverleg in de Knowledge graph identificeert. |
+| `@type` | Verplicht: `soh:Casusoverleg`; voeg `prov:Entity` toe wanneer het object in de betreffende provenance-graaf als Entity wordt gemodelleerd. |
+| `soh:Casusoverleg.identifier` | Verplicht. Identifier waaronder het Casusoverleg bekend is in het zaaksysteem van de organisatie die de vastlegging beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
+| `soh:heeftBetrekkingOpZaak` | Verplicht binnen deze overgangsafspraak. Verwijst naar de opgenomen Zaak-node. |
+
+##### Zaak
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die de Zaak-node in de Knowledge graph identificeert. |
+| `@type` | Verplicht: `soh:Zaak`; voeg `prov:Entity` toe wanneer het object in de betreffende provenance-graaf als Entity wordt gemodelleerd. |
+| `soh:Zaak.identifier` | Verplicht voor dit event. De identificatie van de Zaak die nodig is om de relatie met het Casusoverleg vast te leggen. |
+
+De relatie tussen Casusoverleg en Zaak wordt uiteindelijk aangeleverd door
+Overleggen over de casus. Totdat die samenwerkfunctie deze relatie levert,
+levert Uitwisselen Uitkomst Overleg de Zaak-identificatie aan. De graph-build
+moet bestaande nodes en relaties hergebruiken om dubbele of tegenstrijdige
+relaties te voorkomen.
 
 ##### BeschikbaarStellenUitkomstOverleg
 
@@ -145,12 +179,17 @@ De volledige inhoud en `inzageUrl` zijn niet vereist in dit event. Een
 
 | Onderdeel | Afspraak |
 |---|---|
-| `@id` | Verplicht. URI die de uitvoerende organisatie identificeert, bijvoorbeeld een afgesproken OIN-gebaseerde URN. |
+| `@id` | Verplicht. UUIDv7-URI die de Organisatie-node in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
+| `soh:Organisatie.identificatieType` | Verplicht. Stabiele code voor het type organisatie-identificatienummer, bijvoorbeeld `OIN` of `KVK`. |
+| `soh:Organisatie.identificatieWaarde` | Verplicht. Waarde van het organisatie-identificatienummer, weergegeven als string. |
 
 De `@id` waarnaar `prov:wasAssociatedWith` verwijst, moet overeenkomen met
-de `@id` van deze node. De organisatie hoeft niet dezelfde te zijn als het
-systeem in het CloudEvent-attribuut `source`.
+de `@id` van deze node. De combinatie van `identificatieType` en
+`identificatieWaarde` maakt duidelijk om welk organisatie-identificatienummer
+het gaat. Deze combinatie staat los van de technische `@id`. De organisatie
+hoeft niet dezelfde te zijn als het systeem in het CloudEvent-attribuut
+`source`.
 
 ##### Betrokkene
 
@@ -170,21 +209,129 @@ van de identificatie-eigenschappen wordt opgenomen, moeten beide aanwezig zijn.
 
 #### Identifiers
 
-De volgende identifiers hebben verschillende betekenissen en mogen niet
-door elkaar worden gebruikt:
+Bij het uitwisselen en verwerken van gegevens worden verschillende identifiers
+gebruikt. Ze hebben elk een eigen betekenis.
 
-- CloudEvent `id`: identificeert het CloudEvent;
-- Activity `@id`: identificeert de activiteit als node in de Knowledge graph;
-- Entity `@id`: identificeert de Uitkomst Overleg als node in de Knowledge graph;
-- Agent `@id`: identificeert de Organisatie als node in de Knowledge graph;
-- Betrokkene `@id`: identificeert het Betrokkene-object als node in de Knowledge graph;
-- `soh:UitkomstOverleg.identifier`: de identifier van het Casusoverleg waarop de vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt.
+**1. Identificatie van het CloudEvent**
+
+- `id`: identificeert het CloudEvent. In combinatie met `source` kan deze
+  identifier worden gebruikt om dubbele verwerking van hetzelfde event te
+  voorkomen.
+
+**2. Identificatie van nodes in de Knowledge Graph**
+
+De eigenschap `@id` identificeert een node in de Knowledge Graph. Dit geldt
+voor onder meer:
+
+- de Activity die de gebeurtenis vastlegt;
+- de Entity die de Uitkomst Overleg representeert;
+- de Agent die de betrokken Organisatie representeert;
+- de node die de Betrokkene representeert.
+
+De `@id` van een node is een technische identificatie binnen de Knowledge Graph
+en is niet automatisch gelijk aan een identifier uit een bronsysteem.
+
+**3. Identificatie van objecten in het bronsysteem**
+
+Voor sommige objecten wordt daarnaast een identifier uit het bronsysteem
+vastgelegd:
+
+- `soh:Casusoverleg.identifier`: de identifier van het Casusoverleg in het
+  zaaksysteem;
+- `soh:Zaak.identifier`: de aangeleverde identificatie van de Zaak.
+
+De Uitkomst Overleg heeft geen afzonderlijke externe identifier nodig. De
+`@id` van de bijbehorende Entity dient uitsluitend om de node in de Knowledge
+Graph technisch te identificeren.
 
 #### Volledig voorbeeld
 
 De URN's en waarden zijn fictief.
 
-<pre class="json" data-include="voorbeelden/uitkomst-overleg/uitkomst-beschikbaar-gesteld.json" data-include-format="text"></pre>
+```json
+{
+  "specversion": "1.0",
+  "id": "0199f0a0-1234-7abc-8def-012345678901",
+  "source": "urn:organisatie:voorbeeld",
+  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld",
+  "time": "2026-10-15T10:30:00Z",
+  "subject": "CO-2026-12345",
+  "datacontenttype": "application/ld+json",
+  "data": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#",
+      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
+    },
+    "@graph": [
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50",
+        "@type": [
+          "prov:Activity",
+          "soh:BeschikbaarStellenUitkomstOverleg"
+        ],
+        "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
+        "prov:wasAssociatedWith": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
+        },
+        "soh:steltBeschikbaar": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ],
+        "soh:heeftBetrokkene": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
+        },
+        "soh:hoortBijCasusoverleg": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56",
+        "@type": [
+          "prov:Entity",
+          "soh:Casusoverleg"
+        ],
+        "soh:Casusoverleg.identifier": "CO-2026-12345",
+        "soh:heeftBetrekkingOpZaak": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57",
+        "@type": [
+          "prov:Entity",
+          "soh:Zaak"
+        ],
+        "soh:Zaak.identifier": "ZAAK-2026-12345"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55",
+        "@type": [
+          "prov:Entity",
+          "soh:Betrokkene"
+        ],
+        "soh:Betrokkene.identificatieType": "BSN",
+        "soh:Betrokkene.identificatieWaarde": "123456789",
+        "soh:Betrokkene.woonplaats": "Deventer"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52",
+        "@type": [
+          "prov:Agent",
+          "soh:Organisatie"
+        ],
+        "soh:Organisatie.identificatieType": "OIN",
+        "soh:Organisatie.identificatieWaarde": "00000000000000000000"
+      }
+    ]
+  }
+}
+```
 
 [Dit voorbeeld als graph bekijken](kennis-graph.html?voorbeeld=uitkomst-overleg/uitkomst-beschikbaar-gesteld)
 
@@ -249,14 +396,33 @@ Elk object heeft een eigen `@id`, die de node in de Knowledge graph identificeer
 |---|---|
 | `@id` | Verplicht. URI die de geraadpleegde Uitkomst Overleg identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
-| `soh:UitkomstOverleg.identifier` | De identifier waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt. Dit is niet de technische `@id` van de graph-node. |
+| `soh:hoortBijCasusoverleg` | Verwijst naar het Casusoverleg waarop de ingeziene vastlegging betrekking heeft. |
+
+##### Casusoverleg
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht. URI die de node van het Casusoverleg in de Knowledge graph identificeert. |
+| `@type` | Verplicht: `soh:Casusoverleg`. |
+| `soh:Casusoverleg.identifier` | De identifier waaronder het Casusoverleg bekend is in het zaaksysteem. |
+| `soh:heeftBetrekkingOpZaak` | Verwijst naar de Zaak-node wanneer deze relatie in de beschikbare graphgegevens is opgenomen. |
+
+##### Zaak
+
+| Onderdeel | Afspraak |
+|---|---|
+| `@id` | Verplicht wanneer de Zaak in de graph wordt opgenomen. |
+| `@type` | Verplicht: `soh:Zaak`. |
+| `soh:Zaak.identifier` | De identificatie van de Zaak. |
 
 ##### Organisatie
 
 | Onderdeel | Afspraak |
 |---|---|
-| `@id` | Verplicht. URI die de organisatie identificeert die de inzage heeft uitgevoerd. |
+| `@id` | Verplicht. UUIDv7-URI die de Organisatie-node in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
+| `soh:Organisatie.identificatieType` | Verplicht. Stabiele code voor het type organisatie-identificatienummer, bijvoorbeeld `OIN` of `KVK`. |
+| `soh:Organisatie.identificatieWaarde` | Verplicht. Waarde van het organisatie-identificatienummer, weergegeven als string. |
 
 #### Identifiers
 
@@ -269,7 +435,77 @@ van een graph-object.
 De waarden zijn fictief. De `@id` waarnaar `prov:wasAssociatedWith` verwijst,
 komt overeen met de opgenomen Organisatie-node.
 
-<pre class="json" data-include="voorbeelden/uitkomst-overleg/uitkomst-ingezien.json" data-include-format="text"></pre>
+```json
+{
+  "specversion": "1.0",
+  "id": "0199f0a0-5678-7abc-8def-012345678902",
+  "source": "urn:organisatie:inzage",
+  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien",
+  "time": "2026-10-15T11:00:00Z",
+  "subject": "CO-2026-12345",
+  "datacontenttype": "application/ld+json",
+  "data": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#",
+      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
+    },
+    "@graph": [
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e51",
+        "@type": [
+          "prov:Activity",
+          "soh:InzienUitkomstOverleg"
+        ],
+        "soh:InzienUitkomstOverleg.tijdstip": "2026-10-15T11:00:00Z",
+        "prov:used": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
+        },
+        "prov:wasAssociatedWith": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e53"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ],
+        "soh:hoortBijCasusoverleg": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56",
+        "@type": [
+          "prov:Entity",
+          "soh:Casusoverleg"
+        ],
+        "soh:Casusoverleg.identifier": "CO-2026-12345",
+        "soh:heeftBetrekkingOpZaak": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57",
+        "@type": [
+          "prov:Entity",
+          "soh:Zaak"
+        ],
+        "soh:Zaak.identifier": "ZAAK-2026-12345"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e53",
+        "@type": [
+          "prov:Agent",
+          "soh:Organisatie"
+        ],
+        "soh:Organisatie.identificatieType": "OIN",
+        "soh:Organisatie.identificatieWaarde": "00000000000000000000"
+      }
+    ]
+  }
+}
+```
 
 [Dit voorbeeld als graph bekijken](kennis-graph.html?voorbeeld=uitkomst-overleg/uitkomst-ingezien)
 
@@ -313,9 +549,13 @@ beschikbaar is gesteld.
 `data` bevat een JSON-LD-document met `@context` en `@graph`. De context
 bevat minimaal de prefixen `prov` en `soh` zoals hierboven beschreven.
 De resultaatgraaf hangt af van de informatievraag en kan nul, één of meer
-`UitkomstOverleg`-nodes bevatten. Als een Betrokkene wordt opgenomen, wordt
-deze als afzonderlijke node beschreven en vanuit de betreffende
-`UitkomstOverleg` met `soh:heeftBetrokkene` verbonden.
+`UitkomstOverleg`-nodes bevatten. Bij iedere opgenomen `UitkomstOverleg`-node
+wordt ook de bijbehorende `Casusoverleg`-node opgenomen, zodat de relatie
+`soh:hoortBijCasusoverleg` binnen de resultaatgraaf is uitgewerkt. De
+`Zaak`-node wordt opgenomen wanneer de relatie `soh:heeftBetrekkingOpZaak` deel uitmaakt
+van de resultaatgraaf. Als een Betrokkene wordt opgenomen, wordt deze als
+afzonderlijke node beschreven en vanuit de betreffende `UitkomstOverleg`
+met `soh:heeftBetrokkene` verbonden.
 
 De graph bevat alleen de gegevens die nodig zijn om het resultaat van de
 informatieaanvraag te representeren en de beschikbare provenance te
@@ -330,10 +570,19 @@ event opgenomen.
 |---|---|
 | `@id` | Verplicht voor elke opgenomen Uitkomst Overleg; URI die het object in de Knowledge graph identificeert. |
 | `@type` | Verplicht: zowel `prov:Entity` als `soh:UitkomstOverleg`. |
-| `soh:UitkomstOverleg.identifier` | Neem de identifier op van het Casusoverleg waarop deze vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die de vastlegging beschikbaar stelt. Deze waarde identificeert dus het Casusoverleg, niet de Uitkomst Overleg als afzonderlijke vastlegging en niet de technische `@id` van de graph-node. |
+| `soh:hoortBijCasusoverleg` | Verplicht. Verwijst naar de opgenomen `Casusoverleg`-node waarop deze vastlegging betrekking heeft. |
 | `soh:heeftBetrokkene` | Opnemen wanneer de graaf de Betrokkene waarop de Uitkomst Overleg betrekking heeft bevat. Verwijst naar de Betrokkene-node. |
 | `soh:UitkomstOverleg.beschikbaarGesteldOp` | Optioneel. RFC 3339-datumtijd van het beschikbaarstellingsmoment. Als ook `soh:BeschikbaarStellenUitkomstOverleg.tijdstip` van de beschikbaarstellingsactiviteit is opgenomen, beschrijven beide eigenschappen hetzelfde moment. |
 | `soh:UitkomstOverleg.inzageUrl` | Optioneel. Verwijst naar de resource die via de Inzage-API kan worden geraadpleegd. |
+
+##### Casusoverleg en Zaak
+
+Bij iedere opgenomen Uitkomst Overleg bevat de resultaatgraaf de
+bijbehorende `Casusoverleg`-node met `soh:Casusoverleg.identifier`. De
+Uitkomst Overleg verwijst met `soh:hoortBijCasusoverleg` naar dit
+Casusoverleg. Als de relatie met de Zaak in de resultaatgraaf wordt
+opgenomen, bevat de graaf ook de `Zaak`-node met `soh:Zaak.identifier` en
+de relatie `soh:heeftBetrekkingOpZaak`.
 
 ##### Betrokkene
 
@@ -355,7 +604,7 @@ opnieuw de oorspronkelijke beschikbaarstellingsgebeurtenis.
 
 #### Identifiers en relaties
 
-- Het CloudEvent `id` identificeert het event; `subject` identificeert bij een queryresultaat de asynchrone informatievraag waarop het resultaat betrekking heeft. Bij de events voor beschikbaarstelling en inzage bevat `subject` de identifier van het Casusoverleg waarop de vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt.
+- Het CloudEvent `id` identificeert het event; `subject` identificeert bij een queryresultaat de asynchrone informatievraag waarop het resultaat betrekking heeft. Bij de events voor beschikbaarstelling en inzage bevat `subject` de identifier van het Casusoverleg waarop de vastlegging betrekking heeft, zoals die bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt. De identifier van de Zaak wordt als domeingegeven in `data` opgenomen wanneer die nodig is om de relatie tussen Casusoverleg en Zaak vast te leggen.
 - De `@id` van iedere graph-node identificeert het betreffende domeinobject of provenance-object.
 - Verwijzingen tussen nodes moeten overeenkomen met de `@id` van de bedoelde node in dezelfde graaf, tenzij een verwijzing naar een extern geïdentificeerd object expliciet is toegestaan.
 - Een resultaat kan nul, één of meer `UitkomstOverleg`-nodes bevatten.
@@ -398,7 +647,53 @@ De PROV-typering beschrijft daarmee niet een tweede object naast het
 domeinobject, maar een aanvullende semantische karakterisering van het
 object binnen de provenance-graaf.
 
+### Samenhang tussen UitkomstOverleg, Casusoverleg en Zaak
+
+Een `UitkomstOverleg` wordt met `soh:hoortBijCasusoverleg` gekoppeld aan
+het `Casusoverleg` waarop de vastlegging betrekking heeft. De identifier
+waaronder het Casusoverleg bekend is in het zaaksysteem wordt vastgelegd
+als `soh:Casusoverleg.identifier`. Deze domeinidentifier staat los van de
+technische `@id` van de node in de Knowledge graph.
+
+Het `Casusoverleg` wordt met `soh:heeftBetrekkingOpZaak` gekoppeld aan de
+`Zaak` waarop het betrekking heeft. De Zaak-identificatie die
+Uitwisselen Uitkomst Overleg aanlevert, wordt gebruikt om de Zaak-node
+te vinden of te identificeren. Ook deze domeinidentificatie staat los
+van de technische `@id` van de Zaak-node.
+
+De structurele verantwoordelijkheid voor het aanleveren van de relatie
+tussen Casusoverleg en Zaak ligt uiteindelijk bij de samenwerkfunctie
+Overleggen over de casus. Totdat die samenwerkfunctie deze relatie
+aanlevert, levert Uitwisselen Uitkomst Overleg de benodigde
+Zaak-identificatie aan. De overgang moet zo worden ingericht dat dubbele
+of tegenstrijdige relaties worden voorkomen.
+
+De Uitkomst Overleg hoeft geen eigen externe identifier te hebben. De
+relatie met het Casusoverleg maakt duidelijk op welk overleg de
+vastlegging betrekking heeft; de technische `@id` identificeert de
+UitkomstOverleg-node in de Knowledge graph.
+
 ### Concepten
+
+#### Casusoverleg {#concept-casusoverleg}
+
+Type: `soh:Casusoverleg`
+
+Het casusoverleg waarop de vastlegging van een Uitkomst Overleg betrekking heeft.
+
+Eigenschappen:
+
+- `identifier` --- de identifier waaronder het Casusoverleg bekend is in het zaaksysteem.
+
+#### Zaak {#concept-zaak}
+
+Type: `soh:Zaak`
+
+De zaak waarop het Casusoverleg betrekking heeft.
+
+Eigenschappen:
+
+- `identifier` --- de identificatie van de Zaak die nodig is om de relatie met het Casusoverleg vast te leggen.
 
 #### UitkomstOverleg {#concept-uitkomstoverleg}
 
@@ -409,11 +704,10 @@ Type:
 - `soh:UitkomstOverleg`;
 - `prov:Entity`.
 
-De vastlegging van wat in een Casusoverleg is besproken en besloten, inclusief de concrete besluiten en acties. Deze vastlegging wordt via de Inzage-API beschikbaar gesteld en hoeft geen eigen identifier te hebben.
+De vastlegging van wat in een Casusoverleg is besproken en besloten, inclusief de concrete besluiten en acties. Deze vastlegging wordt via de Inzage-API beschikbaar gesteld en hoeft geen eigen externe identifier te hebben. De technische `@id` identificeert de node in de Knowledge graph.
 
 Eigenschappen:
 
-- `identifier` --- de identifier waaronder de Uitkomst Overleg bekend is in het zaaksysteem van de organisatie die deze beschikbaar stelt;
 - `beschikbaarGesteldOp`;
 - `inzageUrl`.
 
@@ -456,8 +750,14 @@ Organisatie die verantwoordelijk is voor een activiteit.
 
 Eigenschappen:
 
-- `identifier`;
+- `identificatieType`;
+- `identificatieWaarde`;
 - `naam`.
+
+De `@id` identificeert de Organisatie-node technisch in de Knowledge graph.
+De combinatie van `identificatieType` en `identificatieWaarde` bevat de
+herkenbare identificatie van de organisatie, bijvoorbeeld een OIN of
+KvK-nummer. Deze identificatie staat los van de technische `@id`.
 
 #### BeschikbaarStellenUitkomstOverleg {#concept-beschikbaarstellenuitkomstoverleg}
 
@@ -497,10 +797,35 @@ Eigenschappen:
 ### Relaties
 
 
+#### `soh:hoortBijCasusoverleg`
+
+Domeinrelatie waarmee een Uitkomst Overleg wordt gekoppeld aan het
+Casusoverleg waarop de vastlegging betrekking heeft. De identifier van het
+Casusoverleg wordt niet als identifier van Uitkomst Overleg gebruikt.
+
+#### `soh:heeftBetrekkingOpZaak`
+
+Domeinrelatie van Casusoverleg naar Zaak. Uitwisselen Uitkomst Overleg levert
+de Zaak-identificatie voorlopig aan; de structurele verantwoordelijkheid
+voor het aanleveren van deze relatie ligt uiteindelijk bij Overleggen over
+de casus.
+
 #### `soh:heeftBetrokkene`
 
 Domeinrelatie waarmee een UitkomstOverleg aan een Betrokkene wordt
 gerelateerd.
+
+De relatie legt vast op welke Betrokkene de betreffende Uitkomst Overleg
+betrekking heeft. Dit is niet noodzakelijk de hoofdbetrokkene van de Zaak
+en ook niet een opsomming van alle Betrokkenen die bij de Zaak horen. Een
+Taak die tijdens een Casusoverleg wordt gedefinieerd, kan immers betrekking
+hebben op één specifieke Betrokkene. Een ander Casusoverleg over dezelfde
+Zaak kan betrekking hebben op een andere Betrokkene.
+
+De relatie wordt daarom vanuit `UitkomstOverleg` gelegd en niet vanuit
+`Zaak`. In dit model wordt de Taak zelf niet als afzonderlijk object
+weergegeven; `soh:heeftBetrokkene` legt de voor de Uitkomst Overleg
+relevante relatie met de Betrokkene vast.
 
 Deze relatie is nodig om informatievragen op Betrokkene te kunnen
 beantwoorden. Binnen deze samenwerkfunctie kan de queryfunctionaliteit worden gebruikt
@@ -540,9 +865,11 @@ UitkomstOverleg
 
 | Concept | Type | PROV-typering | Belangrijkste eigenschappen |
 |---|---|---|---|
-| UitkomstOverleg | `soh:UitkomstOverleg` | `prov:Entity` | identifier, beschikbaarGesteldOp, inzageUrl |
+| Casusoverleg | `soh:Casusoverleg` | indien relevant `prov:Entity` | identifier |
+| Zaak | `soh:Zaak` | indien relevant `prov:Entity` | identifier |
+| UitkomstOverleg | `soh:UitkomstOverleg` | `prov:Entity` | beschikbaarGesteldOp, inzageUrl |
 | Betrokkene | `soh:Betrokkene` | `prov:Agent`¹ | identifier, identificatieType, identificatieWaarde, woonplaats |
-| Organisatie | `soh:Organisatie` | `prov:Agent` | identifier, naam |
+| Organisatie | `soh:Organisatie` | `prov:Agent` | identificatieType, identificatieWaarde, naam |
 | BeschikbaarStellenUitkomstOverleg | `soh:BeschikbaarStellenUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
 | InzienUitkomstOverleg | `soh:InzienUitkomstOverleg` | `prov:Activity` | identifier, tijdstip |
 
@@ -656,7 +983,9 @@ resultaatgraaf.
 Binnen deze samenwerkfunctie kan een informatievraag geen, één of
 meerdere Uitkomsten Overleg opleveren. Elke gevonden Uitkomst Overleg
 wordt als afzonderlijke `soh:UitkomstOverleg`-node in dezelfde
-resultaatgraaf opgenomen. Als geen Uitkomsten Overleg aan de
+resultaatgraaf opgenomen. Waar relevant voor het resultaat worden ook het
+bijbehorende Casusoverleg en de Zaak opgenomen, met expliciete relaties via
+`@id`. Als geen Uitkomsten Overleg aan de
 informatieaanvraag voldoen, bevat de resultaatgraaf geen
 `soh:UitkomstOverleg`-nodes.
 
@@ -697,7 +1026,92 @@ wordt deze inzage als afzonderlijke activiteit vastgelegd.
 
 Voorbeeld van een queryresultaat met twee gevonden Uitkomsten Overleg:
 
-<pre class="json" data-include="voorbeelden/uitkomst-overleg/queryresultaat.json" data-include-format="text"></pre>
+```json
+{
+  "specversion": "1.0",
+  "id": "0199f0a0-9abc-7abc-8def-012345678903",
+  "source": "urn:organisatie:queryvoorziening",
+  "type": "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat",
+  "time": "2026-10-15T12:00:00Z",
+  "subject": "987e6543-e21b-45d6-b789-426614174111",
+  "datacontenttype": "application/ld+json",
+  "data": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#",
+      "soh": "https://samen-onder-handbereik.github.io/specificaties/schema/"
+    },
+    "@graph": [
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54",
+        "@type": [
+          "prov:Entity",
+          "soh:UitkomstOverleg"
+        ],
+        "soh:UitkomstOverleg.beschikbaarGesteldOp": "2026-10-15T10:30:00Z",
+        "soh:UitkomstOverleg.inzageUrl": "https://inzage.voorbeeld.nl/uitkomst-overleg/CO-2026-12345",
+        "soh:hoortBijCasusoverleg": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56"
+        },
+        "soh:heeftBetrokkene": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e56",
+        "@type": [
+          "prov:Entity",
+          "soh:Casusoverleg"
+        ],
+        "soh:Casusoverleg.identifier": "CO-2026-12345",
+        "soh:heeftBetrekkingOpZaak": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e57",
+        "@type": [
+          "prov:Entity",
+          "soh:Zaak"
+        ],
+        "soh:Zaak.identifier": "ZAAK-2026-12345"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e55",
+        "@type": [
+          "prov:Entity",
+          "soh:Betrokkene"
+        ],
+        "soh:Betrokkene.identificatieType": "BSN",
+        "soh:Betrokkene.identificatieWaarde": "123456789",
+        "soh:Betrokkene.woonplaats": "Deventer"
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e50",
+        "@type": [
+          "prov:Activity",
+          "soh:BeschikbaarStellenUitkomstOverleg"
+        ],
+        "soh:BeschikbaarStellenUitkomstOverleg.tijdstip": "2026-10-15T10:30:00Z",
+        "prov:wasAssociatedWith": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52"
+        },
+        "soh:steltBeschikbaar": {
+          "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e54"
+        }
+      },
+      {
+        "@id": "urn:uuid:019a8b7c-4d21-7e32-9a51-8c6f2b3d4e52",
+        "@type": [
+          "prov:Agent",
+          "soh:Organisatie"
+        ],
+        "soh:Organisatie.identificatieType": "OIN",
+        "soh:Organisatie.identificatieWaarde": "00000000000000000000"
+      }
+    ]
+  }
+}
+```
 
 [Dit voorbeeld als graph bekijken](kennis-graph.html?voorbeeld=uitkomst-overleg/queryresultaat)
 
