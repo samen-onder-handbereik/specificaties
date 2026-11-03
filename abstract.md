@@ -1,1 +1,1 @@
-Deze site bevat de technische specificaties van Samen onder Handbereik (SOH). De specificaties maken deel uit van het [Samen onder Handbereik Afsprakenstelsel](https://samen-onder-handbereik.github.io/afsprakenstelsel/) en beschrijven de technische uitwerking van de samenwerkfuncties en stelselvoorzieningen.
+Deze site beschrijft de generieke technische aspecten van Samen Onder Handbereik (SOH) en bevat de technische uitwerkingen van de afzonderlijke samenwerkfuncties.
