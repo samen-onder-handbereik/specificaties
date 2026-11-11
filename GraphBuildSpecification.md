@@ -67,6 +67,12 @@ voor hetzelfde object gegenereerd. De UUIDv7 wordt niet afgeleid van het
 CloudEvent-id of van een identifier uit een bronsysteem, zoals
 `soh:Casusoverleg.identifier`.
 
+De schrijfwijze `urn:uuid:<uuidv7>` is de afgesproken SOH-representatie
+van de technische node-identificatie. Het `urn:uuid:`-prefix maakt van de
+UUID een absolute URI en voorkomt dat de interpretatie van de identifier
+afhankelijk is van de basis-URI van het JSON-LD-document. Dit is een
+SOH-conventie en geen eis die JSON-LD aan UUID-identificaties stelt.
+
 ## Algemene mappingregels
 
 ### CloudEvent naar Activity

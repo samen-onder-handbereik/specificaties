@@ -106,7 +106,7 @@ paths:
                 summary: CloudEvent met samenwerkfunctie-specifieke payload
                 value:
                   specversion: "1.0"
-                  id: "123e4567-e89b-42d3-a456-426614174000"
+                  id: "123e4567-e89b-72d3-a456-426614174000"
                   source: "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg"
                   type: "nl.jzv.voorbeeld-samenwerkfunctie.voorbeeld-gebeurtenis"
                   time: "2026-01-15T09:30:00Z"
@@ -125,7 +125,7 @@ paths:
                 geaccepteerd:
                   summary: Interactie geregistreerd
                   value:
-                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-75d6-b789-426614174111"
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -154,11 +154,12 @@ paths:
         - name: interactieId
           in: path
           required: true
-          description: Identifier van de asynchrone interactie.
+          description: Identifier van de asynchrone interactie. Binnen SOH wordt hiervoor UUIDv7 gebruikt.
           schema:
             type: string
             format: uuid
-          example: "123e4567-e89b-42d3-a456-426614174000"
+            pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "123e4567-e89b-72d3-a456-426614174000"
 
       responses:
         '200':
@@ -171,17 +172,17 @@ paths:
                 ok:
                   summary: Verwerking succesvol afgerond
                   value:
-                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-75d6-b789-426614174111"
                     status: OK
                 inProgress:
                   summary: Verwerking loopt nog
                   value:
-                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-75d6-b789-426614174111"
                     status: IN_PROGRESS
                 fout:
                   summary: Verwerking beëindigd met een fout
                   value:
-                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-75d6-b789-426614174111"
                     status: ERROR
                     resultaat:
                       fout: "Het verzoek voldoet niet aan de afspraken van de samenwerkfunctie."
@@ -217,17 +218,24 @@ paths:
 
         De concrete structuur en betekenis van het CloudEvent worden bepaald door het
         CloudEvent-profiel van de betreffende samenwerkfunctie.
+
+        Het CloudEvent bevat de inhoudelijke resultaten van de asynchrone interactie
+        in het attribuut data. De structuur en betekenis van deze gegevens worden
+        bepaald door de betreffende samenwerkfunctie. Bij een informatievraag bevat
+        data de PROV-JSON-LD-resultaatgraaf die het resultaat van de informatievraag
+        weergeeft.
       operationId: vraagResultaatOp
 
       parameters:
         - name: interactieId
           in: path
           required: true
-          description: Identifier van de asynchrone interactie.
+          description: Identifier van de asynchrone interactie. Binnen SOH wordt hiervoor UUIDv7 gebruikt.
           schema:
             type: string
             format: uuid
-          example: "987e6543-e21b-45d6-b789-426614174111"
+            pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "987e6543-e21b-75d6-b789-426614174111"
 
       responses:
         '200':
@@ -236,6 +244,33 @@ paths:
             application/cloudevents+json:
               schema:
                 $ref: '#/components/schemas/CloudEvent'
+              examples:
+                informatievraagResultaat:
+                  summary: CloudEvent met een PROV-JSON-LD-resultaatgraaf
+                  description: Illustratief voorbeeld van een resultaat van een informatievraag. De inhoud van de resultaatgraaf is samenwerkfunctie-specifiek.
+                  value:
+                    specversion: "1.0"
+                    id: "3fa85f64-5717-7562-b3fc-2c963f66afa6"
+                    source: "urn:nld:oin:00000001823288444000:systeem:uitkomstoverleg"
+                    type: "nl.jzv.uitwisselen-uitkomst-overleg.informatievraag-resultaat"
+                    time: "2026-11-11T13:55:19Z"
+                    subject: "informatievraag-987e6543"
+                    datacontenttype: "application/ld+json"
+                    data:
+                      "@context":
+                        prov: "http://www.w3.org/ns/prov#"
+                        soh: "https://samenonderhandbereik.nl/definities#"
+                      "@graph":
+                        - "@id": "urn:uuid:11111111-1111-7111-8111-111111111111"
+                          "@type": "prov:Activity"
+                        - "@id": "urn:uuid:22222222-2222-7222-8222-222222222222"
+                          "@type": "soh:UitkomstOverleg"
+                          "soh:identifier": "UO-2026-001"
+                          "soh:heeftBetrokkene":
+                            "@id": "urn:uuid:33333333-3333-7333-8333-333333333333"
+                        - "@id": "urn:uuid:33333333-3333-7333-8333-333333333333"
+                          "@type": "soh:Betrokkene"
+                          "soh:woonplaats": "Deventer"
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -359,8 +394,10 @@ components:
         id:
           type: string
           format: uuid
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
           description: |
-            Unieke identifier van het CloudEvent.
+            Unieke identifier van het CloudEvent. Binnen SOH wordt hiervoor UUIDv7 gebruikt,
+            als UUID-string zonder urn:uuid:-prefix.
             Het CloudEvent.id identificeert het CloudEvent zelf. De interactieId wordt
             afzonderlijk uitgegeven door de voorziening die verantwoordelijk is voor de verwerking.
         source:
@@ -385,7 +422,11 @@ components:
           description: Optionele verwijzing naar het schema van data.
         data:
           type: object
-          description: Samenwerkfunctie-specifieke payload.
+          description: |
+            De inhoudelijke payload van het CloudEvent. De structuur en betekenis
+            worden bepaald door het CloudEvent-profiel van de betreffende
+            samenwerkfunctie. Bij informatievragen bevat dit attribuut de
+            PROV-JSON-LD-resultaatgraaf.
 
     AcceptatieResponse:
       type: object
@@ -395,10 +436,12 @@ components:
         interactieId:
           type: string
           format: uuid
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
           description: |
             Identificatie van de asynchrone interactie.
             Deze waarde wordt uitgegeven door de voorziening die verantwoordelijk is
             voor de verwerking van de interactie en staat los van CloudEvent.id.
+            De waarde is een UUIDv7.
 
     StatusResponse:
       description: |
@@ -425,6 +468,7 @@ components:
         interactieId:
           type: string
           format: uuid
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
           description: Identificatie van de asynchrone interactie.
         status:
           const: OK
@@ -438,6 +482,7 @@ components:
         interactieId:
           type: string
           format: uuid
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
           description: Identificatie van de asynchrone interactie.
         status:
           const: IN_PROGRESS
@@ -452,6 +497,7 @@ components:
         interactieId:
           type: string
           format: uuid
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
           description: Identificatie van de asynchrone interactie.
         status:
           const: ERROR

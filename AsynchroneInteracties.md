@@ -540,12 +540,16 @@ voorkomen. Deze hebben ieder een eigen betekenis en toepassingsgebied.
 
 | Identifier | Niveau | Betekenis |
 |---|---|---|
-| `interactieId` | Interactieniveau | Identificeert de asynchrone interactie. |
-| `CloudEvent.id` | Eventniveau | Identificeert het CloudEvent. |
-| JSON-LD `@id` | Semantisch niveau | Identificeert resources binnen een provenance-graaf. |
-| Domeinspecifieke identifiers | Domeinniveau | Identificeren objecten binnen een samenwerkfunctie. |
+| `interactieId` | Interactieniveau | Identificeert de asynchrone interactie. Binnen SOH wordt hiervoor UUIDv7 gebruikt, weergegeven als gewone UUID-string. |
+| `CloudEvent.id` | Eventniveau | Identificeert het CloudEvent. Binnen SOH wordt hiervoor UUIDv7 gebruikt, weergegeven als gewone UUID-string zonder `urn:uuid:`-prefix. |
+| JSON-LD `@id` | Semantisch niveau | Identificeert een node in een PROV-JSON-LD-graaf. Binnen SOH is dit een UUIDv7-URI met het prefix `urn:uuid:`. |
+| Domeinspecifieke identifiers | Domeinniveau | Identificeren objecten binnen een samenwerkfunctie of bronsysteem en staan los van de technische `@id`. |
 
-Deze identifiers worden niet onderling vervangen.
+De verschillende identifiers hebben ieder een eigen betekenis en worden
+niet onderling vervangen. Dezelfde graph-node behoudt dezelfde JSON-LD-`@id`
+wanneer deze in verschillende gebeurtenissen of queryresultaten voorkomt.
+Zie het [Knowledge graph-model](KnowledgeGraphModel.md#identificatie-van-nodes)
+voor de generieke afspraak voor graph-node-identificaties.
 
 ## Relatie met samenwerkfuncties
 

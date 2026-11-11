@@ -39,5 +39,10 @@ Hieronder staat per inhoudelijk hoofdstuk wat je er kunt vinden en wanneer het r
 
 Naast de hoofdstukken zijn er twee interactieve hulpmiddelen:
 
-- **[API-specificaties](api.html)**: bekijk de API-contracten interactief, download de OpenAPI-bestanden of open ze in Swagger Editor. De Swagger UI op deze site is bedoeld om de contracten te bekijken; API-aanroepen uitvoeren is daar niet mogelijk.
+- **[API-specificaties](api.html)**: bekijk de beschikbare API-contracten interactief, download de OpenAPI-bestanden of open ze in Swagger Editor. De API-specificaties zijn onderverdeeld in een generieke API en API's voor specifieke samenwerkfuncties:
+  - API Asynchrone interacties: voor het aanbieden, volgen en ophalen van resultaten van asynchrone interacties. Bekijk de [OpenAPI-specificatie](yaml/AsynchroneInteracties.yaml) of [bekijk de API interactief](api.html?spec=AsynchroneInteracties).
+  - API Uitwisselen Uitkomst Overleg: voor het indienen van informatievragen over beschikbare Uitkomsten Overleg. Bekijk de [OpenAPI-specificatie](yaml/UitwisselenUitkomstOverleg.yaml) of [bekijk de API interactief](api.html?spec=UitwisselenUitkomstOverleg).
+  - Inzage-API Uitkomst Overleg: voor het raadplegen van de volledige inhoud van een Uitkomst Overleg. Bekijk de [OpenAPI-specificatie](yaml/UitkomstOverleg.yaml) of [bekijk de API interactief](api.html?spec=UitkomstOverleg).
+
+  De Swagger UI op deze site is bedoeld om de API-contracten te bekijken; API-aanroepen uitvoeren is daar niet mogelijk.
 - **[Kennis-graph](kennis-graph.html)**: verken het informatiemodel en de voorbeelden als graph en bekijk de relaties tussen de verschillende objecten.

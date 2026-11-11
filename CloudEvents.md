@@ -92,8 +92,10 @@ Identificeert het CloudEvent.
 -   Het attribuut `id` wordt gegenereerd door de producerende partij.
 -   De waarde is uniek binnen de context waarin de producer CloudEvents
     uitgeeft.
--   Als standaard wordt gebruikgemaakt van een UUID, bij voorkeur
-    UUIDv7.
+-   Voor het attribuut `id` wordt binnen SOH UUIDv7 gebruikt.
+-   De waarde wordt opgenomen als UUID-string, zonder het prefix
+    `urn:uuid:`. Dit prefix wordt binnen SOH gebruikt voor de JSON-LD-`@id`
+    van graph-nodes en wordt niet toegepast op `CloudEvent.id`.
 -   Een eenmaal gebruikt `id` wordt niet opnieuw gebruikt, ook niet
     wanneer een CloudEvent opnieuw wordt aangeboden.
 
@@ -300,6 +302,13 @@ deze nodig zijn voor de betreffende gebeurtenis.
 
 Een samenwerkfunctie kan `data` gebruiken voor een specifieke
 representatie van de gebeurtenis, zoals een PROV-JSONLD-graaf.
+
+Wanneer `data` een PROV-JSON-LD-graaf bevat, heeft iedere node in die
+graaf een eigen JSON-LD-`@id`. Binnen SOH wordt daarvoor een UUIDv7
+gebruikt als `urn:uuid:`-URI. Deze node-identificatie is niet gelijk
+aan het `id` van het omhullende CloudEvent. De generieke afspraken
+voor node-identificaties zijn beschreven in het [Knowledge
+graph-model](KnowledgeGraphModel.md#identificatie-van-nodes).
 
 # Relatie tussen generieke afspraken en samenwerkfuncties
 

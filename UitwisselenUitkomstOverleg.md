@@ -80,7 +80,7 @@ De CloudEvent wordt als JSON-object geserialiseerd volgens CloudEvents 1.0.
 | Attribuut | Invulling |
 |---|---|
 | `specversion` | Gebruik de vaste waarde `1.0`. |
-| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
+| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`, als UUID-string zonder `urn:uuid:`-prefix. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
 | `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
 | `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-beschikbaar-gesteld`. |
 | `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. Dit hoeft niet gelijk te zijn aan het tijdstip van de activiteit. |
@@ -179,7 +179,7 @@ relaties te voorkomen.
 
 | Onderdeel | Afspraak |
 |---|---|
-| `@id` | Verplicht. UUIDv7-URI die de Organisatie-node in de Knowledge graph identificeert. |
+| `@id` | Verplicht. UUIDv7-URI in de vorm `urn:uuid:<uuidv7>` die de Organisatie-node in de Knowledge graph identificeert. Dit is de SOH-conventie voor graph-node-identificaties. |
 | `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
 | `soh:Organisatie.identificatieType` | Verplicht. Soort organisatieidentificatie, bijvoorbeeld `OIN` of `KVK`. |
 | `soh:Organisatie.identificatieWaarde` | Verplicht. Waarde van het organisatie-identificatienummer, weergegeven als string. |
@@ -355,7 +355,7 @@ raadpleging van de inhoud wordt als afzonderlijke activiteit vastgelegd.
 | Attribuut | Invulling |
 |---|---|
 | `specversion` | Gebruik de vaste waarde `1.0`. |
-| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
+| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`, als UUID-string zonder `urn:uuid:`-prefix. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
 | `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
 | `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-ingezien`. |
 | `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. |
@@ -417,7 +417,7 @@ Elk object heeft een eigen `@id`, die de node in de Knowledge graph identificeer
 
 | Onderdeel | Afspraak |
 |---|---|
-| `@id` | Verplicht. UUIDv7-URI die de Organisatie-node in de Knowledge graph identificeert. |
+| `@id` | Verplicht. UUIDv7-URI in de vorm `urn:uuid:<uuidv7>` die de Organisatie-node in de Knowledge graph identificeert. Dit is de SOH-conventie voor graph-node-identificaties. |
 | `@type` | Verplicht: zowel `prov:Agent` als `soh:Organisatie`. |
 | `soh:Organisatie.identificatieType` | Verplicht. Soort organisatieidentificatie, bijvoorbeeld `OIN` of `KVK`. |
 | `soh:Organisatie.identificatieWaarde` | Verplicht. Waarde van het organisatie-identificatienummer, weergegeven als string. |
@@ -426,7 +426,11 @@ Elk object heeft een eigen `@id`, die de node in de Knowledge graph identificeer
 
 Het CloudEvent-id, de Activity-id, de Entity-id en de Agent-id hebben elk
 een eigen functie. Het CloudEvent-id wordt niet hergebruikt als identifier
-van een graph-object.
+van een graph-object. Het CloudEvent-id is een UUIDv7-string zonder
+`urn:uuid:`-prefix. De `@id` van iedere graph-node is een UUIDv7-URI in de
+vorm `urn:uuid:<uuidv7>`. Deze schrijfwijze is de SOH-conventie voor
+graph-node-identificaties; JSON-LD zelf schrijft geen UUID-versie of
+specifiek URI-schema voor.
 
 #### Volledig voorbeeld
 
@@ -534,7 +538,7 @@ beschikbaar is gesteld.
 | Attribuut | Invulling |
 |---|---|
 | `specversion` | Gebruik de vaste waarde `1.0`. |
-| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
+| `id` | Gebruik een UUIDv7 als unieke identificatie van dit CloudEvent binnen de context van `source`, als UUID-string zonder `urn:uuid:`-prefix. Dit is een aanvullende afspraak voor deze samenwerkfunctie en geen algemene CloudEvents-eis. Het id is niet de identifier van een graph-object. |
 | `source` | Gebruik een URI-reference die het systeem identificeert dat het event registreert en publiceert. Gebruik de afgesproken identificatie van het bronsysteem. |
 | `type` | Gebruik exact `nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat`. |
 | `time` | Neem het registratietijdstip op als RFC 3339-datumtijd. |
@@ -884,12 +888,31 @@ het betreffende domeinobject ook de typering `prov:Agent`.
 Binnen deze samenwerkfunctie worden informatievragen vooraf gedefinieerd.
 De queryfunctionaliteit ondersteunt in ieder geval de volgende informatievragen:
 
-- zoeken naar beschikbare Uitkomsten Overleg;
+- zoeken op beschikbaarheidsdatum;
 - zoeken op Betrokkene;
-- zoeken op beschikbaarheidsdatum.
+- zoeken op woonplaats van de Betrokkene.
 
 De concrete structuur van de informatievraag wordt vastgelegd in de
 technische API-specificatie van de samenwerkfunctie.
+
+### API voor informatievragen
+
+Voor het indienen van informatievragen over beschikbare Uitkomsten Overleg
+wordt de **API Uitwisselen Uitkomst Overleg** gebruikt. Deze API ondersteunt
+de hierboven beschreven informatievragen. De bijbehorende
+[OpenAPI-specificatie UitwisselenUitkomstOverleg.yaml](yaml/UitwisselenUitkomstOverleg.yaml)
+kan ook [interactief worden bekeken](api.html?spec=UitwisselenUitkomstOverleg)
+of [worden geopend in Swagger Editor](https://editor.swagger.io/?url=https://samen-onder-handbereik.github.io/specificaties/yaml/UitwisselenUitkomstOverleg.yaml).
+
+<details class="soh-api" data-spec="UitwisselenUitkomstOverleg"><summary>API Uitwisselen Uitkomst Overleg interactief bekijken</summary></details>
+
+De informatievraag wordt asynchroon verwerkt. Voor het volgen van de
+verwerking en het ophalen van het resultaat wordt gebruikgemaakt van de
+[API Asynchrone interacties](api.html?spec=AsynchroneInteracties) en het
+generieke patroon voor asynchrone interacties. De bijbehorende
+[OpenAPI-specificatie](yaml/AsynchroneInteracties.yaml) beschrijft onder
+meer hoe de initiator de status van de interactie volgt en het resultaat
+opvraagt.
 
 #### Foutafhandeling
 
@@ -936,9 +959,16 @@ Voorbeeld request:
 }
 ```
 
-Een deelnemer kan ook zoeken naar Uitkomsten Overleg waarbij een betrokkene
-woont in een bepaalde woonplaats. De woonplaats wordt als tekstuele eigenschap
-`soh:Betrokkene.woonplaats` bij de `Betrokkene` vastgelegd.
+### Zoeken op woonplaats van de Betrokkene
+
+Een deelnemer kan zoeken naar Uitkomsten Overleg die betrekking hebben op
+een Betrokkene die in een bepaalde woonplaats woont. De zoekvraag selecteert
+Uitkomsten Overleg op basis van de woonplaats van de Betrokkene die via de
+relatie `soh:heeftBetrokkene` aan de betreffende Uitkomst Overleg is
+gerelateerd.
+
+De woonplaats wordt als tekstuele eigenschap `soh:Betrokkene.woonplaats` bij
+de `Betrokkene` vastgelegd.
 
 Voorbeeld request:
 

@@ -267,6 +267,13 @@ identificatie wordt gevormd door een UUIDv7, weergegeven als URI met het
 schema `urn:uuid:`. Dit geldt voor zowel PROV-nodes (`Entity`, `Activity`
 en `Agent`) als domeinspecifieke nodes.
 
+Het gebruik van UUIDv7 en de schrijfwijze `urn:uuid:` is de binnen SOH
+gekozen conventie voor graph-node-identificaties; JSON-LD schrijft geen
+UUID-versie of specifiek URI-schema voor. JSON-LD vereist dat de waarde
+van `@id` een IRI-reference is. Door de UUID als `urn:uuid:`-URI op te
+nemen, is de identificatie absoluut en niet afhankelijk van de basis-URI
+van het JSON-LD-document.
+
 De `@id` identificeert de node in de Knowledge graph. Een node behoudt
 dezelfde `@id` wanneer deze in verschillende CloudEvents, queryresultaten
 of andere representaties voorkomt. Er wordt dus geen nieuwe `@id`

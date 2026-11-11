@@ -104,7 +104,7 @@ paths:
                 geaccepteerd:
                   summary: Query geaccepteerd
                   value:
-                    interactieId: "987e6543-e21b-45d6-b789-426614174111"
+                    interactieId: "987e6543-e21b-75d6-b789-426614174111"
         '400':
           description: De informatievraag bevat ongeldige invoer.
           content:
@@ -197,7 +197,7 @@ components:
         source: "urn:organisatie:queryvoorziening"
         type: "nl.jzv.uitwisselen-uitkomst-overleg.uitkomst-overleg-query-resultaat"
         time: "2026-01-15T12:00:00Z"
-        subject: "987e6543-e21b-45d6-b789-426614174111"
+        subject: "987e6543-e21b-75d6-b789-426614174111"
         datacontenttype: "application/ld+json"
         dataschema: "https://samen-onder-handbereik.github.io/specificaties/jsonschema/prov-jsonld.schema.json"
         data:
@@ -331,7 +331,8 @@ components:
     BetrokkeneGraphNode:
       description: |
         Voorbeeldschema voor een Betrokkene in de PROV/JSON-LD-graaf. De @id
-        identificeert de graph-node met een UUIDv7-URI. De persoonsidentificatie wordt daarnaast weergegeven met het soort
+        identificeert de graph-node met een UUIDv7-URI in de vorm urn:uuid:<uuidv7>.
+        Dit is de SOH-conventie voor graph-node-identificaties. De persoonsidentificatie wordt daarnaast weergegeven met het soort
         persoonsidentificatie en de bijbehorende waarde; deze vervangen de @id niet.
       type: object
       required:
@@ -368,7 +369,8 @@ components:
     OrganisatieGraphNode:
       description: |
         Voorbeeldschema voor een Organisatie in de PROV/JSON-LD-graaf. De @id
-        identificeert de graph-node met een UUIDv7-URI. De organisatie-identificatie
+        identificeert de graph-node met een UUIDv7-URI in de vorm urn:uuid:<uuidv7>.
+        Dit is de SOH-conventie voor graph-node-identificaties. De organisatie-identificatie
         wordt daarnaast weergegeven met het soort organisatieidentificatie en de
         bijbehorende waarde; deze vervangen de @id niet.
       type: object
@@ -638,6 +640,7 @@ components:
             subject:
               type: string
               format: uuid
-              description: Het interactieId van de asynchrone informatievraag waarop het resultaat betrekking heeft.
+              pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+              description: Het interactieId van de asynchrone informatievraag waarop het resultaat betrekking heeft. Binnen SOH wordt hiervoor UUIDv7 gebruikt.
             data:
               $ref: '#/components/schemas/ProvenancePayload'
